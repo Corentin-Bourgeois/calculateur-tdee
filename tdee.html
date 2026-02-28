@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TDEE Calculator</title>
+  <style>
+    :root {
+      --bg:      #000000;
+      --card:    #1C1C1E;
+      --card2:   #2C2C2E;
+      --border:  rgba(255,255,255,0.09);
+      --text:    #FFFFFF;
+      --text2:   #8E8E93;
+      --blue:    #0A84FF;
+      --red:     #FF453A;
+      --orange:  #FF9F0A;
+      --green:   #30D158;
+      --gray:    #3A3A3C;
+      --seg-bg:  #2C2C2E;
+      --seg-act: #3A3A3C;
+    }
+
+    :root.light {
+      --bg:      #F2F2F7;
+      --card:    #FFFFFF;
+      --card2:   #F2F2F7;
+      --border:  rgba(0,0,0,0.10);
+      --text:    #000000;
+      --text2:   #6C6C70;
+      --blue:    #007AFF;
+      --red:     #FF3B30;
+      --orange:  #FF9500;
+      --green:   #34C759;
+      --gray:    #C6C6C8;
+      --seg-bg:  #E5E5EA;
+      --seg-act: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; outline: none; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                   "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 52px 24px 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ─── Theme toggle ─── */
+    .theme-toggle {
+      position: fixed;
+      top: 18px;
+      left: 24px;
+      z-index: 200;
+    }
+
+    #themeBtn {
+      height: 26px;
+      padding: 0 13px;
+      border: 1.5px solid var(--border);
+      background: var(--card2);
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+    }
+
+    #themeBtn:hover  { opacity: 0.8; }
+    #themeBtn:active { transform: scale(0.94); }
+
+    /* ─── Number inputs (age, height) ─── */
+    .num-field       { display: flex; align-items: center; gap: 7px; justify-content: flex-end; }
+    .num-field-input {
+      width: 72px; padding: 5px 9px;
+      border: 1.5px solid var(--border); border-radius: 9px;
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      color: var(--blue); background: var(--card2);
+      text-align: right; outline: none;
+      transition: border-color 0.2s;
+      -moz-appearance: textfield;
+    }
+    .num-field-input:focus { border-color: var(--blue); }
+    .num-field-input::-webkit-outer-spin-button,
+    .num-field-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .num-field-unit { font-size: 13px; color: var(--text2); white-space: nowrap; }
+
+    /* ─── Lang switcher ─── */
+    .lang-switcher {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      display: flex;
+      gap: 5px;
+      z-index: 200;
+    }
+
+    .lang-btn {
+      width: 34px;
+      height: 26px;
+      border: none;
+      background: var(--card2);
+      border-radius: 7px;
+      font-size: 17px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.45;
+      transition: opacity 0.18s, box-shadow 0.18s, transform 0.1s;
+      line-height: 1;
+      padding: 0;
+    }
+
+    .lang-btn:hover  { opacity: 0.75; }
+    .lang-btn:active { transform: scale(0.93); }
+
+    .lang-btn.active {
+      opacity: 1;
+      box-shadow: 0 0 0 1.5px var(--blue);
+    }
+
+    /* ─── Header ─── */
+    header { text-align: center; margin-bottom: 48px; }
+
+    .badge {
+      display: inline-block;
+      background: var(--blue);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.7px;
+      padding: 4px 13px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    header h1 { font-size: 56px; font-weight: 700; letter-spacing: -2px; line-height: 1; }
+    header p  { color: var(--text2); font-size: 18px; margin-top: 8px; }
+
+    /* ─── Layout: 1/3 — 2/3 ─── */
+    .layout { display: flex; gap: 20px; align-items: flex-start; }
+    .left-col  { flex: 1; min-width: 0; }
+    .right-col { flex: 2; min-width: 0; }
+
+    /* ─── Cards ─── */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 0 0 1px var(--border);
+      margin-bottom: 12px;
+    }
+
+    .card-label {
+      font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--text2); margin-bottom: 16px;
+    }
+
+    /* ─── Segmented ─── */
+    .seg { display: flex; background: var(--seg-bg); border-radius: 10px; padding: 2px; gap: 2px; }
+
+    .seg button {
+      flex: 1; padding: 8px 0; border: none; background: transparent;
+      border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 500;
+      cursor: pointer; color: var(--text2); transition: all 0.18s ease;
+    }
+
+    .seg button.active { background: var(--seg-act); color: var(--text); }
+
+    /* ─── Fields ─── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9px; }
+
+    .field-name { font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 7px; }
+
+    .optional-tag {
+      font-size: 10px; font-weight: 600; color: var(--text2);
+      background: var(--card2); padding: 2px 7px; border-radius: 5px;
+    }
+
+    .field-val {
+      font-size: 14px; font-weight: 600; color: var(--blue);
+      font-variant-numeric: tabular-nums; cursor: text; padding: 2px 7px;
+      border-radius: 7px; transition: background 0.15s; user-select: none;
+    }
+
+    .field-val:hover { background: rgba(10,132,255,0.12); }
+    .field-val.editing { background: transparent; }
+
+    .field-val input[type="number"] {
+      background: transparent; border: none;
+      border-bottom: 1.5px solid var(--blue); color: var(--blue);
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      width: 58px; text-align: right; outline: none; padding: 0 1px 1px;
+    }
+
+    .field-val input[type="number"]::-webkit-outer-spin-button,
+    .field-val input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .bf-unset { color: var(--text2) !important; }
+
+    /* ─── Sliders ─── */
+    input[type="range"] {
+      -webkit-appearance: none; width: 100%; height: 4px;
+      border-radius: 2px; background: var(--gray); outline: none; cursor: pointer; display: block;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track { background: transparent; height: 4px; border-radius: 2px; }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px; margin-top: -9px;
+      border-radius: 50%; background: #FFF;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
+      cursor: pointer; transition: transform 0.12s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover  { transform: scale(1.12); }
+    input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.06); }
+
+    /* ─── Selects ─── */
+    .sel-wrap { position: relative; }
+
+    .sel-wrap::after {
+      content: ''; position: absolute; right: 13px; top: 50%;
+      transform: translateY(-50%); width: 0; height: 0;
+      border-left: 4px solid transparent; border-right: 4px solid transparent;
+      border-top: 5px solid var(--text2); pointer-events: none;
+    }
+
+    select {
+      width: 100%; padding: 11px 34px 11px 13px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-family: inherit; font-size: 14px; color: var(--text);
+      background: var(--card2); outline: none; -webkit-appearance: none;
+      cursor: pointer; transition: border-color 0.2s;
+    }
+
+    select:focus { border-color: var(--blue); }
+    select option { background: #2C2C2E; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+    /* ─── Method card ─── */
+    .method-card { padding: 18px 22px; }
+
+    .method-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+    .method-icon {
+      width: 28px; height: 28px; border-radius: 7px; background: var(--card2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0; color: var(--text2);
+      font-style: italic; font-weight: 700;
+    }
+
+    .method-formula-name { font-size: 13px; font-weight: 600; }
+    .method-formula-tag {
+      font-size: 10px; color: var(--text2); background: var(--card2);
+      padding: 2px 7px; border-radius: 5px; margin-left: 6px;
+    }
+
+    .method-body { font-size: 12px; color: var(--text2); line-height: 1.65; }
+
+    /* ─── Results ─── */
+    #results { animation: fadeUp 0.4s ease; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Results top row: hero + chart side by side */
+    .results-top {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0;
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 0 0 1px var(--border);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .tdee-hero {
+      text-align: center;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--border);
+      min-width: 200px;
+    }
+
+    .tdee-lbl {
+      font-size: 10px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--text2); margin-bottom: 4px;
+    }
+
+    .tdee-num {
+      font-size: 72px; font-weight: 700; letter-spacing: -3px;
+      line-height: 1; font-variant-numeric: tabular-nums;
+    }
+
+    .tdee-unit { font-size: 15px; color: var(--text2); margin-top: 5px; }
+
+    /* Chart */
+    .chart-wrap {
+      display: flex; align-items: center; justify-content: center;
+      gap: 20px; flex-wrap: wrap; padding: 24px;
+    }
+
+    .donut-svg-wrap svg { display: block; transform: rotate(-90deg); }
+
+    .legend { display: flex; flex-direction: column; gap: 11px; }
+    .leg-item { display: flex; align-items: center; gap: 9px; }
+    .leg-dot  { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .leg-info { flex: 1; }
+    .leg-name { font-size: 13px; font-weight: 600; }
+    .leg-sub  { font-size: 11px; color: var(--text2); }
+    .leg-val  { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+    /* Metric cards 2×2 */
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .metric {
+      background: var(--card); border-radius: 16px; padding: 16px 18px;
+      box-shadow: 0 0 0 1px var(--border);
+    }
+
+    .metric-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.5px; padding: 2px 9px; border-radius: 6px; margin-bottom: 8px;
+    }
+
+    .metric-val { font-size: 32px; font-weight: 700; letter-spacing: -1px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .metric-name { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .metric-pct  { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .metric-desc { font-size: 11px; color: var(--text2); margin-top: 9px; line-height: 1.5; }
+
+    /* ─── Extra info sections ─── */
+    .extra-section  { margin-top: 10px; }
+    .extra-row      { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .extra-row .card { margin-bottom: 0; }
+
+    .info-table        { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .info-table tr+tr  { border-top: 1px solid var(--border); }
+    .info-table td     { padding: 9px 4px; font-size: 13px; vertical-align: middle; }
+    .info-td-label     { color: var(--text); }
+    .info-td-aux       { color: var(--text2); font-size: 11px; padding: 0 6px; white-space: nowrap; }
+    .info-td-val       { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .info-table tr.row-active td { color: var(--blue); }
+
+    .iw-range     { font-size: 26px; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; margin-top: 8px; }
+    .iw-range-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+    .bmi-display  { display: flex; align-items: center; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
+    .bmi-num      { font-size: 44px; font-weight: 700; letter-spacing: -2px; font-variant-numeric: tabular-nums; line-height: 1; }
+    .bmi-badge    { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 20px; }
+    .cat-dot      { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 2px; }
+
+    .mp-grid  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .mp-item  { background: var(--card2); border-radius: 12px; padding: 14px 10px; text-align: center; }
+    .mp-bf    { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+    .mp-val   { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
+    .extra-note { font-size: 11px; color: var(--text2); margin-top: 12px; text-align: center; }
+
+    /* ─── Footer ─── */
+    footer { text-align: center; margin-top: 40px; color: var(--text2); font-size: 12px; line-height: 1.9; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 860px) {
+      .layout    { flex-direction: column; }
+      .left-col, .right-col { flex: none; width: 100%; position: static; }
+      .results-top { grid-template-columns: 1fr; }
+      .tdee-hero { border-right: none; border-bottom: 1px solid var(--border); }
+      .extra-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 500px) {
+      body          { padding: 32px 16px 60px; }
+      header h1     { font-size: 44px; }
+      .tdee-num     { font-size: 58px; }
+      .chart-wrap   { flex-direction: column; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .row2         { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<div class="theme-toggle">
+  <button id="themeBtn" onclick="toggleTheme()">Mode clair</button>
+</div>
+
+<!-- Lang switcher -->
+<div class="lang-switcher">
+  <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')" title="Français">🇫🇷</button>
+  <button class="lang-btn"        data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+  <button class="lang-btn"        data-lang="es" onclick="setLang('es')" title="Español">🇪🇸</button>
+</div>
+
+<div class="container">
+
+  <header>
+    <div class="badge" id="hBadge">Calculateur</div>
+    <h1>TDEE</h1>
+    <p id="hSubtitle">Dépense énergétique totale journalière</p>
+  </header>
+
+  <div class="layout">
+
+    <!-- ── Left (1/3): Form ── -->
+    <div class="left-col">
+
+      <div class="card">
+        <div class="card-label" id="lProfil">Profil</div>
+
+        <div class="field">
+          <div class="field-row"><span class="field-name" id="lGenre">Genre</span></div>
+          <div class="seg" id="genderSeg">
+            <button class="active" onclick="setGender('male',this)" id="btnMale">Homme</button>
+            <button onclick="setGender('female',this)" id="btnFemale">Femme</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-row"><span class="field-name" id="lUnits">Unités</span></div>
+          <div class="seg" id="unitSeg">
+            <button class="active" onclick="setUnit('metric',this)" id="btnMetric">Métrique (kg / cm)</button>
+            <button onclick="setUnit('imperial',this)" id="btnImperial">Impérial (lb / ft)</button>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-name" id="lAge">Âge</span>
+            <div class="num-field">
+              <input type="number" id="age" class="num-field-input" min="1" max="120" value="25" oninput="debounceCalc()">
+              <span class="num-field-unit" id="lAgeUnit">ans</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-name" id="lHeight">Taille</span>
+            <div class="num-field">
+              <input type="number" id="height" class="num-field-input" min="50" max="250" value="175" oninput="debounceCalc()">
+              <span class="num-field-unit">cm</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-name" id="lWeight">Poids</span>
+            <span class="field-val" id="weightVal" onclick="makeEditable(this,'weight',40,160,fmtWeight)">70 kg</span>
+          </div>
+          <input type="range" id="weight" min="40" max="160" value="70"
+                 oninput="syncSlider(this,'weightVal',fmtWeight)">
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-name">
+              <span id="lBodyfat">Masse grasse</span>
+              <span class="optional-tag" id="lOptional">optionnel</span>
+            </span>
+            <span class="field-val bf-unset" id="bfVal" onclick="editBodyFat(this)">— %</span>
+          </div>
+          <p style="font-size:11px;color:var(--text2);margin-top:2px;" id="lBfHint">
+            Active la formule de Katch-McArdle, plus précise
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label" id="lActivity">Activité quotidienne hors sport</div>
+        <div class="sel-wrap">
+          <select id="neatLevel" onchange="debounceCalc()"></select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label" id="lTraining">Entraînement</div>
+
+        <div class="field">
+          <div class="field-row">
+            <span class="field-name" id="lDays">Jours / semaine</span>
+            <span class="field-val" id="daysVal" onclick="makeEditable(this,'exerciseDays',0,7,fmtDays)">3 jours</span>
+          </div>
+          <input type="range" id="exerciseDays" min="0" max="7" value="3" step="1"
+                 oninput="syncSlider(this,'daysVal',fmtDays)">
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <div class="field-row"><span class="field-name" id="lDuration">Durée</span></div>
+            <div class="sel-wrap">
+              <select id="exerciseDuration" onchange="debounceCalc()">
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60" selected>60 min</option>
+                <option value="90">90 min</option>
+                <option value="120">120 min</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-row"><span class="field-name" id="lIntensity">Intensité</span></div>
+            <div class="sel-wrap">
+              <select id="exerciseIntensity" onchange="debounceCalc()"></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Method description -->
+      <div class="card method-card">
+        <div class="method-header">
+          <div class="method-icon">ƒ</div>
+          <div>
+            <span class="method-formula-name" id="methodName">Mifflin-St Jeor</span>
+            <span class="method-formula-tag"  id="methodTag">1990</span>
+          </div>
+        </div>
+        <p class="method-body" id="methodBody"></p>
+      </div>
+
+    </div>
+
+    <!-- ── Right (2/3): Results ── -->
+    <div class="right-col">
+      <div id="results">
+
+        <div class="results-top">
+          <div class="tdee-hero">
+            <div class="tdee-lbl" id="rTotalLabel">Dépense totale</div>
+            <div class="tdee-num" id="tdeeNum">—</div>
+            <div class="tdee-unit" id="rUnit">kcal / jour</div>
+          </div>
+
+          <div class="chart-wrap">
+            <div class="donut-svg-wrap">
+              <svg id="donutSvg" width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="54" fill="none" style="stroke:var(--gray)" stroke-width="20"/>
+              </svg>
+            </div>
+            <div class="legend" id="legend"></div>
+          </div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric">
+            <div class="metric-tag" style="background:rgba(255,69,58,.15);color:#FF453A;">BMR</div>
+            <div class="metric-val" id="bmrVal">—</div>
+            <div class="metric-name" id="mBmrName">Métabolisme de base</div>
+            <div class="metric-pct"  id="bmrPct"></div>
+            <div class="metric-desc" id="mBmrDesc">Énergie brûlée au repos — respiration, circulation, thermorégulation.</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-tag" style="background:rgba(255,159,10,.15);color:#FF9F0A;">NEAT</div>
+            <div class="metric-val" id="neatVal">—</div>
+            <div class="metric-name" id="mNeatName">Activité hors sport</div>
+            <div class="metric-pct"  id="neatPct"></div>
+            <div class="metric-desc" id="mNeatDesc">Marche, posture, fidgeting — tout mouvement non planifié.</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-tag" style="background:rgba(10,132,255,.15);color:#0A84FF;">EAT</div>
+            <div class="metric-val" id="eatVal">—</div>
+            <div class="metric-name" id="mEatName">Exercice physique</div>
+            <div class="metric-pct"  id="eatPct"></div>
+            <div class="metric-desc" id="mEatDesc">Calories brûlées lors de vos séances d'entraînement.</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-tag" style="background:rgba(48,209,88,.15);color:#30D158;">TEF</div>
+            <div class="metric-val" id="tefVal">—</div>
+            <div class="metric-name" id="mTefName">Effet thermique</div>
+            <div class="metric-pct"  id="tefPct"></div>
+            <div class="metric-desc" id="mTefDesc">Énergie dépensée pour digérer et assimiler les nutriments (~10 %).</div>
+          </div>
+        </div>
+
+        <!-- Maintenance Calories -->
+        <div class="card extra-section" id="maintenanceCard">
+          <div class="card-label" id="lMaintenance">Calories de Maintien</div>
+          <table class="info-table" id="maintenanceTable"></table>
+        </div>
+
+        <!-- Ideal Weight + BMI -->
+        <div class="extra-row">
+          <div class="card">
+            <div class="card-label" id="lIdealWeight">Poids Idéal</div>
+            <div class="iw-range" id="iwRange">—</div>
+            <div class="iw-range-sub" id="lIdealRange">Plage estimée</div>
+            <table class="info-table" id="idealWeightTable"></table>
+          </div>
+          <div class="card">
+            <div class="card-label" id="lBMI">IMC</div>
+            <div class="bmi-display">
+              <div class="bmi-num" id="bmiNum">—</div>
+              <div class="bmi-badge" id="bmiBadge"></div>
+            </div>
+            <table class="info-table" id="bmiTable"></table>
+          </div>
+        </div>
+
+        <!-- Max Muscular Potential -->
+        <div class="card extra-section" id="muscularCard">
+          <div class="card-label" id="lMuscular">Potentiel Musculaire Maximum</div>
+          <div class="mp-grid" id="mpGrid"></div>
+          <p class="extra-note" id="lBerkhan">Formule de Berkhan · Hommes uniquement</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <footer><p id="footerText">Valeurs indicatives · Pour des recommandations personnalisées, consultez un professionnel de santé.</p></footer>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   TRANSLATIONS
+══════════════════════════════════════════════ */
+const LANGS = {
+  fr: {
+    badge:       'Calculateur',
+    subtitle:    'Dépense énergétique totale journalière',
+    lProfil:     'Profil',
+    lActivity:   'Activité quotidienne hors sport',
+    lTraining:   'Entraînement',
+    lGenre:      'Genre',
+    btnMale:     'Homme',
+    btnFemale:   'Femme',
+    lUnits:      'Unités',
+    btnMetric:   'Métrique (kg / cm)',
+    btnImperial: 'Impérial (lb / ft)',
+    lAge:        'Âge',
+    lHeight:     'Taille',
+    lWeight:     'Poids',
+    lBodyfat:    'Masse grasse',
+    lOptional:   'optionnel',
+    lBfHint:     'Active la formule de Katch-McArdle, plus précise',
+    lDays:       'Jours / semaine',
+    lDuration:   'Durée',
+    lIntensity:  'Intensité',
+    fmtAge:  v => v + ' ans',
+    fmtDays: v => +v === 1 ? '1 jour' : v + ' jours',
+    neat: [
+      ['sedentary', 'Sédentaire — Principalement assis'],
+      ['light',     'Légèrement actif — Quelques marches'],
+      ['moderate',  'Modérément actif — Souvent debout'],
+      ['active',    'Très actif — Travail physique'],
+    ],
+    intensities: [
+      ['light',      'Légère'],
+      ['moderate',   'Modérée'],
+      ['intense',    'Intense'],
+      ['veryIntense','Très intense'],
+    ],
+    rTotalLabel: 'Dépense totale',
+    rUnit:       'kcal / jour',
+    pctOf:       '% du TDEE',
+    mBmrName:  'Métabolisme de base',
+    mNeatName: 'Activité hors sport',
+    mEatName:  'Exercice physique',
+    mTefName:  'Effet thermique',
+    mBmrDesc:  'Énergie brûlée au repos — respiration, circulation, thermorégulation.',
+    mNeatDesc: 'Marche, posture, fidgeting — tout mouvement non planifié.',
+    mEatDesc:  'Calories brûlées lors de vos séances d\'entraînement.',
+    mTefDesc:  'Énergie dépensée pour digérer et assimiler les nutriments (~10 %).',
+    legFull:   ['Métabolisme de base','Activité quotidienne','Exercice physique','Effet thermique'],
+    methodMSJName: 'Mifflin-St Jeor', methodMSJTag: '1990',
+    methodMSJBody: 'Publiée par M.D. Mifflin et S.T. St Jeor, cette équation est la référence pour estimer le métabolisme basal (BMR) de la population générale. Elle intègre le poids, la taille, l\'âge et le sexe. Le TDEE est obtenu en additionnant le NEAT, l\'EAT et le TEF (~10 %). Renseigner votre % de masse grasse active la formule de Katch-McArdle, plus précise.',
+    methodKMName:  'Katch-McArdle', methodKMTag: 'Masse maigre',
+    methodKMBody:  'Développée par Frank Katch et William McArdle, cette formule calcule le BMR à partir de la masse maigre (LBM = poids × (1 − %MG)), s\'affranchissant de la variabilité liée au tissu adipeux. Elle est plus précise que Mifflin-St Jeor pour les personnes actives, très musclées ou obèses.',
+    footer: 'Valeurs indicatives · Pour des recommandations personnalisées, consultez un professionnel de santé.',
+    lMaintenance: 'Calories de Maintien',
+    maintenanceLevels: [
+      ['Sédentaire',        1.2  ],
+      ['Légèrement actif',  1.375],
+      ['Modérément actif',  1.55 ],
+      ['Très actif',        1.725],
+      ['Athlète',           1.9  ],
+    ],
+    lIdealWeight: 'Poids Idéal',
+    lIdealRange: 'Plage estimée (4 formules)',
+    idealWeightFormulas: [
+      ['G.J. Hamwi',    '1964'],
+      ['B.J. Devine',   '1974'],
+      ['J.D. Robinson', '1983'],
+      ['D.R. Miller',   '1983'],
+    ],
+    lBMI: 'Indice de Masse Corporelle',
+    bmiCategories: [
+      [null, 18.5, '#0A84FF', 'Insuffisance pondérale'],
+      [18.5, 25,   '#30D158', 'Poids normal'],
+      [25,   30,   '#FF9F0A', 'Surpoids'],
+      [30,   35,   '#FF6B3A', 'Obésité modérée'],
+      [35,   null, '#FF453A', 'Obésité sévère'],
+    ],
+    lMuscular: 'Potentiel Musculaire Maximum',
+    lBerkhan: 'Formule de Berkhan',
+    lBF: '% MG',
+    lAgeUnit: 'ans',
+    btnLightMode: 'Mode clair',
+    btnDarkMode:  'Mode sombre',
+  },
+
+  en: {
+    badge:       'Calculator',
+    subtitle:    'Total Daily Energy Expenditure',
+    lProfil:     'Profile',
+    lActivity:   'Daily non-exercise activity',
+    lTraining:   'Training',
+    lGenre:      'Sex',
+    btnMale:     'Male',
+    btnFemale:   'Female',
+    lUnits:      'Units',
+    btnMetric:   'Metric (kg / cm)',
+    btnImperial: 'Imperial (lb / ft)',
+    lAge:        'Age',
+    lHeight:     'Height',
+    lWeight:     'Weight',
+    lBodyfat:    'Body fat',
+    lOptional:   'optional',
+    lBfHint:     'Enables the Katch-McArdle formula, more accurate',
+    lDays:       'Days / week',
+    lDuration:   'Duration',
+    lIntensity:  'Intensity',
+    fmtAge:  v => v + ' yrs',
+    fmtDays: v => +v === 1 ? '1 day' : v + ' days',
+    neat: [
+      ['sedentary', 'Sedentary — Mostly sitting'],
+      ['light',     'Lightly active — Some walking'],
+      ['moderate',  'Moderately active — Often standing'],
+      ['active',    'Very active — Physical job'],
+    ],
+    intensities: [
+      ['light',      'Light'],
+      ['moderate',   'Moderate'],
+      ['intense',    'Intense'],
+      ['veryIntense','Very intense'],
+    ],
+    rTotalLabel: 'Total expenditure',
+    rUnit:       'kcal / day',
+    pctOf:       '% of TDEE',
+    mBmrName:  'Basal metabolic rate',
+    mNeatName: 'Non-exercise activity',
+    mEatName:  'Exercise activity',
+    mTefName:  'Thermic effect',
+    mBmrDesc:  'Energy burned at rest — breathing, circulation, thermoregulation.',
+    mNeatDesc: 'Walking, posture, fidgeting — all unplanned movement.',
+    mEatDesc:  'Calories burned during planned exercise sessions.',
+    mTefDesc:  'Energy used to digest and absorb nutrients (~10%).',
+    legFull:   ['Basal metabolic rate','Non-exercise activity','Exercise activity','Thermic effect'],
+    methodMSJName: 'Mifflin-St Jeor', methodMSJTag: '1990',
+    methodMSJBody: 'Published by M.D. Mifflin and S.T. St Jeor, this equation is recognized as the most accurate for estimating basal metabolic rate (BMR) in the general population. It accounts for weight, height, age and sex. TDEE is derived by adding NEAT, EAT and TEF (~10%). Entering your body fat percentage activates the more accurate Katch-McArdle formula.',
+    methodKMName:  'Katch-McArdle', methodKMTag: 'Lean mass',
+    methodKMBody:  'Developed by Frank Katch and William McArdle, this formula estimates BMR from lean body mass (LBM = weight × (1 − BF%)), removing variability caused by adipose tissue. It is more accurate than Mifflin-St Jeor for active, very muscular, or obese individuals.',
+    footer: 'Indicative values · For personalized recommendations, consult a health professional.',
+    lMaintenance: 'Maintenance Calories',
+    maintenanceLevels: [
+      ['Sedentary',          1.2  ],
+      ['Lightly active',     1.375],
+      ['Moderately active',  1.55 ],
+      ['Very active',        1.725],
+      ['Athlete',            1.9  ],
+    ],
+    lIdealWeight: 'Ideal Weight',
+    lIdealRange: 'Estimated range (4 formulas)',
+    idealWeightFormulas: [
+      ['G.J. Hamwi',    '1964'],
+      ['B.J. Devine',   '1974'],
+      ['J.D. Robinson', '1983'],
+      ['D.R. Miller',   '1983'],
+    ],
+    lBMI: 'Body Mass Index',
+    bmiCategories: [
+      [null, 18.5, '#0A84FF', 'Underweight'],
+      [18.5, 25,   '#30D158', 'Normal'],
+      [25,   30,   '#FF9F0A', 'Overweight'],
+      [30,   35,   '#FF6B3A', 'Obese (class I)'],
+      [35,   null, '#FF453A', 'Obese (class II+)'],
+    ],
+    lMuscular: 'Maximum Muscular Potential',
+    lBerkhan: 'Berkhan formula',
+    lBF: '% BF',
+    lAgeUnit: 'yrs',
+    btnLightMode: 'Light mode',
+    btnDarkMode:  'Dark mode',
+  },
+
+  es: {
+    badge:       'Calculadora',
+    subtitle:    'Gasto energético total diario',
+    lProfil:     'Perfil',
+    lActivity:   'Actividad diaria sin deporte',
+    lTraining:   'Entrenamiento',
+    lGenre:      'Sexo',
+    btnMale:     'Hombre',
+    btnFemale:   'Mujer',
+    lUnits:      'Unidades',
+    btnMetric:   'Métrico (kg / cm)',
+    btnImperial: 'Imperial (lb / ft)',
+    lAge:        'Edad',
+    lHeight:     'Altura',
+    lWeight:     'Peso',
+    lBodyfat:    'Grasa corporal',
+    lOptional:   'opcional',
+    lBfHint:     'Activa la fórmula de Katch-McArdle, más precisa',
+    lDays:       'Días / semana',
+    lDuration:   'Duración',
+    lIntensity:  'Intensidad',
+    fmtAge:  v => v + ' años',
+    fmtDays: v => +v === 1 ? '1 día' : v + ' días',
+    neat: [
+      ['sedentary', 'Sedentario — Principalmente sentado'],
+      ['light',     'Ligeramente activo — Algunas caminatas'],
+      ['moderate',  'Moderadamente activo — A menudo de pie'],
+      ['active',    'Muy activo — Trabajo físico'],
+    ],
+    intensities: [
+      ['light',      'Ligera'],
+      ['moderate',   'Moderada'],
+      ['intense',    'Intensa'],
+      ['veryIntense','Muy intensa'],
+    ],
+    rTotalLabel: 'Gasto total',
+    rUnit:       'kcal / día',
+    pctOf:       '% del TDEE',
+    mBmrName:  'Metabolismo basal',
+    mNeatName: 'Actividad sin deporte',
+    mEatName:  'Ejercicio físico',
+    mTefName:  'Efecto térmico',
+    mBmrDesc:  'Energía quemada en reposo — respiración, circulación, termorregulación.',
+    mNeatDesc: 'Caminar, postura, movimientos involuntarios — todo movimiento no planificado.',
+    mEatDesc:  'Calorías quemadas durante las sesiones de entrenamiento.',
+    mTefDesc:  'Energía usada para digerir y asimilar los nutrientes (~10%).',
+    legFull:   ['Metabolismo basal','Actividad sin deporte','Ejercicio físico','Efecto térmico'],
+    methodMSJName: 'Mifflin-St Jeor', methodMSJTag: '1990',
+    methodMSJBody: 'Publicada por M.D. Mifflin y S.T. St Jeor, esta ecuación es la referencia para estimar la tasa metabólica basal (BMR) en la población general. Integra el peso, la talla, la edad y el sexo. El TDEE se obtiene sumando NEAT, EAT y TEF (~10%). Introducir su % de grasa corporal activa la fórmula de Katch-McArdle, más precisa.',
+    methodKMName:  'Katch-McArdle', methodKMTag: 'Masa magra',
+    methodKMBody:  'Desarrollada por Frank Katch y William McArdle, esta fórmula estima el BMR a partir de la masa magra (LBM = peso × (1 − %GC)), eliminando la variabilidad del tejido adiposo. Es más precisa que Mifflin-St Jeor para personas activas, muy musculadas u obesas.',
+    footer: 'Valores indicativos · Para recomendaciones personalizadas, consulte a un profesional de salud.',
+    lMaintenance: 'Calorías de Mantenimiento',
+    maintenanceLevels: [
+      ['Sedentario',            1.2  ],
+      ['Ligeramente activo',    1.375],
+      ['Moderadamente activo',  1.55 ],
+      ['Muy activo',            1.725],
+      ['Atleta',                1.9  ],
+    ],
+    lIdealWeight: 'Peso Ideal',
+    lIdealRange: 'Rango estimado (4 fórmulas)',
+    idealWeightFormulas: [
+      ['G.J. Hamwi',    '1964'],
+      ['B.J. Devine',   '1974'],
+      ['J.D. Robinson', '1983'],
+      ['D.R. Miller',   '1983'],
+    ],
+    lBMI: 'Índice de Masa Corporal',
+    bmiCategories: [
+      [null, 18.5, '#0A84FF', 'Bajo peso'],
+      [18.5, 25,   '#30D158', 'Normal'],
+      [25,   30,   '#FF9F0A', 'Sobrepeso'],
+      [30,   35,   '#FF6B3A', 'Obesidad moderada'],
+      [35,   null, '#FF453A', 'Obesidad severa'],
+    ],
+    lMuscular: 'Potencial Muscular Máximo',
+    lBerkhan: 'Fórmula de Berkhan',
+    lBF: '% GC',
+    lAgeUnit: 'años',
+    btnLightMode: 'Modo claro',
+    btnDarkMode:  'Modo oscuro',
+  },
+};
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let lang    = 'fr';
+let gender  = 'male';
+let unit    = 'metric';
+let bodyFat = null;
+let calcTimer = null;
+
+/* ── Dynamic formatters (delegated to lang) ── */
+const fmtAge    = v => LANGS[lang].fmtAge(v);
+const fmtDays   = v => LANGS[lang].fmtDays(v);
+const fmtHeight = v => {
+  if (unit === 'imperial') {
+    const i = Math.round(v / 2.54);
+    return Math.floor(i / 12) + "'" + (i % 12) + '"';
+  }
+  return v + ' cm';
+};
+const fmtWeight = v => unit === 'imperial' ? Math.round(v * 2.2046) + ' lb' : v + ' kg';
+
+/* ══════════════════════════════════════════════
+   LANGUAGE
+══════════════════════════════════════════════ */
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+
+  document.querySelectorAll('.lang-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.lang === l));
+
+  const t = LANGS[l];
+
+  /* Static text */
+  const ids = ['badge','hSubtitle','lProfil','lActivity','lTraining','lGenre','lUnits',
+                'lAge','lHeight','lWeight','lBodyfat','lOptional','lBfHint',
+                'lDays','lDuration','lIntensity',
+                'rTotalLabel','rUnit',
+                'mBmrName','mNeatName','mEatName','mTefName',
+                'mBmrDesc','mNeatDesc','mEatDesc','mTefDesc',
+                'btnMale','btnFemale','btnMetric','btnImperial',
+                'lMaintenance','lIdealWeight','lIdealRange','lBMI','lMuscular','lBerkhan',
+                'lAgeUnit','footerText'];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && t[id] !== undefined) el.textContent = t[id];
+  });
+
+  /* Selects */
+  rebuildSelect('neatLevel',         t.neat,        'moderate');
+  rebuildSelect('exerciseIntensity', t.intensities, 'moderate');
+
+  /* Refresh slider labels */
+  refreshAll();
+
+  /* Method desc + recalc */
+  updateMethodDesc();
+  updateThemeBtn();
+  debounceCalc();
+}
+
+function rebuildSelect(id, options, defaultVal) {
+  const sel = document.getElementById(id);
+  const cur = sel.value || defaultVal;
+  sel.innerHTML = '';
+  options.forEach(([val, label]) => {
+    const opt = document.createElement('option');
+    opt.value = val; opt.textContent = label;
+    if (val === cur) opt.selected = true;
+    sel.appendChild(opt);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   SLIDERS
+══════════════════════════════════════════════ */
+function syncSlider(input, labelId, formatter) {
+  document.getElementById(labelId).textContent = formatter(input.value);
+  updateTrack(input);
+  debounceCalc();
+}
+
+function updateTrack(input) {
+  const pct = (input.value - input.min) / (input.max - input.min) * 100;
+  input.style.background =
+    `linear-gradient(to right, var(--blue) ${pct}%, var(--gray) ${pct}%)`;
+}
+
+function refreshAll() {
+  const map = [
+    ['weight',       'weightVal', fmtWeight],
+    ['exerciseDays', 'daysVal',   fmtDays],
+  ];
+  map.forEach(([id, labelId, fmt]) => {
+    const el = document.getElementById(id);
+    document.getElementById(labelId).textContent = fmt(el.value);
+    updateTrack(el);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   GENDER / UNIT
+══════════════════════════════════════════════ */
+function setGender(g, btn) {
+  gender = g;
+  document.querySelectorAll('#genderSeg button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  debounceCalc();
+}
+
+function setUnit(u, btn) {
+  unit = u;
+  document.querySelectorAll('#unitSeg button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  refreshAll();
+}
+
+/* ══════════════════════════════════════════════
+   INLINE EDITING
+══════════════════════════════════════════════ */
+function makeEditable(span, sliderId, min, max, formatter) {
+  if (span.querySelector('input')) return;
+  const slider = document.getElementById(sliderId);
+  const cur = +slider.value;
+  let done = false;
+
+  const inp = document.createElement('input');
+  inp.type = 'number'; inp.value = cur; inp.min = min; inp.max = max;
+
+  span.classList.add('editing');
+  span.textContent = '';
+  span.appendChild(inp);
+  inp.focus(); inp.select();
+  inp.addEventListener('click', e => e.stopPropagation());
+
+  function commit() {
+    if (done) return; done = true;
+    let val = parseInt(inp.value);
+    if (isNaN(val)) val = cur;
+    val = Math.max(min, val);
+    const curMax = +slider.max;
+    if (val > curMax) {
+      if (sliderId === 'weight') {
+        slider.max = Math.ceil(val / 10) * 10;
+      } else {
+        val = curMax;
+      }
+    }
+    slider.value = val;
+    span.classList.remove('editing');
+    span.textContent = formatter(val);
+    updateTrack(slider);
+    debounceCalc();
+  }
+
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') inp.blur();
+    if (e.key === 'Escape') { done = true; span.classList.remove('editing'); span.textContent = formatter(cur); }
+  });
+}
+
+function editBodyFat(span) {
+  if (span.querySelector('input')) return;
+  const cur = bodyFat;
+  let done = false;
+
+  const inp = document.createElement('input');
+  inp.type = 'number'; inp.min = 3; inp.max = 60; inp.step = 0.5; inp.placeholder = '—';
+  if (cur !== null) inp.value = cur;
+
+  span.classList.add('editing'); span.classList.remove('bf-unset');
+  span.textContent = '';
+  span.appendChild(inp);
+
+  const suffix = document.createElement('span');
+  suffix.textContent = ' %';
+  span.appendChild(suffix);
+
+  inp.focus();
+  if (cur !== null) inp.select();
+  inp.addEventListener('click', e => e.stopPropagation());
+
+  function commit() {
+    if (done) return; done = true;
+    const v = parseFloat(inp.value);
+    span.classList.remove('editing');
+    if (!inp.value || isNaN(v) || v < 3 || v > 60) {
+      bodyFat = null;
+      span.classList.add('bf-unset');
+      span.textContent = '— %';
+    } else {
+      bodyFat = Math.round(Math.min(60, Math.max(3, v)) * 10) / 10;
+      span.textContent = bodyFat + ' %';
+    }
+    updateMethodDesc();
+    debounceCalc();
+  }
+
+  inp.addEventListener('blur', commit);
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') inp.blur();
+    if (e.key === 'Escape') {
+      done = true; span.classList.remove('editing');
+      if (cur === null) { span.classList.add('bf-unset'); span.textContent = '— %'; }
+      else span.textContent = cur + ' %';
+    }
+  });
+}
+
+/* ══════════════════════════════════════════════
+   METHOD DESCRIPTION
+══════════════════════════════════════════════ */
+function updateMethodDesc() {
+  const t = LANGS[lang];
+  if (bodyFat !== null) {
+    document.getElementById('methodName').textContent = t.methodKMName;
+    document.getElementById('methodTag').textContent  = t.methodKMTag;
+    document.getElementById('methodBody').textContent = t.methodKMBody;
+  } else {
+    document.getElementById('methodName').textContent = t.methodMSJName;
+    document.getElementById('methodTag').textContent  = t.methodMSJTag;
+    document.getElementById('methodBody').textContent = t.methodMSJBody;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   CALCULATE
+══════════════════════════════════════════════ */
+function debounceCalc() {
+  clearTimeout(calcTimer);
+  calcTimer = setTimeout(calculate, 200);
+}
+
+function calculate() {
+  const age     = +document.getElementById('age').value;
+  const hCm     = +document.getElementById('height').value;
+  const wKg     = +document.getElementById('weight').value;
+  const days    = +document.getElementById('exerciseDays').value;
+  const dur     = +document.getElementById('exerciseDuration').value;
+  const intv    =  document.getElementById('exerciseIntensity').value;
+  const neatLvl =  document.getElementById('neatLevel').value;
+
+  let bmr;
+  if (bodyFat !== null) {
+    bmr = 370 + 21.6 * (wKg * (1 - bodyFat / 100));
+  } else {
+    bmr = 10 * wKg + 6.25 * hCm - 5 * age + (gender === 'male' ? 5 : -161);
+  }
+
+  const neat = bmr * { sedentary:0.12, light:0.25, moderate:0.40, active:0.58 }[neatLvl];
+  const eat  = ({ light:4, moderate:7, intense:10, veryIntense:13 }[intv] * wKg * (dur/60) * days) / 7;
+  const tdee = (bmr + neat + eat) / 0.9;
+  const tef  = tdee * 0.1;
+
+  show({ bmr, neat, eat, tef, tdee, hCm, wKg, neatLvl });
+}
+
+/* ══════════════════════════════════════════════
+   DISPLAY
+══════════════════════════════════════════════ */
+function show({ bmr, neat, eat, tef, tdee, hCm, wKg, neatLvl }) {
+  animateCount(document.getElementById('tdeeNum'), Math.round(tdee));
+
+  const t = LANGS[lang];
+  const data = [
+    { id:'bmr',  value:bmr,  color:'#FF453A', name:'BMR',  full: t.legFull[0] },
+    { id:'neat', value:neat, color:'#FF9F0A', name:'NEAT', full: t.legFull[1] },
+    { id:'eat',  value:eat,  color:'#0A84FF', name:'EAT',  full: t.legFull[2] },
+    { id:'tef',  value:tef,  color:'#30D158', name:'TEF',  full: t.legFull[3] },
+  ];
+
+  data.forEach(d => {
+    document.getElementById(d.id + 'Val').textContent = fmt(d.value);
+    document.getElementById(d.id + 'Pct').textContent =
+      Math.round(d.value / tdee * 100) + ' ' + t.pctOf;
+  });
+
+  drawDonut(data, tdee);
+  drawLegend(data);
+
+  showMaintenance(bmr, neatLvl);
+  showIdealWeight(hCm);
+  showBMI(wKg, hCm);
+  showMuscularPotential(hCm);
+}
+
+function drawDonut(data, tdee) {
+  const svg = document.getElementById('donutSvg');
+  svg.querySelectorAll('.seg').forEach(e => e.remove());
+
+  const cx = 70, cy = 70, r = 54;
+  const C = 2 * Math.PI * r, gap = 3;
+  let cum = 0;
+
+  data.forEach((d, i) => {
+    const pct = d.value / tdee;
+    const len = Math.max(0, pct * C - gap);
+
+    const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', r);
+    c.setAttribute('fill', 'none');
+    c.setAttribute('stroke', d.color);
+    c.setAttribute('stroke-width', '20');
+    c.setAttribute('stroke-dasharray', `${len} ${C - len}`);
+    c.setAttribute('stroke-dashoffset', C * (1 - cum));
+    c.setAttribute('class', 'seg');
+    c.style.opacity = '0';
+    c.style.transition = `opacity 0.4s ease ${i * 80}ms`;
+    svg.appendChild(c);
+    requestAnimationFrame(() => requestAnimationFrame(() => c.style.opacity = '1'));
+    cum += pct;
+  });
+}
+
+function drawLegend(data) {
+  const el = document.getElementById('legend');
+  el.innerHTML = '';
+  data.forEach(d => {
+    el.insertAdjacentHTML('beforeend', `
+      <div class="leg-item">
+        <div class="leg-dot" style="background:${d.color}"></div>
+        <div class="leg-info">
+          <div class="leg-name">${d.name}</div>
+          <div class="leg-sub">${d.full}</div>
+        </div>
+        <div class="leg-val">${fmt(d.value)} kcal</div>
+      </div>`);
+  });
+}
+
+function animateCount(el, target) {
+  const raw  = el.textContent.replace(/[\u202f\s,]/g, '');
+  const prev = parseInt(raw) || 0;
+  const t0 = performance.now(), dur = 550;
+  (function tick(now) {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(prev + (target - prev) * e).toLocaleString('fr-FR');
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
+
+const fmt = n => Math.round(n).toLocaleString('fr-FR');
+
+/* ── Weight format (kg → current unit) ── */
+function kgFmt(kg) {
+  return unit === 'imperial' ? Math.round(kg * 2.2046) + ' lb' : Math.round(kg) + ' kg';
+}
+
+/* ══════════════════════════════════════════════
+   EXTRA SECTIONS
+══════════════════════════════════════════════ */
+
+/* ── Maintenance Calories ── */
+function showMaintenance(bmr, neatLvl) {
+  const t = LANGS[lang];
+  const mults = [1.2, 1.375, 1.55, 1.725, 1.9];
+  const activeIdx = { sedentary:0, light:1, moderate:2, active:3 }[neatLvl] ?? -1;
+  document.getElementById('maintenanceTable').innerHTML =
+    t.maintenanceLevels.map(([label, mult], i) => `
+      <tr class="${i === activeIdx ? 'row-active' : ''}">
+        <td class="info-td-label">${label}</td>
+        <td class="info-td-aux">×${mult}</td>
+        <td class="info-td-val">${fmt(bmr * mults[i])} kcal</td>
+      </tr>`).join('');
+}
+
+/* ── Ideal Weight (Hamwi, Devine, Robinson, Miller) ── */
+function showIdealWeight(hCm) {
+  const t = LANGS[lang];
+  const inches = (hCm - 152.4) / 2.54;
+  const vals = gender === 'male'
+    ? [48.0 + 2.7*inches, 50.0 + 2.3*inches, 52.0 + 1.9*inches, 56.2 + 1.41*inches]
+    : [45.5 + 2.2*inches, 45.5 + 2.3*inches, 49.0 + 1.7*inches, 53.1 + 1.36*inches];
+  const minKg = Math.min(...vals), maxKg = Math.max(...vals);
+  document.getElementById('iwRange').textContent = `${kgFmt(minKg)} — ${kgFmt(maxKg)}`;
+  document.getElementById('idealWeightTable').innerHTML =
+    t.idealWeightFormulas.map(([name, year], i) => `
+      <tr>
+        <td class="info-td-label">${name}</td>
+        <td class="info-td-aux">${year}</td>
+        <td class="info-td-val">${kgFmt(vals[i])}</td>
+      </tr>`).join('');
+}
+
+/* ── BMI ── */
+function showBMI(wKg, hCm) {
+  const t = LANGS[lang];
+  const bmi = wKg / Math.pow(hCm / 100, 2);
+  document.getElementById('bmiNum').textContent = bmi.toFixed(1);
+  const cat = t.bmiCategories.find(([mn, mx]) =>
+    (mn === null || bmi >= mn) && (mx === null || bmi < mx));
+  const badge = document.getElementById('bmiBadge');
+  if (cat) {
+    badge.textContent = cat[3];
+    badge.style.background = cat[2] + '22';
+    badge.style.color = cat[2];
+  }
+  document.getElementById('bmiTable').innerHTML =
+    t.bmiCategories.map(([mn, mx, color, label]) => {
+      const range = mn === null ? `< ${mx}` : mx === null ? `≥ ${mn}` : `${mn} – ${mx}`;
+      const active = (mn === null || bmi >= mn) && (mx === null || bmi < mx);
+      return `<tr class="${active ? 'row-active' : ''}">
+        <td><span class="cat-dot" style="background:${color}"></span></td>
+        <td class="info-td-label">${label}</td>
+        <td class="info-td-val" style="color:${active ? color : 'var(--text2)'}; font-weight:${active ? '700' : '400'}">${range}</td>
+      </tr>`;
+    }).join('');
+}
+
+/* ── Max Muscular Potential (Berkhan formula) ── */
+function showMuscularPotential(hCm) {
+  const t = LANGS[lang];
+  const lbm = hCm - 100;
+  const bfLevels = gender === 'male'
+    ? [[10, 0.90], [15, 0.85], [20, 0.80]]
+    : [[15, 0.85], [20, 0.80], [25, 0.75]];
+  document.getElementById('mpGrid').innerHTML =
+    bfLevels.map(([bf, div]) => `
+      <div class="mp-item">
+        <div class="mp-bf">${bf}${t.lBF}</div>
+        <div class="mp-val">${kgFmt(lbm / div)}</div>
+      </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════ */
+let darkMode = true;
+
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.documentElement.classList.toggle('light', !darkMode);
+  updateThemeBtn();
+}
+
+function updateThemeBtn() {
+  const t = LANGS[lang];
+  document.getElementById('themeBtn').textContent =
+    darkMode ? t.btnLightMode : t.btnDarkMode;
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+setLang('fr');   // builds selects + labels
+refreshAll();
+calculate();
+</script>
+</body>
+</html>

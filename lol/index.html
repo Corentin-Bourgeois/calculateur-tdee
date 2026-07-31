@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Champion Ocean Challenge</title>
+  <title>No Trick Poney Challenge</title>
   <style>
     :root {
       --bg:        #070E1B;
@@ -339,7 +339,7 @@
       <div class="header-row">
         <div>
           <div class="eyebrow">League of Legends · Ranked Solo/Duo</div>
-          <h1 id="title">Champion Ocean Challenge</h1>
+          <h1 id="title">No Trick Poney Challenge</h1>
         </div>
         <div class="header-actions">
           <button id="refresh" title="Recharger les données">Actualiser</button>
@@ -1065,7 +1065,9 @@
   }
 
   function renderChrome() {
-    document.getElementById('title').textContent = state.config.challengeName || 'Champion Ocean Challenge';
+    const nom = state.config.challengeName || 'No Trick Poney Challenge';
+    document.getElementById('title').textContent = nom;
+    document.title = nom; // l'onglet du navigateur suit la config
 
     const tabs = el(`
       <nav class="tabs">

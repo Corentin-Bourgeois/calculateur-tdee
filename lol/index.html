@@ -116,10 +116,20 @@
     .prog-stats { display: flex; gap: 18px; flex-wrap: wrap; }
     .prog-stat-v { font-size: 17px; font-weight: 700; }
     .prog-stat-l { font-size: 11px; color: var(--text3); margin-top: 1px; }
-    .rank-chip {
-      display: inline-block; padding: 3px 9px; border-radius: 6px;
-      background: var(--gold-soft); color: var(--gold);
-      font-size: 11px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 10px;
+    /* ---------- Classement ---------- */
+    .rank-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .rank-emblem { width: 78px; height: 78px; flex-shrink: 0; object-fit: contain; }
+    .rank-tier { font-size: 19px; font-weight: 800; letter-spacing: -0.3px; }
+    .rank-lp { font-size: 14px; color: var(--gold); font-weight: 700; margin-top: 1px; }
+    .rank-record { font-size: 12px; color: var(--text2); margin-top: 6px; }
+    .lp-chart { border-top: 1px solid var(--border2); padding-top: 14px; }
+    .lp-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+    .lp-delta { font-size: 16px; font-weight: 800; }
+    .lp-since { font-size: 11.5px; color: var(--text3); }
+    .lp-chart svg { width: 100%; height: 110px; display: block; }
+    .lp-axis {
+      display: flex; justify-content: space-between;
+      font-size: 10.5px; color: var(--text3); margin-top: 6px; font-weight: 600;
     }
 
     /* ---------- Stat tiles ---------- */
@@ -473,9 +483,6 @@
       const entry = state.stats.players[p.id];
       const done = s.played.size;
       const progress = s.total ? (done / s.total) * 100 : 0;
-      const rank = entry.rank
-        ? `<div class="rank-chip">${esc(entry.rank.tier)} ${esc(entry.rank.division)} · ${entry.rank.lp} LP</div>`
-        : '';
 
       progGrid.appendChild(el(`
         <div class="card">
@@ -484,7 +491,6 @@
             <div class="prog-info">
               <div class="prog-name">${esc(p.name)}</div>
               <div class="prog-riotid">${esc(entry.riotId || '')}</div>
-              ${rank}
               <div class="prog-stats">
                 <div>
                   <div class="prog-stat-v">${done}<span style="color:var(--text3);font-size:13px">/${s.total}</span></div>
@@ -555,33 +561,126 @@
     }
     frag.appendChild(roleGrid);
 
-    // Champions les plus joués
-    const topGrid = el('<div class="grid grid-2"></div>');
-    for (const p of list) {
-      const s = computeStats(p.id);
-      const card = el(`<div class="card"><div class="card-title">Les plus joués — ${esc(p.name)}</div></div>`);
-      const top = [...s.byChamp.entries()]
-        .sort((a, b) => b[1].games - a[1].games || b[1].wins - a[1].wins)
-        .slice(0, 6);
-      if (!top.length) {
-        card.appendChild(el('<div class="empty">Aucune partie enregistrée.</div>'));
-      } else {
-        for (const [champId, c] of top) {
-          const champ = state.champById.get(champId);
-          const wr = (c.wins / c.games) * 100;
-          card.appendChild(el(`
-            <div class="bar-row">
-              <img src="${champIcon(champ)}" alt="" width="26" height="26" style="border-radius:6px" loading="lazy">
-              <div class="bar-label" style="width:auto;flex:1">${esc(champ ? champ.name : 'Champion ' + champId)}</div>
-              <div class="bar-meta"><b style="color:${wrColor(wr)}">${pct(wr)}</b> · ${c.games} g</div>
-            </div>`));
-        }
-      }
-      topGrid.appendChild(card);
-    }
-    frag.appendChild(topGrid);
+    // Classement et courbe de LP
+    const rankGrid = el('<div class="grid grid-2"></div>');
+    for (const p of list) rankGrid.appendChild(renderRankCard(p));
+    frag.appendChild(rankGrid);
 
     return frag;
+  }
+
+  /* ================= Classement ================= */
+
+  const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND',
+                 'MASTER', 'GRANDMASTER', 'CHALLENGER'];
+  const TIER_FR = {
+    IRON: 'Fer', BRONZE: 'Bronze', SILVER: 'Argent', GOLD: 'Or', PLATINUM: 'Platine',
+    EMERALD: 'Émeraude', DIAMOND: 'Diamant', MASTER: 'Maître', GRANDMASTER: 'Grand Maître',
+    CHALLENGER: 'Challenger',
+  };
+  const DIVISIONS = ['IV', 'III', 'II', 'I'];
+  const APEX = 7; // Maître et au-dessus : plus de divisions
+
+  const emblemUrl = (tier) =>
+    `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-${String(tier).toLowerCase()}.png`;
+
+  /** LP absolus, pour rendre comparables des rangs de paliers différents. */
+  function absLp(r) {
+    const ti = TIERS.indexOf(r.tier);
+    if (ti < 0) return null;
+    if (ti >= APEX) return APEX * 400 + r.lp;
+    const di = DIVISIONS.indexOf(r.division);
+    return ti * 400 + (di < 0 ? 0 : di) * 100 + r.lp;
+  }
+
+  /** Opération inverse : un palier lisible à partir de LP absolus. */
+  function rankLabel(abs) {
+    if (abs >= APEX * 400) return TIER_FR.MASTER;
+    const ti = Math.floor(abs / 400);
+    const di = Math.floor((abs % 400) / 100);
+    return `${TIER_FR[TIERS[ti]] || ''} ${DIVISIONS[di] || ''}`.trim();
+  }
+
+  function renderRankCard(p) {
+    const entry = state.stats.players[p.id];
+    const rank = entry.rank;
+    const card = el(`<div class="card"><div class="card-title">Classement — ${esc(p.name)}</div></div>`);
+
+    if (!rank) {
+      card.appendChild(el('<div class="empty">Non classé, ou classement momentanément indisponible.</div>'));
+      return card;
+    }
+
+    const parties = rank.wins + rank.losses;
+    const wr = parties ? (rank.wins / parties) * 100 : 0;
+    const apex = TIERS.indexOf(rank.tier) >= APEX;
+
+    card.appendChild(el(`
+      <div class="rank-head">
+        <img class="rank-emblem" src="${emblemUrl(rank.tier)}" alt="${esc(rank.tier)}"
+             onerror="this.style.display='none'">
+        <div>
+          <div class="rank-tier">${esc(TIER_FR[rank.tier] || rank.tier)}${apex ? '' : ' ' + esc(rank.division)}</div>
+          <div class="rank-lp">${rank.lp} LP</div>
+          <div class="rank-record">
+            ${rank.wins}V / ${rank.losses}D
+            <span style="color:${wrColor(wr)}">· ${pct(wr)}</span>
+            <span style="color:var(--text3)">sur ${parties} parties classées</span>
+          </div>
+        </div>
+      </div>`));
+
+    card.appendChild(renderLpChart(entry.rankHistory || []));
+    return card;
+  }
+
+  function renderLpChart(history) {
+    const pts = history
+      .map((h) => ({ ts: h.ts, abs: absLp(h) }))
+      .filter((h) => h.abs !== null);
+
+    if (pts.length < 2) {
+      return el(`<div class="empty">Courbe de LP en construction : l'API Riot ne fournit
+        pas d'historique, les points sont relevés à chaque synchronisation.
+        ${pts.length ? 'Premier relevé enregistré.' : ''}</div>`);
+    }
+
+    const W = 600, H = 150, PAD = 4;
+    const min = Math.min(...pts.map((p) => p.abs));
+    const max = Math.max(...pts.map((p) => p.abs));
+    const span = Math.max(max - min, 20); // évite une ligne écrasée quand tout est plat
+    const t0 = pts[0].ts, t1 = pts[pts.length - 1].ts;
+    const dt = Math.max(t1 - t0, 1);
+
+    const x = (p) => ((p.ts - t0) / dt) * (W - PAD * 2) + PAD;
+    const y = (p) => H - PAD - ((p.abs - min) / span) * (H - PAD * 2);
+
+    const ligne = pts.map((p) => `${x(p).toFixed(1)},${y(p).toFixed(1)}`).join(' ');
+    const aire = `${PAD},${H} ${ligne} ${(W - PAD).toFixed(1)},${H}`;
+    const delta = pts[pts.length - 1].abs - pts[0].abs;
+    const monte = delta >= 0;
+
+    const wrap = el(`
+      <div class="lp-chart">
+        <div class="lp-head">
+          <span class="lp-delta" style="color:${monte ? 'var(--win)' : 'var(--loss)'}">
+            ${monte ? '+' : ''}${delta} LP
+          </span>
+          <span class="lp-since">depuis le ${new Date(t0).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+        </div>
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img"
+             aria-label="Évolution des LP">
+          <polygon points="${aire}" fill="${monte ? 'rgba(61,207,142,0.14)' : 'rgba(229,84,91,0.14)'}"/>
+          <polyline points="${ligne}" fill="none" stroke="${monte ? 'var(--win)' : 'var(--loss)'}"
+                    stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+                    vector-effect="non-scaling-stroke"/>
+        </svg>
+        <div class="lp-axis">
+          <span>${esc(rankLabel(min))} → ${esc(rankLabel(max))}</span>
+          <span>${pts.length} relevés</span>
+        </div>
+      </div>`);
+    return wrap;
   }
 
   /* ================= Onglet : champions ================= */

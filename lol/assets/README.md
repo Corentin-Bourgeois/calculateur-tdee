@@ -22,6 +22,16 @@ reste présentable, il n'y a jamais d'image cassée.
 
 Pour changer le cadrage, ajuster `background-position` sur `.hero-img` dans `../index.html`.
 
+# Portraits de sélection
+
+Portrait affiché sur le panneau de chaque combattant, à l'écran d'accueil :
+
+    fighter-corentin.jpg   fighter-mehdi.jpg
+
+Les extensions .jpeg, .png et .webp sont également acceptées. En l'absence de portrait,
+le panneau se replie sur hero.jpg. Format paysage, le sujet centré ; les panneaux sont
+carrés sur grand écran et en 4/3 sur mobile.
+
 # Vidéos d'intro
 
 Déposer ici les deux vidéos jouées après le choix du combattant :

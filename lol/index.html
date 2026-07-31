@@ -517,23 +517,21 @@
       position: relative; overflow: hidden; cursor: pointer;
       border: 1px solid rgba(255,255,255,0.10); border-radius: 6px;
       background: #0C0E12; padding: 0; font-family: inherit;
-      aspect-ratio: 3 / 4; max-height: 62vh;
+      aspect-ratio: 1 / 1; max-height: 58vh;
       transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
     }
     /* Chaque panneau cadre sa moitié de l'illustration. */
     .fighter::before {
       content: ""; position: absolute; inset: 0;
-      background-image: url('assets/hero.jpg');
       /*
-        Les deux personnages ne sont séparés que d'un huitième de la largeur de
-        l'illustration : en cadrage « cover » les deux tiennent dans chaque panneau. On
-        agrandit donc pour que le combattant concerné soit nettement le sujet.
+        Portrait propre au combattant, avec repli sur l'illustration commune. Les sources
+        sont empilées : la première qui charge s'affiche, les autres restent invisibles
+        dessous. Aucun panneau vide, même sans portrait déposé.
       */
-      background-size: 230% auto;
+      background-image: var(--f-img);
+      background-size: cover; background-position: center 32%;
       filter: grayscale(1) brightness(.42); transition: filter .35s ease, transform .5s ease;
     }
-    .fighter[data-side="left"]::before  { background-position: 37% 34%; }
-    .fighter[data-side="right"]::before { background-position: 60% 34%; }
     .fighter::after {
       content: ""; position: absolute; inset: 0;
       background: linear-gradient(to top, #06070A 4%, rgba(6,7,10,0.35) 46%, transparent 78%);
@@ -596,10 +594,8 @@
 
     @media (max-width: 640px) {
       .fighters { grid-template-columns: 1fr; gap: 12px; }
-      .fighter { aspect-ratio: 16 / 10; max-height: none; }
-      .fighter::before { background-size: auto 210%; }
-      .fighter[data-side="left"]::before  { background-position: 42% 30%; }
-      .fighter[data-side="right"]::before { background-position: 57% 30%; }
+      .fighter { aspect-ratio: 4 / 3; max-height: none; }
+      .fighter::before { background-position: center 22%; }
       .intro-skip { bottom: 20px; right: 20px; padding: 9px 16px; font-size: 11px; }
     }
 
@@ -1477,6 +1473,14 @@
    * au contenu — vidéo absente, format refusé, lecture bloquée par le navigateur : on
    * entre quand même.
    */
+  /** Sources d'image d'un panneau, de la plus spécifique au repli commun. */
+  function portraitsDe(joueurId) {
+    return ['jpg', 'jpeg', 'png', 'webp']
+      .map((ext) => `url('assets/fighter-${joueurId}.${ext}')`)
+      .concat(`url('assets/hero.jpg')`)
+      .join(', ');
+  }
+
   function ouvrirAccueil() {
     const gate = document.getElementById('gate');
     const liste = document.getElementById('fighters');
@@ -1486,7 +1490,8 @@
     joueurs.slice(0, 2).forEach((p, i) => {
       const b = el(`
         <button class="fighter" data-side="${i === 0 ? 'left' : 'right'}"
-                style="--f-color:${p.color};--f-glow:${p.color}55;--f-veil:${p.color}30">
+                style="--f-color:${p.color};--f-glow:${p.color}55;--f-veil:${p.color}30;
+                       --f-img:${portraitsDe(p.id)}">
           <span class="fighter-label">
             <span class="fighter-name">${esc(p.name)}</span>
             <span class="fighter-id">${esc(state.stats.players[p.id]?.riotId || '')}</span>

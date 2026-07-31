@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-31T06:54:17.160Z",
+  "generatedAt": "2026-07-31T09:51:32.291Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -268,6 +268,16 @@
           "oppChampId": 51,
           "oppChamp": "Caitlyn"
         }
+      ],
+      "rankHistory": [
+        {
+          "ts": 1785491487393,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 31,
+          "wins": 10,
+          "losses": 5
+        }
       ]
     },
     "mehdi": {
@@ -484,6 +494,16 @@
           "gold": 8196,
           "oppChampId": 799,
           "oppChamp": "Ambessa"
+        }
+      ],
+      "rankHistory": [
+        {
+          "ts": 1785491491048,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 81,
+          "wins": 8,
+          "losses": 4
         }
       ]
     }

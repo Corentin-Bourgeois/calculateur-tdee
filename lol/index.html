@@ -117,11 +117,11 @@
     .prog-stat-v { font-size: 17px; font-weight: 700; }
     .prog-stat-l { font-size: 11px; color: var(--text3); margin-top: 1px; }
     /* ---------- Classement ---------- */
-    .rank-head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
-    .rank-emblem { width: 78px; height: 78px; flex-shrink: 0; object-fit: contain; }
-    .rank-tier { font-size: 19px; font-weight: 800; letter-spacing: -0.3px; }
-    .rank-lp { font-size: 14px; color: var(--gold); font-weight: 700; margin-top: 1px; }
-    .rank-record { font-size: 12px; color: var(--text2); margin-top: 6px; }
+    .rank-head { display: flex; align-items: center; gap: 20px; margin-bottom: 18px; }
+    .rank-emblem { width: 132px; height: 132px; flex-shrink: 0; object-fit: contain; }
+    .rank-tier { font-size: 24px; font-weight: 800; letter-spacing: -0.4px; }
+    .rank-lp { font-size: 16px; color: var(--gold); font-weight: 700; margin-top: 2px; }
+    .rank-record { font-size: 12.5px; color: var(--text2); margin-top: 8px; }
     .lp-chart { border-top: 1px solid var(--border2); padding-top: 14px; }
     .lp-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
     .lp-delta { font-size: 16px; font-weight: 800; }
@@ -314,6 +314,8 @@
       .match-vs { display: none; }
       .bar-meta { width: 92px; font-size: 11px; }
       .prog { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .rank-emblem { width: 104px; height: 104px; }
+      .rank-tier { font-size: 21px; }
     }
   </style>
 </head>
@@ -467,13 +469,18 @@
    * que de disparaître de tous les filtres.
    */
   function lanesFor(champ, list) {
-    const set = new Set();
-    for (const p of list) {
-      const jouees = observedLanes(p.id).get(champ.numId);
-      if (jouees && jouees.length) jouees.forEach((r) => set.add(r));
-      else (state.lanes[champ.key] || []).forEach((r) => set.add(r));
-    }
-    return set.size ? set : null;
+    const table = state.lanes[champ.key] || [];
+
+    // Vue commune : on s'en tient à la répartition de référence. Chacun peut avoir joué le
+    // même champion à un poste différent, et réunir les deux ferait apparaître un champion
+    // dans une lane qui n'a de sens pour personne.
+    if (list.length !== 1) return table.length ? new Set(table) : null;
+
+    // Vue d'un seul joueur : ce qu'il a réellement joué prime, la table ne sert que pour
+    // les champions qu'il n'a pas encore faits.
+    const jouees = observedLanes(list[0].id).get(champ.numId);
+    if (jouees && jouees.length) return new Set(jouees);
+    return table.length ? new Set(table) : null;
   }
 
   let _observed = null;
@@ -836,17 +843,20 @@
       const done = isDone(c.numId);
       const partial = isPartial(c.numId);
 
-      // Un badge V/D par joueur ayant joué le champion.
-      const badges = list.map((p) => {
+      // Verdict V/D uniquement sur une liste personnelle : à deux, deux résultats sur la
+      // même vignette ne veulent rien dire. La vue commune garde les pastilles, qui
+      // répondent à la seule question qui s'y pose — qui doit encore le jouer.
+      let badge = '';
+      if (list.length === 1) {
+        const p = list[0];
         const stat = statsByPlayer.get(p.id).byChamp.get(c.numId);
-        if (!stat) return '';
-        const gagne = verdict(p.id, c.numId);
-        const detail = stat.games > 1 ? ` — ${stat.games} parties, ${stat.wins}V ${stat.games - stat.wins}D` : '';
-        return `<div class="champ-badge ${gagne ? 'v' : 'd'}"
-                     style="border-bottom-color:${list.length > 1 ? p.color : 'transparent'}"
-                     title="${esc(p.name)} : ${gagne ? 'gagné' : 'perdu'}${esc(detail)}">${gagne ? 'V' : 'D'}</div>`;
-      }).join('');
-      const badge = badges ? `<div class="champ-badges">${badges}</div>` : '';
+        if (stat) {
+          const gagne = verdict(p.id, c.numId);
+          const detail = stat.games > 1 ? ` — ${stat.games} parties, ${stat.wins}V ${stat.games - stat.wins}D` : '';
+          badge = `<div class="champ-badges"><div class="champ-badge ${gagne ? 'v' : 'd'}"
+                        title="${esc(p.name)} : ${gagne ? 'gagné' : 'perdu'}${esc(detail)}">${gagne ? 'V' : 'D'}</div></div>`;
+        }
+      }
 
       // Pastilles : l'état de chacun, toujours affiché en mode comparaison. Une pastille
       // éteinte signale un joueur qui doit encore jouer ce champion.

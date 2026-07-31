@@ -2,8 +2,10 @@ name: Sync LoL challenge
 
 on:
   schedule:
-    # Toutes les 3 heures. GitHub peut décaler les exécutions planifiées de quelques minutes.
-    - cron: '0 */3 * * *'
+    # Toutes les 5 minutes : c'est l'intervalle le plus court accepté par GitHub Actions.
+    # Les exécutions planifiées sont souvent décalées de plusieurs minutes en période de
+    # charge, la latence réelle est donc plutôt de 5 à 15 minutes.
+    - cron: '*/5 * * * *'
   workflow_dispatch:
     inputs:
       max_new_matches:

@@ -237,6 +237,18 @@
     .notice a { color: var(--gold); }
     footer { margin-top: 32px; text-align: center; font-size: 11.5px; color: var(--text3); line-height: 1.7; }
 
+    .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+    .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+    .header-actions button, .header-actions a {
+      padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border2);
+      background: var(--card); color: var(--text2); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; text-decoration: none; white-space: nowrap;
+      transition: all .15s;
+    }
+    .header-actions button:hover, .header-actions a:hover { border-color: var(--gold); color: var(--text); }
+    .header-actions button[disabled] { opacity: .5; cursor: default; border-color: var(--border2); }
+    .header-actions a { color: var(--text3); }
+
     .toast {
       position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
       background: var(--card3); border: 1px solid var(--gold); color: var(--text);
@@ -248,6 +260,9 @@
 
     @media (max-width: 640px) {
       h1 { font-size: 24px; }
+      .header-row { flex-direction: column; align-items: stretch; gap: 14px; }
+      .header-actions { justify-content: flex-start; }
+      .header-actions button, .header-actions a { flex: 1; text-align: center; }
       .match-vs, .match-date { display: none; }
       .bar-meta { width: 92px; font-size: 11px; }
       .prog { flex-direction: column; align-items: flex-start; gap: 14px; }
@@ -257,8 +272,17 @@
 <body>
   <div class="wrap">
     <header>
-      <div class="eyebrow">League of Legends · Ranked Solo/Duo</div>
-      <h1 id="title">Champion Ocean Challenge</h1>
+      <div class="header-row">
+        <div>
+          <div class="eyebrow">League of Legends · Ranked Solo/Duo</div>
+          <h1 id="title">Champion Ocean Challenge</h1>
+        </div>
+        <div class="header-actions">
+          <button id="refresh" title="Recharger les données">Actualiser</button>
+          <a id="sync-link" hidden target="_blank" rel="noopener"
+             title="Ouvre GitHub Actions pour forcer une récupération auprès de Riot">Forcer une synchro</a>
+        </div>
+      </div>
       <div class="subtitle" id="subtitle">Chargement…</div>
     </header>
     <main id="app"></main>
@@ -799,20 +823,23 @@
    * L'onglet, le joueur sélectionné et les filtres vivent dans `state` : ils survivent
    * au redessin.
    */
-  async function refreshStats() {
+  async function refreshStats({ manual = false } = {}) {
     // Redessiner fermerait la fiche champion ouverte : on repassera au prochain cycle.
-    if (state.modal !== null) return;
+    // Un clic explicite, lui, prime sur cette précaution.
+    if (state.modal !== null && !manual) return;
 
     let fresh;
     try {
       // Paramètre anti-cache : GitHub Pages sert stats.json avec un cache agressif.
       fresh = await getJson(`data/stats.json?t=${Date.now()}`);
     } catch {
+      if (manual) toast('Données injoignables, réessaie dans un instant');
       return; // hors ligne ou déploiement en cours : on retente au prochain cycle
     }
 
     if (fresh.generatedAt === state.stats.generatedAt) {
       updateMeta(); // rien de neuf, mais « il y a X minutes » doit avancer
+      if (manual) toast('Aucune nouvelle partie');
       return;
     }
 
@@ -850,6 +877,27 @@
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') refreshStats();
       });
+
+      const btn = document.getElementById('refresh');
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        btn.textContent = 'Actualisation…';
+        try {
+          await refreshStats({ manual: true });
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Actualiser';
+        }
+      });
+
+      // Le site est statique : il ne peut pas déclencher lui-même la récupération auprès
+      // de Riot, cela demanderait un jeton GitHub, qui serait public dans la page. Le lien
+      // renvoie donc vers le workflow, seul endroit où la synchro peut être forcée.
+      if (config.repoUrl) {
+        const link = document.getElementById('sync-link');
+        link.href = `${config.repoUrl.replace(/\/$/, '')}/actions/workflows/lol-sync.yml`;
+        link.hidden = false;
+      }
     } catch (err) {
       document.getElementById('subtitle').textContent = 'Erreur de chargement';
       document.getElementById('app').appendChild(

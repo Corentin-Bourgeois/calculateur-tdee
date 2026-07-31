@@ -214,6 +214,22 @@ async function main() {
     entry.name = player.name;
     entry.rank = await fetchRank(platform, account.puuid);
 
+    // L'API ne sert que le classement courant, sans historique : la courbe de LP ne peut
+    // exister que si on relève le rang à chaque passage. On n'ajoute un point que lorsque
+    // quelque chose a bougé, sinon le fichier grossirait à chaque exécution du cron.
+    if (entry.rank) {
+      const hist = entry.rankHistory || [];
+      const dernier = hist[hist.length - 1];
+      const inchange = dernier
+        && dernier.tier === entry.rank.tier
+        && dernier.division === entry.rank.division
+        && dernier.lp === entry.rank.lp;
+      if (!inchange) {
+        hist.push({ ts: Date.now(), ...entry.rank });
+      }
+      entry.rankHistory = hist.slice(-800);
+    }
+
     const allIds = await fetchMatchIds(routing, account.puuid, queue, startTime);
     const missing = allIds.filter((id) => !known.has(id));
     console.log(`  ${allIds.length} matchs ranked côté Riot, ${known.size} déjà en base, ${missing.length} à récupérer`);

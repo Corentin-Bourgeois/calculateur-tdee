@@ -21,3 +21,22 @@ Tant que le fichier est absent, le hero affiche un dégradé sombre de repli : l
 reste présentable, il n'y a jamais d'image cassée.
 
 Pour changer le cadrage, ajuster `background-position` sur `.hero-img` dans `../index.html`.
+
+# Vidéos d'intro
+
+Déposer ici les deux vidéos jouées après le choix du combattant :
+
+    intro-corentin.mp4
+    intro-mehdi.mp4
+
+Le `.webm` est accepté en second choix (`intro-corentin.webm`), utile si vous voulez
+un fichier plus léger pour les navigateurs qui le supportent.
+
+Recommandations :
+
+- format paysage, 1920×1080, quelques secondes suffisent
+- viser moins de 10 Mo par vidéo : elles se chargent au clic, pas avant
+- le son est autorisé, le clic sur le combattant vaut geste utilisateur
+
+Tant qu'un fichier est absent, le choix mène directement au site sans vidéo, sans
+message d'erreur. Un bouton « Passer l'intro » est toujours disponible.

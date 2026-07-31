@@ -493,6 +493,116 @@
     .header-actions button[disabled] { opacity: .5; cursor: default; border-color: var(--border2); }
     .header-actions a { color: var(--text3); }
 
+    /* ---------- Écran de sélection ---------- */
+    .gate {
+      position: fixed; inset: 0; z-index: 300;
+      background: #06070A;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 1; transition: opacity .5s ease;
+    }
+    .gate[hidden] { display: none; }
+    .gate.closing { opacity: 0; pointer-events: none; }
+    .gate-inner { width: 100%; max-width: 1180px; padding: 0 18px; text-align: center; }
+    .gate-eyebrow {
+      font-family: var(--serif); font-size: 11px; letter-spacing: 0.4em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 14px;
+    }
+    .gate-title {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(26px, 4.5vw, 48px); letter-spacing: 0.06em;
+      color: var(--text); margin-bottom: 34px;
+    }
+    .fighters { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .fighter {
+      position: relative; overflow: hidden; cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.10); border-radius: 6px;
+      background: #0C0E12; padding: 0; font-family: inherit;
+      aspect-ratio: 3 / 4; max-height: 62vh;
+      transition: border-color .3s ease, transform .3s ease, box-shadow .3s ease;
+    }
+    /* Chaque panneau cadre sa moitié de l'illustration. */
+    .fighter::before {
+      content: ""; position: absolute; inset: 0;
+      background-image: url('assets/hero.jpg');
+      /*
+        Les deux personnages ne sont séparés que d'un huitième de la largeur de
+        l'illustration : en cadrage « cover » les deux tiennent dans chaque panneau. On
+        agrandit donc pour que le combattant concerné soit nettement le sujet.
+      */
+      background-size: 230% auto;
+      filter: grayscale(1) brightness(.42); transition: filter .35s ease, transform .5s ease;
+    }
+    .fighter[data-side="left"]::before  { background-position: 37% 34%; }
+    .fighter[data-side="right"]::before { background-position: 60% 34%; }
+    .fighter::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to top, #06070A 4%, rgba(6,7,10,0.35) 46%, transparent 78%);
+      transition: background .35s ease;
+    }
+    .fighter:hover, .fighter:focus-visible {
+      border-color: var(--f-color); transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px var(--f-glow);
+      outline: none;
+    }
+    .fighter:hover::before, .fighter:focus-visible::before {
+      filter: grayscale(0) brightness(.72); transform: scale(1.04);
+    }
+    .fighter:hover::after, .fighter:focus-visible::after {
+      background: linear-gradient(to top, #06070A 4%, var(--f-veil) 55%, transparent 88%);
+    }
+    .fighter-label {
+      position: absolute; left: 0; right: 0; bottom: 26px; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .fighter-name {
+      font-family: var(--serif); font-size: clamp(20px, 2.6vw, 32px); font-weight: 700;
+      letter-spacing: 0.08em; color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+    }
+    .fighter-id { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 0.06em; }
+    .fighter-go {
+      margin-top: 8px; padding: 7px 20px; border-radius: 3px;
+      border: 1px solid var(--f-color); color: var(--f-color);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+      opacity: 0; transform: translateY(6px); transition: all .3s ease;
+    }
+    .fighter:hover .fighter-go, .fighter:focus-visible .fighter-go {
+      opacity: 1; transform: translateY(0);
+    }
+    .gate-skip {
+      margin-top: 30px; background: none; border: 0; cursor: pointer; font-family: inherit;
+      color: var(--text3); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color .25s ease;
+    }
+    .gate-skip:hover { color: var(--text); }
+
+    /* ---------- Vidéo d'intro ---------- */
+    .intro {
+      position: fixed; inset: 0; z-index: 320; background: #000;
+      opacity: 1; transition: opacity .6s ease;
+    }
+    .intro[hidden] { display: none; }
+    .intro.closing { opacity: 0; pointer-events: none; }
+    .intro video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .intro-skip {
+      position: absolute; bottom: 28px; right: 28px;
+      padding: 10px 20px; border-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.35); background: rgba(0,0,0,0.45);
+      color: #fff; font-family: inherit; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+      transition: all .25s ease;
+    }
+    .intro-skip:hover { border-color: #fff; background: rgba(0,0,0,0.7); }
+
+    @media (max-width: 640px) {
+      .fighters { grid-template-columns: 1fr; gap: 12px; }
+      .fighter { aspect-ratio: 16 / 10; max-height: none; }
+      .fighter::before { background-size: auto 210%; }
+      .fighter[data-side="left"]::before  { background-position: 42% 30%; }
+      .fighter[data-side="right"]::before { background-position: 57% 30%; }
+      .intro-skip { bottom: 20px; right: 20px; padding: 9px 16px; font-size: 11px; }
+    }
+
     /* ---------- Bascule de thème ---------- */
     /*
       Onde qui traverse l'écran au changement de joueur, dans la couleur du thème visé.
@@ -572,6 +682,21 @@
     <div class="hero-veil"></div>
   </div>
   <div class="theme-flash" id="theme-flash" aria-hidden="true"></div>
+
+  <!-- Écran d'accueil : choix du combattant, puis vidéo d'intro. -->
+  <div class="gate" id="gate" hidden>
+    <div class="gate-inner">
+      <div class="gate-eyebrow">No Trick Poney Challenge</div>
+      <h2 class="gate-title">Choisis ton combattant</h2>
+      <div class="fighters" id="fighters"></div>
+      <button class="gate-skip" id="gate-skip">Entrer sans choisir</button>
+    </div>
+  </div>
+
+  <div class="intro" id="intro" hidden>
+    <video id="intro-video" playsinline preload="none"></video>
+    <button class="intro-skip" id="intro-skip">Passer l'intro</button>
+  </div>
   <div class="wrap">
     <header>
       <div class="header-row">
@@ -1342,6 +1467,102 @@
       `Données Riot Games API · Icônes Data Dragon ${esc(state.version)} · Les remakes ne comptent pas.`;
   }
 
+  /* ================= Écran d'accueil ================= */
+
+  /**
+   * Séquence d'arrivée : choix du combattant, vidéo, puis le site.
+   *
+   * Le site est déjà rendu derrière l'écran : quand la vidéo se termine, il n'y a plus
+   * rien à attendre. Tout ce qui suit est décoratif et ne doit jamais empêcher d'accéder
+   * au contenu — vidéo absente, format refusé, lecture bloquée par le navigateur : on
+   * entre quand même.
+   */
+  function ouvrirAccueil() {
+    const gate = document.getElementById('gate');
+    const liste = document.getElementById('fighters');
+    const joueurs = players();
+    if (!gate || !liste || !joueurs.length) return;
+
+    joueurs.slice(0, 2).forEach((p, i) => {
+      const b = el(`
+        <button class="fighter" data-side="${i === 0 ? 'left' : 'right'}"
+                style="--f-color:${p.color};--f-glow:${p.color}55;--f-veil:${p.color}30">
+          <span class="fighter-label">
+            <span class="fighter-name">${esc(p.name)}</span>
+            <span class="fighter-id">${esc(state.stats.players[p.id]?.riotId || '')}</span>
+            <span class="fighter-go">Combattre</span>
+          </span>
+        </button>`);
+      b.addEventListener('click', () => choisirCombattant(p.id));
+      liste.appendChild(b);
+    });
+
+    document.getElementById('gate-skip')
+      .addEventListener('click', () => { fermer(gate); });
+
+    gate.hidden = false;
+  }
+
+  function fermer(element) {
+    element.classList.add('closing');
+    setTimeout(() => { element.hidden = true; element.classList.remove('closing'); }, 620);
+  }
+
+  function choisirCombattant(joueurId) {
+    state.player = joueurId;
+    appliquerTheme(joueurId);
+    render();
+    fermer(document.getElementById('gate'));
+    lancerIntro(joueurId);
+  }
+
+  function lancerIntro(joueurId) {
+    const boite = document.getElementById('intro');
+    const video = document.getElementById('intro-video');
+    if (!boite || !video) return;
+
+    let termine = false;
+    const sortir = () => {
+      if (termine) return;
+      termine = true;
+      clearTimeout(secours);
+      video.pause();
+      video.removeAttribute('src');
+      video.innerHTML = '';
+      fermer(boite);
+    };
+
+    // Si la lecture ne démarre pas dans les temps, on n'immobilise pas le visiteur.
+    const secours = setTimeout(() => { if (video.currentTime === 0) sortir(); }, 3500);
+
+    video.addEventListener('ended', sortir, { once: true });
+    document.getElementById('intro-skip').onclick = sortir;
+
+    // Deux sources : le navigateur prend la première qu'il sait lire.
+    const sources = [
+      [`assets/intro-${joueurId}.mp4`, 'video/mp4'],
+      [`assets/intro-${joueurId}.webm`, 'video/webm'],
+    ];
+    // Avec des balises <source>, l'erreur se déclenche sur la source et non sur la vidéo :
+    // sans ce comptage, une intro absente laisserait le lecteur ouvert jusqu'au secours.
+    let echecs = 0;
+    video.innerHTML = '';
+    for (const [src, type] of sources) {
+      const s = document.createElement('source');
+      s.src = src;
+      s.type = type;
+      s.addEventListener('error', () => { if (++echecs === sources.length) sortir(); });
+      video.appendChild(s);
+    }
+
+    boite.hidden = false;
+    video.load();
+
+    // Le clic sur le combattant fait office de geste utilisateur : le son est autorisé.
+    const lecture = video.play();
+    if (lecture) lecture.catch(sortir);
+  }
+
   /* ================= Thème ================= */
 
   /**
@@ -1428,6 +1649,7 @@
       appliquerTheme(state.player);
       renderChrome();
       render();
+      ouvrirAccueil();
 
       setInterval(refreshStats, REFRESH_MS);
       // Revenir sur l'onglet est le moment où l'on veut des données fraîches.

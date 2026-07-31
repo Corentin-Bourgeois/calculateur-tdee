@@ -1,0 +1,52 @@
+name: Sync LoL challenge
+
+on:
+  schedule:
+    # Toutes les 3 heures. GitHub peut décaler les exécutions planifiées de quelques minutes.
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+    inputs:
+      max_new_matches:
+        description: 'Nombre max de nouveaux matchs à récupérer sur cette exécution'
+        required: false
+        default: '80'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lol-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Récupération des matchs
+        env:
+          RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+          MAX_NEW_MATCHES: ${{ github.event.inputs.max_new_matches || '80' }}
+        run: node lol/scripts/sync.mjs
+
+      - name: Commit des données
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- lol/data/stats.json; then
+            echo "Aucun nouveau match, rien à commiter."
+            exit 0
+          fi
+          git add lol/data/stats.json
+          git commit -m "chore(lol): synchronisation des matchs ranked"
+          for delay in 0 2 4 8 16; do
+            if [ "$delay" != "0" ]; then sleep "$delay"; fi
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+          done
+          echo "Push impossible après plusieurs tentatives." >&2
+          exit 1

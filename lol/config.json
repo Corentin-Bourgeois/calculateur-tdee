@@ -1,0 +1,23 @@
+{
+  "challengeName": "Champion Ocean Challenge",
+  "region": {
+    "platform": "euw1",
+    "routing": "europe"
+  },
+  "queue": 420,
+  "challengeStart": null,
+  "players": [
+    {
+      "id": "joueur1",
+      "name": "Joueur 1",
+      "riotId": "AAAAAA#EUW",
+      "color": "#C8AA6E"
+    },
+    {
+      "id": "joueur2",
+      "name": "Joueur 2",
+      "riotId": "BBBBBB#EUW",
+      "color": "#0AC8B9"
+    }
+  ]
+}

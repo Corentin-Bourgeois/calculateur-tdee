@@ -4,95 +4,172 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>No Trick Poney Challenge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #070E1B;
-      --card:      #0E1B2E;
-      --card2:     #142339;
-      --card3:     #1B2E48;
-      --border:    rgba(200,170,110,0.16);
-      --border2:   rgba(255,255,255,0.07);
-      --text:      #F0E6D2;
-      --text2:     #9AA4B2;
-      --text3:     #6B7688;
+      --bg:        #0A0705;
+      --card:      #15100B;
+      --card2:     #1E1710;
+      --card3:     #2A2117;
+      --border:    rgba(200,170,110,0.26);
+      --border2:   rgba(200,170,110,0.11);
+      --text:      #EFE4CD;
+      --text2:     #A99A80;
+      --text3:     #736553;
       --gold:      #C8AA6E;
-      --gold-soft: rgba(200,170,110,0.12);
+      --gold-hi:   #F2E2B6;
+      --gold-soft: rgba(200,170,110,0.10);
       --teal:      #0AC8B9;
-      --win:       #3DCF8E;
-      --win-bg:    rgba(61,207,142,0.12);
-      --loss:      #E5545B;
-      --loss-bg:   rgba(229,84,91,0.12);
+      --win:       #4FBF8B;
+      --win-bg:    rgba(79,191,139,0.10);
+      --loss:      #C4462F;
+      --loss-bg:   rgba(196,70,47,0.12);
       --radius:    14px;
+      --serif:     'Cinzel', 'Bell MT', Georgia, 'Times New Roman', serif;
+      --sans:      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
-      padding-bottom: 60px;
+      padding-bottom: 80px;
     }
 
+    /* Braises et lumière basse, pour que le fond ne soit jamais un noir plat. */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(900px 500px at 15% -10%, rgba(10,200,185,0.10), transparent 60%),
-        radial-gradient(900px 500px at 85% -10%, rgba(200,170,110,0.10), transparent 60%);
+        radial-gradient(1100px 600px at 50% 0%, rgba(200,170,110,0.10), transparent 65%),
+        radial-gradient(700px 500px at 10% 40%, rgba(196,70,47,0.05), transparent 70%);
       pointer-events: none;
       z-index: 0;
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      position: absolute; top: 0; left: 0; right: 0; height: 720px;
+      overflow: hidden; z-index: 0; pointer-events: none;
+      /* Repli si l'illustration est absente : le hero reste une scène crédible. */
+      background:
+        radial-gradient(120% 90% at 50% 10%, #241a10 0%, #120c07 55%, var(--bg) 100%);
+    }
+    .hero-img {
+      position: absolute; inset: 0;
+      background-image: url('assets/hero.jpg');
+      background-size: cover; background-position: center 32%;
+      /* Fondu vers le fond sur les quatre bords : l'image ne doit avoir aucune arête. */
+      -webkit-mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 18%, #000 52%, transparent 92%),
+        linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to bottom, transparent 0%, #000 18%, #000 52%, transparent 92%),
+        linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
+      mask-composite: intersect;
+      opacity: .72; filter: saturate(.85) contrast(1.08);
+    }
+    /* Voile chaud + vignette : l'illustration passe sous le texte sans le concurrencer. */
+    .hero-veil {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(80% 60% at 50% 30%, rgba(10,7,5,0) 0%, rgba(10,7,5,0.55) 70%, var(--bg) 100%),
+        linear-gradient(to bottom, rgba(10,7,5,0.55) 0%, rgba(10,7,5,0.25) 35%, var(--bg) 88%);
     }
 
     .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 18px; }
 
     /* ---------- Header ---------- */
-    header { padding: 34px 0 22px; }
+    header { padding: 120px 0 60px; text-align: center; }
     .eyebrow {
-      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700; margin-bottom: 8px;
+      font-family: var(--serif);
+      font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 18px;
+      text-shadow: 0 0 18px rgba(200,170,110,0.4);
     }
-    h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
-    .subtitle { color: var(--text2); font-size: 14px; margin-top: 6px; }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 6vw, 72px); font-weight: 700;
+      letter-spacing: 0.02em; line-height: 1.05;
+      background: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 48%, #8A6E3C 100%);
+      -webkit-background-clip: text; background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 2px 18px rgba(200,170,110,0.35));
+    }
+    /* Filet doré sous le titre, comme un sceau. */
+    h1::after {
+      content: ""; display: block; width: 220px; max-width: 60%; height: 1px; margin: 20px auto 0;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .subtitle {
+      color: var(--text2); font-size: 14px; margin: 16px auto 0; max-width: 620px; line-height: 1.7;
+    }
 
     /* ---------- Tabs ---------- */
     nav.tabs {
-      display: flex; gap: 4px; background: var(--card);
-      border: 1px solid var(--border2); border-radius: 12px;
-      padding: 4px; margin: 22px 0 20px; overflow-x: auto;
+      display: flex; gap: 4px; background: rgba(21,16,11,0.75);
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 5px; margin: 0 0 22px; overflow-x: auto;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
     nav.tabs button {
-      flex: 1; min-width: 110px; padding: 10px 14px; border: 0; border-radius: 9px;
-      background: transparent; color: var(--text2); font-size: 14px; font-weight: 600;
-      cursor: pointer; font-family: inherit; white-space: nowrap; transition: all .15s;
+      flex: 1; min-width: 110px; padding: 12px 14px; border: 0; border-radius: 3px;
+      background: transparent; color: var(--text2);
+      font-family: var(--serif); font-size: 14px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer; white-space: nowrap; transition: all .18s;
     }
-    nav.tabs button:hover { color: var(--text); }
-    nav.tabs button.active { background: var(--card3); color: var(--text); }
+    nav.tabs button:hover { color: var(--gold-hi); }
+    nav.tabs button.active {
+      background: linear-gradient(180deg, var(--card3), var(--card2));
+      color: var(--gold-hi);
+      box-shadow: inset 0 0 0 1px var(--border), 0 0 22px rgba(200,170,110,0.10);
+    }
 
     /* ---------- Player switch ---------- */
     .player-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
     .player-switch button {
-      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border2);
-      background: var(--card); color: var(--text2); font-size: 13px; font-weight: 600;
-      cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 7px;
-      transition: all .15s;
+      padding: 9px 18px; border-radius: 4px; border: 1px solid var(--border2);
+      background: rgba(21,16,11,0.7); color: var(--text2);
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 8px;
+      transition: all .18s;
     }
     .player-switch button:hover { border-color: var(--border); color: var(--text); }
-    .player-switch button.active { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+    .player-switch button.active {
+      background: var(--gold-soft); border-color: var(--gold); color: var(--gold-hi);
+      box-shadow: 0 0 22px rgba(200,170,110,0.16);
+    }
     .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
     /* ---------- Cards ---------- */
     .card {
-      background: var(--card); border: 1px solid var(--border2);
-      border-radius: var(--radius); padding: 20px;
+      position: relative;
+      background: linear-gradient(180deg, rgba(30,23,16,0.92), rgba(16,12,8,0.92));
+      border: 1px solid var(--border2);
+      border-radius: 6px; padding: 24px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(200,170,110,0.08);
     }
+    /* Titre de carte encadré de losanges, comme les intertitres de la référence. */
     .card-title {
-      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--text3); font-weight: 700; margin-bottom: 16px;
+      font-family: var(--serif);
+      font-size: 12.5px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px; white-space: nowrap;
     }
+    .card-title::before, .card-title::after {
+      content: ""; height: 1px; flex: 1;
+      background: linear-gradient(90deg, transparent, rgba(200,170,110,0.34));
+    }
+    .card-title::after { background: linear-gradient(90deg, rgba(200,170,110,0.34), transparent); }
     .grid { display: grid; gap: 16px; }
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
     .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -105,16 +182,19 @@
       position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
     }
-    .ring-pct { font-size: 21px; font-weight: 800; letter-spacing: -0.5px; }
-    .ring-sub { font-size: 10px; color: var(--text3); font-weight: 600; }
+    .ring-pct { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--gold-hi); }
+    .ring-sub { font-size: 9px; color: var(--text3); font-weight: 600; letter-spacing: 0.18em; }
     .prog-info { min-width: 0; }
-    .prog-name { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+    .prog-name {
+      font-family: var(--serif); font-size: 22px; font-weight: 700;
+      letter-spacing: 0.04em; color: var(--gold-hi); margin-bottom: 4px;
+    }
     .prog-riotid {
       font-size: 12px; color: var(--text3); margin-bottom: 12px;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .prog-stats { display: flex; gap: 18px; flex-wrap: wrap; }
-    .prog-stat-v { font-size: 17px; font-weight: 700; }
+    .prog-stat-v { font-family: var(--serif); font-size: 19px; font-weight: 700; }
     .prog-stat-l { font-size: 11px; color: var(--text3); margin-top: 1px; }
     /* ---------- Classement ---------- */
     .rank-head {
@@ -129,11 +209,22 @@
       de 3 % vers le bas car l'insigne est légèrement au-dessus du centre de l'image.
     */
     .rank-emblem-box {
+      position: relative;
       width: min(390px, 82%); aspect-ratio: 1; overflow: hidden;
       display: flex; align-items: center; justify-content: center;
     }
+    /* Halo : l'emblème doit rayonner, c'est le trophée de la page. */
+    .rank-emblem-box::before {
+      content: ""; position: absolute; inset: 12%;
+      background: radial-gradient(circle, rgba(200,170,110,0.20) 0%, transparent 62%);
+      pointer-events: none;
+    }
     .rank-emblem { width: 380%; max-width: none; transform: translateY(3%); }
-    .rank-tier { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+    .rank-tier {
+      font-family: var(--serif); font-size: 34px; font-weight: 700; letter-spacing: 0.06em;
+      background: linear-gradient(180deg, var(--gold-hi), var(--gold) 55%, #8A6E3C);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
     .rank-lp { font-size: 18px; color: var(--gold); font-weight: 700; margin-top: 2px; }
     .rank-record { font-size: 12.5px; color: var(--text2); margin-top: 8px; }
     .lp-chart { border-top: 1px solid var(--border2); padding-top: 14px; }
@@ -147,9 +238,16 @@
     }
 
     /* ---------- Stat tiles ---------- */
-    .tile { background: var(--card); border: 1px solid var(--border2); border-radius: var(--radius); padding: 16px 18px; }
-    .tile-v { font-size: 24px; font-weight: 800; letter-spacing: -0.6px; }
-    .tile-l { font-size: 11px; color: var(--text3); margin-top: 3px; font-weight: 600; }
+    .tile {
+      background: linear-gradient(180deg, rgba(30,23,16,0.9), rgba(16,12,8,0.9));
+      border: 1px solid var(--border2); border-radius: 6px; padding: 20px;
+      box-shadow: inset 0 1px 0 rgba(200,170,110,0.07);
+    }
+    .tile-v { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--gold-hi); }
+    .tile-l {
+      font-size: 10px; color: var(--text3); margin-top: 6px;
+      font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+    }
 
     /* ---------- Bars ---------- */
     .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
@@ -165,8 +263,8 @@
     /* ---------- Champion grid ---------- */
     .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
     .search {
-      flex: 1; min-width: 190px; padding: 10px 14px; border-radius: 10px;
-      border: 1px solid var(--border2); background: var(--card); color: var(--text);
+      flex: 1; min-width: 190px; padding: 11px 16px; border-radius: 5px;
+      border: 1px solid var(--border2); background: rgba(21,16,11,0.7); color: var(--text);
       font-size: 14px; font-family: inherit;
     }
     .search:focus { outline: none; border-color: var(--gold); }
@@ -175,25 +273,32 @@
        le groupe défile sur lui-même plutôt que de pousser la page. */
     .seg {
       display: flex; background: var(--card); border: 1px solid var(--border2);
-      border-radius: 10px; padding: 3px; max-width: 100%; overflow-x: auto;
+      border-radius: 5px; padding: 4px; max-width: 100%; overflow-x: auto;
     }
     .seg button {
       padding: 7px 13px; border: 0; border-radius: 7px; background: transparent;
       color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
       white-space: nowrap;
     }
-    .seg button.active { background: var(--card3); color: var(--text); }
+    .seg button.active {
+      background: var(--card3); color: var(--gold-hi);
+      box-shadow: inset 0 0 0 1px var(--border2);
+    }
 
     .lane-bar { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
     .lane {
-      display: flex; align-items: center; gap: 6px; padding: 8px 14px;
-      border-radius: 10px; border: 1px solid var(--border2); background: var(--card);
-      color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: inherit; transition: all .15s;
+      display: flex; align-items: center; gap: 7px; padding: 9px 16px;
+      border-radius: 4px; border: 1px solid var(--border2); background: rgba(21,16,11,0.7);
+      color: var(--text2); font-size: 12px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; cursor: pointer;
+      font-family: inherit; transition: all .18s;
     }
     .lane img { width: 18px; height: 18px; filter: brightness(2.1); opacity: .75; }
     .lane:hover { color: var(--text); border-color: var(--border); }
-    .lane.active { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+    .lane.active {
+      background: var(--gold-soft); border-color: var(--gold); color: var(--gold-hi);
+      box-shadow: 0 0 20px rgba(200,170,110,0.14);
+    }
     .lane.active img { filter: brightness(2.6); opacity: 1; }
 
     .champ-grid {
@@ -204,15 +309,18 @@
       cursor: pointer; font-family: inherit; text-align: center;
     }
     .champ-img {
-      width: 100%; aspect-ratio: 1; border-radius: 10px; display: block;
-      border: 2px solid transparent; background: var(--card2); transition: all .15s;
+      width: 100%; aspect-ratio: 1; border-radius: 4px; display: block;
+      border: 1px solid rgba(200,170,110,0.14); background: var(--card2); transition: all .18s;
     }
     /* Ce qui reste à jouer est mis en avant ; ce qui est fait s'efface. */
     .champ.todo .champ-img { border-color: var(--border2); }
     .champ.done .champ-img { filter: grayscale(1) brightness(.45); }
     /* Joué par l'un mais pas par l'autre : à moitié éteint. */
     .champ.partial .champ-img { filter: grayscale(.6) brightness(.72); }
-    .champ:hover .champ-img { transform: translateY(-2px); filter: none; border-color: var(--gold); }
+    .champ:hover .champ-img {
+      transform: translateY(-3px); filter: none; border-color: var(--gold);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.55), 0 0 16px rgba(200,170,110,0.22);
+    }
     .champ-name {
       font-size: 10.5px; margin-top: 5px; color: var(--text2); font-weight: 600;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -240,7 +348,7 @@
     /* ---------- Match history ---------- */
     .match {
       display: flex; align-items: center; gap: 14px; padding: 12px 14px;
-      border-radius: 10px; border-left: 3px solid var(--loss);
+      border-radius: 5px; border-left: 2px solid var(--loss);
       background: var(--loss-bg); margin-bottom: 8px;
     }
     .match.win { border-left-color: var(--win); background: var(--win-bg); }
@@ -255,13 +363,19 @@
     .match-right { flex-shrink: 0; text-align: right; }
     .match img { width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0; background: var(--card2); }
     .match-champ { flex: 1; min-width: 120px; }
-    .match-champ b { font-size: 14px; font-weight: 700; display: block; }
+    .match-champ b {
+      font-family: var(--serif); font-size: 15px; font-weight: 700;
+      letter-spacing: 0.03em; display: block;
+    }
     .match-sub { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
     .match-kda { text-align: center; min-width: 96px; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
     .match-kda span { display: block; font-size: 11px; color: var(--text3); font-weight: 500; margin-top: 2px; }
     .match-vs { min-width: 118px; font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
     .match-vs img { width: 22px; height: 22px; border-radius: 5px; }
-    .match-res { min-width: 62px; text-align: right; font-size: 12.5px; font-weight: 800; color: var(--loss); }
+    .match-res {
+      min-width: 62px; text-align: right; font-family: var(--serif);
+      font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--loss);
+    }
     .match.win .match-res { color: var(--win); }
     .match.split .match-res { color: var(--gold); }
     .match-date { min-width: 78px; text-align: right; font-size: 11.5px; color: var(--text3); margin-top: 3px; }
@@ -277,7 +391,10 @@
     }
     .modal-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
     .modal-head img { width: 62px; height: 62px; border-radius: 12px; }
-    .modal-head h3 { font-size: 20px; font-weight: 800; }
+    .modal-head h3 {
+      font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: 0.04em;
+      color: var(--gold-hi);
+    }
     .modal-tags { font-size: 12px; color: var(--text3); margin-top: 3px; }
     .modal-close {
       margin-top: 20px; width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border2);
@@ -297,17 +414,29 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--gold);
     }
     .notice a { color: var(--gold); }
-    footer { margin-top: 32px; text-align: center; font-size: 11.5px; color: var(--text3); line-height: 1.7; }
-
-    .header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
-    .header-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
-    .header-actions button, .header-actions a {
-      padding: 9px 16px; border-radius: 10px; border: 1px solid var(--border2);
-      background: var(--card); color: var(--text2); font-size: 13px; font-weight: 600;
-      cursor: pointer; font-family: inherit; text-decoration: none; white-space: nowrap;
-      transition: all .15s;
+    footer {
+      margin-top: 48px; padding-top: 26px; text-align: center;
+      font-size: 11px; color: var(--text3); line-height: 1.9; letter-spacing: 0.04em;
+      border-top: 1px solid var(--border2);
     }
-    .header-actions button:hover, .header-actions a:hover { border-color: var(--gold); color: var(--text); }
+
+    .header-row { display: block; }
+    /* Boutons utilitaires relégués dans le coin : le hero reste dégagé. */
+    .header-actions {
+      position: absolute; top: 22px; right: 18px; z-index: 3;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;
+    }
+    .header-actions button, .header-actions a {
+      padding: 9px 16px; border-radius: 4px; border: 1px solid var(--border2);
+      background: rgba(21,16,11,0.72); backdrop-filter: blur(6px);
+      color: var(--text2); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
+      cursor: pointer; font-family: inherit; text-decoration: none; white-space: nowrap;
+      transition: all .18s;
+    }
+    .header-actions button:hover, .header-actions a:hover {
+      border-color: var(--gold); color: var(--gold-hi);
+      box-shadow: 0 0 18px rgba(200,170,110,0.18);
+    }
     .header-actions button[disabled] { opacity: .5; cursor: default; border-color: var(--border2); }
     .header-actions a { color: var(--text3); }
 
@@ -321,19 +450,33 @@
     @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 10px); } }
 
     @media (max-width: 640px) {
-      h1 { font-size: 24px; }
-      .header-row { flex-direction: column; align-items: stretch; gap: 14px; }
-      .header-actions { justify-content: flex-start; }
+      .hero { height: 520px; }
+      header { padding: 46px 0 40px; }
+      .eyebrow { letter-spacing: 0.26em; font-size: 10px; }
+      h1::after { margin-top: 16px; }
+      /* Les boutons rejoignent le flux : plus de bandeau flottant sur l'illustration. */
+      .header-actions {
+        position: static; justify-content: center; margin-top: 22px;
+      }
       .header-actions button, .header-actions a { flex: 1; text-align: center; }
+      /* Sans cet allègement, les onglets en capitales espacées débordaient et se rognaient. */
+      nav.tabs button {
+        font-size: 11px; letter-spacing: 0.06em; min-width: 0; padding: 11px 6px;
+      }
       .match-vs { display: none; }
       .bar-meta { width: 92px; font-size: 11px; }
       .prog { flex-direction: column; align-items: flex-start; gap: 14px; }
       .rank-emblem-box { width: 88%; }
       .rank-tier { font-size: 26px; }
+      .card, .tile { padding: 18px; }
     }
   </style>
 </head>
 <body>
+  <div class="hero" aria-hidden="true">
+    <div class="hero-img"></div>
+    <div class="hero-veil"></div>
+  </div>
   <div class="wrap">
     <header>
       <div class="header-row">

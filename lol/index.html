@@ -64,8 +64,14 @@
     }
     .hero-img {
       position: absolute; inset: 0;
-      background-image: url('assets/hero.jpg');
+      /*
+        Plusieurs sources empilées : la première qui charge s'affiche, les autres restent
+        invisibles dessous. Cela évite d'imposer une extension précise au moment du dépôt.
+      */
+      background-image: url('assets/hero.jpg'), url('assets/hero.jpeg'),
+                        url('assets/hero.png'), url('assets/hero.webp');
       background-size: cover; background-position: center 32%;
+      background-repeat: no-repeat;
       /* Fondu vers le fond sur les quatre bords : l'image ne doit avoir aucune arête. */
       -webkit-mask-image:
         linear-gradient(to bottom, transparent 0%, #000 18%, #000 52%, transparent 92%),

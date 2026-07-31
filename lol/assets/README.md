@@ -1,8 +1,11 @@
 # Illustration du hero
 
-Déposer ici l'illustration affichée en haut du site, sous le nom exact :
+Déposer ici l'illustration affichée en haut du site, sous l'un de ces noms :
 
-    hero.jpg
+    hero.jpg   hero.jpeg   hero.png   hero.webp
+
+La première extension présente est utilisée, les autres sont ignorées. Inutile donc de
+renommer le fichier avant de le déposer.
 
 Le site la fond dans le décor tout seul : dégradé sur les quatre bords, voile chaud,
 vignette et désaturation légère. Aucun recadrage manuel n'est nécessaire.

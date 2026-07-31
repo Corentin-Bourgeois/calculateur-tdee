@@ -157,13 +157,30 @@
     }
     .search:focus { outline: none; border-color: var(--gold); }
     .search::placeholder { color: var(--text3); }
-    .seg { display: flex; background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 3px; }
+    /* Les libellés longs (« Validés par les deux ») dépassaient la largeur d'un mobile :
+       le groupe défile sur lui-même plutôt que de pousser la page. */
+    .seg {
+      display: flex; background: var(--card); border: 1px solid var(--border2);
+      border-radius: 10px; padding: 3px; max-width: 100%; overflow-x: auto;
+    }
     .seg button {
       padding: 7px 13px; border: 0; border-radius: 7px; background: transparent;
       color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
       white-space: nowrap;
     }
     .seg button.active { background: var(--card3); color: var(--text); }
+
+    .lane-bar { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+    .lane {
+      display: flex; align-items: center; gap: 6px; padding: 8px 14px;
+      border-radius: 10px; border: 1px solid var(--border2); background: var(--card);
+      color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: all .15s;
+    }
+    .lane img { width: 18px; height: 18px; filter: brightness(2.1); opacity: .75; }
+    .lane:hover { color: var(--text); border-color: var(--border); }
+    .lane.active { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+    .lane.active img { filter: brightness(2.6); opacity: 1; }
 
     .champ-grid {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 10px;
@@ -330,12 +347,21 @@
   ];
   const ROLE_LABEL = Object.fromEntries(ROLES);
 
+  const LANES = [
+    ['ALL', 'Tous', null], ['TOP', 'Top', 'top'], ['JUNGLE', 'Jungle', 'jungle'],
+    ['MIDDLE', 'Mid', 'middle'], ['BOTTOM', 'ADC', 'bottom'], ['UTILITY', 'Support', 'utility'],
+  ];
+  const laneIcon = (slug) =>
+    `https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-champ-select/global/default/svg/position-${slug}.svg`;
+
   const state = {
     config: null,
     stats: null,
     version: null,
     champions: [],          // [{numId, key, name, tags}]
     champById: new Map(),   // numId -> champion
+    lanes: {},              // clé ddragon -> ['TOP', ...]
+    laneFilter: 'ALL',
     tab: 'overview',
     player: 'all',
     champFilter: 'all',     // all | done | todo
@@ -426,6 +452,33 @@
     const losses = games.length - wins;
     if (wins !== losses) return wins > losses;
     return games[games.length - 1].win; // triés du plus récent au plus ancien
+  }
+
+  /**
+   * Lanes d'un champion. La table de référence est complétée par les lanes où vous l'avez
+   * réellement joué : le filtre se corrige donc tout seul au fil des parties.
+   * Renvoie null pour un champion inconnu de la table, qui reste alors visible partout
+   * plutôt que de disparaître de tous les filtres.
+   */
+  function lanesOf(champ) {
+    const set = new Set(state.lanes[champ.key] || []);
+    for (const obs of observedLanes().get(champ.numId) || []) set.add(obs);
+    return set.size ? set : null;
+  }
+
+  let _observed = null;
+  function observedLanes() {
+    if (_observed) return _observed;
+    _observed = new Map();
+    for (const p of players()) {
+      for (const m of matchesOf(p.id)) {
+        if (!m.role || m.role === 'UNKNOWN') continue;
+        const arr = _observed.get(m.champId) || [];
+        if (!arr.includes(m.role)) arr.push(m.role);
+        _observed.set(m.champId, arr);
+      }
+    }
+    return _observed;
   }
 
   const players = () => (state.config.players || []).filter((p) => state.stats.players[p.id]);
@@ -695,16 +748,18 @@
     const isDone = (numId) => list.every((p) => statsByPlayer.get(p.id).played.has(numId));
     const isPartial = (numId) => !isDone(numId) && list.some((p) => statsByPlayer.get(p.id).played.has(numId));
 
-    const doneCount = state.champions.filter((c) => isDone(c.numId)).length;
+    // Les compteurs d'état portent sur la lane sélectionnée, pas sur le roster entier.
+    const duLane = state.champions.filter(matchesLane);
+    const doneCount = duLane.filter((c) => isDone(c.numId)).length;
     const duo = list.length > 1;
 
     const filters = el(`
       <div class="filters">
         <input class="search" type="search" placeholder="Rechercher un champion…" value="${esc(state.search)}">
         <div class="seg">
-          <button data-f="all">Tous (${state.champions.length})</button>
+          <button data-f="all">Tous (${duLane.length})</button>
           <button data-f="done">${duo ? 'Validés par les deux' : 'Joués'} (${doneCount})</button>
-          <button data-f="todo">Restants (${state.champions.length - doneCount})</button>
+          <button data-f="todo">Restants (${duLane.length - doneCount})</button>
         </div>
       </div>`);
     filters.querySelector('.search').addEventListener('input', (e) => {
@@ -720,11 +775,30 @@
     });
     frag.appendChild(filters);
 
+    const laneBar = el('<div class="lane-bar"></div>');
+    for (const [key, label, slug] of LANES) {
+      const b = el(`
+        <button class="lane ${state.laneFilter === key ? 'active' : ''}" data-lane="${key}">
+          ${slug ? `<img src="${laneIcon(slug)}" alt="" onerror="this.remove()">` : ''}
+          <span>${label}</span>
+        </button>`);
+      b.addEventListener('click', () => { state.laneFilter = key; render(); });
+      laneBar.appendChild(b);
+    }
+    frag.appendChild(laneBar);
+
     const grid = el('<div class="champ-grid"></div>');
     renderChampGrid(grid, list, statsByPlayer, isDone, isPartial);
     frag.appendChild(grid);
 
     return frag;
+  }
+
+  /** Un champion dont la lane est inconnue reste visible dans tous les filtres. */
+  function matchesLane(c) {
+    if (state.laneFilter === 'ALL') return true;
+    const lanes = lanesOf(c);
+    return !lanes || lanes.has(state.laneFilter);
   }
 
   function renderChampGrid(grid, list, statsByPlayer, isDone, isPartial) {
@@ -733,6 +807,7 @@
 
     const visible = state.champions.filter((c) => {
       if (q && !c.name.toLowerCase().includes(q) && !c.key.toLowerCase().includes(q)) return false;
+      if (!matchesLane(c)) return false;
       if (state.champFilter === 'done') return isDone(c.numId);
       if (state.champFilter === 'todo') return !isDone(c.numId);
       return true;
@@ -1026,6 +1101,7 @@
 
     state.stats = fresh;
     state.stats.players = fresh.players || {};
+    _observed = null; // les lanes observées dépendent des parties
     updateMeta();
     render();
 
@@ -1037,13 +1113,16 @@
 
   async function init() {
     try {
-      const [config, stats] = await Promise.all([
+      const [config, stats, lanes] = await Promise.all([
         getJson('config.json'),
         getJson('data/stats.json').catch(() => ({ players: {} })),
+        // Table tenue à la main : son absence ne doit pas empêcher le site de fonctionner.
+        getJson('data/champion-lanes.json').catch(() => ({ lanes: {} })),
       ]);
       state.config = config;
       state.stats = stats;
       state.stats.players = stats.players || {};
+      state.lanes = lanes.lanes || {};
       await loadChampions();
       renderChrome();
       render();

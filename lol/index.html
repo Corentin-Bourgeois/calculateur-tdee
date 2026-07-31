@@ -237,6 +237,15 @@
     .notice a { color: var(--gold); }
     footer { margin-top: 32px; text-align: center; font-size: 11.5px; color: var(--text3); line-height: 1.7; }
 
+    .toast {
+      position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+      background: var(--card3); border: 1px solid var(--gold); color: var(--text);
+      padding: 11px 20px; border-radius: 999px; font-size: 13px; font-weight: 600;
+      z-index: 200; box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+      animation: toast-in .25s ease-out;
+    }
+    @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 10px); } }
+
     @media (max-width: 640px) {
       h1 { font-size: 24px; }
       .match-vs, .match-date { display: none; }
@@ -754,6 +763,11 @@
     });
     document.getElementById('app').before(tabs);
 
+    updateMeta();
+  }
+
+  /** Sous-titre et pied de page : redessinés à chaque rafraîchissement. */
+  function updateMeta() {
     const backlog = Object.values(state.stats.players).reduce((n, p) => n + (p.backlog || 0), 0);
     const synced = state.stats.generatedAt
       ? `Dernière synchronisation ${timeAgo(new Date(state.stats.generatedAt).getTime())}`
@@ -769,6 +783,55 @@
       `Données Riot Games API · Icônes Data Dragon ${esc(state.version)} · Les remakes ne comptent pas.`;
   }
 
+  /* ================= Rafraîchissement automatique ================= */
+
+  const REFRESH_MS = 5 * 60 * 1000;
+
+  function toast(message) {
+    document.querySelectorAll('.toast').forEach((t) => t.remove());
+    const t = el(`<div class="toast">${esc(message)}</div>`);
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+  }
+
+  /**
+   * Recharge stats.json et ne redessine que si la synchro a produit du neuf.
+   * L'onglet, le joueur sélectionné et les filtres vivent dans `state` : ils survivent
+   * au redessin.
+   */
+  async function refreshStats() {
+    // Redessiner fermerait la fiche champion ouverte : on repassera au prochain cycle.
+    if (state.modal !== null) return;
+
+    let fresh;
+    try {
+      // Paramètre anti-cache : GitHub Pages sert stats.json avec un cache agressif.
+      fresh = await getJson(`data/stats.json?t=${Date.now()}`);
+    } catch {
+      return; // hors ligne ou déploiement en cours : on retente au prochain cycle
+    }
+
+    if (fresh.generatedAt === state.stats.generatedAt) {
+      updateMeta(); // rien de neuf, mais « il y a X minutes » doit avancer
+      return;
+    }
+
+    const avant = Object.values(state.stats.players)
+      .reduce((n, p) => n + (p.matches || []).length, 0);
+    const apres = Object.values(fresh.players || {})
+      .reduce((n, p) => n + (p.matches || []).length, 0);
+
+    state.stats = fresh;
+    state.stats.players = fresh.players || {};
+    updateMeta();
+    render();
+
+    const delta = apres - avant;
+    toast(delta > 0
+      ? `${delta} nouvelle${delta > 1 ? 's' : ''} partie${delta > 1 ? 's' : ''}`
+      : 'Données mises à jour');
+  }
+
   async function init() {
     try {
       const [config, stats] = await Promise.all([
@@ -781,6 +844,12 @@
       await loadChampions();
       renderChrome();
       render();
+
+      setInterval(refreshStats, REFRESH_MS);
+      // Revenir sur l'onglet est le moment où l'on veut des données fraîches.
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') refreshStats();
+      });
     } catch (err) {
       document.getElementById('subtitle').textContent = 'Erreur de chargement';
       document.getElementById('app').appendChild(

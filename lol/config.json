@@ -8,14 +8,14 @@
   "challengeStart": null,
   "players": [
     {
-      "id": "joueur1",
-      "name": "Joueur 1",
-      "riotId": "AAAAAA#EUW",
+      "id": "corentin",
+      "name": "Corentin",
+      "riotId": "No Trick Poney#LFT",
       "color": "#C8AA6E"
     },
     {
-      "id": "joueur2",
-      "name": "Joueur 2",
+      "id": "mehdi",
+      "name": "Mehdi",
       "riotId": "BBBBBB#EUW",
       "color": "#0AC8B9"
     }

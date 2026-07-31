@@ -9,19 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:        #0A0705;
-      --card:      #15100B;
-      --card2:     #1E1710;
-      --card3:     #2A2117;
-      --border:    rgba(200,170,110,0.26);
-      --border2:   rgba(200,170,110,0.11);
-      --text:      #EFE4CD;
-      --text2:     #A99A80;
-      --text3:     #736553;
-      --gold:      #C8AA6E;
-      --gold-hi:   #F2E2B6;
-      --gold-soft: rgba(200,170,110,0.10);
-      --teal:      #0AC8B9;
+      --bg-rgb:         10, 11, 13;
+      --surface-rgb:    18, 20, 23;
+      --surface-hi-rgb: 30, 34, 40;
+      --surface-lo-rgb: 14, 16, 19;
+      /* Base neutre : gris-noir, sans dominante chaude. */
+      --bg:        #0A0B0D;
+      --card:      #121417;
+      --card2:     #181B20;
+      --card3:     #23272E;
+      --text:      #E7EAEE;
+      --text2:     #98A0AA;
+      --text3:     #626A74;
       --win:       #4FBF8B;
       --win-bg:    rgba(79,191,139,0.10);
       --loss:      #C4462F;
@@ -29,8 +28,56 @@
       --radius:    14px;
       --serif:     'Cinzel', 'Bell MT', Georgia, 'Times New Roman', serif;
       --sans:      'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      /* Accent neutre : acier. Les thèmes joueur ne redéfinissent que ces quatre lignes. */
+      --accent:     #B9C3CE;
+      --accent-hi:  #F1F5F9;
+      --accent-rgb: 185, 195, 206;
+      --accent-soft: rgba(185,195,206,0.09);
+
+      --border:  rgba(var(--accent-rgb), 0.24);
+      --border2: rgba(var(--accent-rgb), 0.10);
     }
 
+    /* Corentin : rouge sombre. */
+    :root[data-theme="corentin"] {
+      --bg-rgb:         11, 7, 8;
+      --surface-rgb:    23, 16, 15;
+      --surface-hi-rgb: 38, 24, 22;
+      --surface-lo-rgb: 17, 11, 11;
+      --accent:     #D8382B;
+      --accent-hi:  #FF8571;
+      --accent-rgb: 216, 56, 43;
+      --accent-soft: rgba(216,56,43,0.13);
+      --bg:    #0B0708;
+      --card:  #17100F;
+      --card2: #1E1514;
+      --card3: #2B1D1B;
+    }
+
+    /* Mehdi : bleu sombre. */
+    :root[data-theme="mehdi"] {
+      --bg-rgb:         7, 10, 15;
+      --surface-rgb:    15, 20, 28;
+      --surface-hi-rgb: 24, 32, 44;
+      --surface-lo-rgb: 11, 15, 21;
+      --accent:     #3B7BD8;
+      --accent-hi:  #86BBFF;
+      --accent-rgb: 59, 123, 216;
+      --accent-soft: rgba(59,123,216,0.13);
+      --bg:    #070A0F;
+      --card:  #0F141C;
+      --card2: #141A24;
+      --card3: #1D2735;
+    }
+
+    /* La bascule doit se voir : tout ce qui porte l'accent glisse d'une teinte à l'autre. */
+    body, .card, .tile, nav.tabs, nav.tabs button, .player-switch button,
+    .lane, .seg, .seg button, .search, .header-actions button, .header-actions a,
+    .champ-img, .match, footer {
+      transition: background-color .55s ease, border-color .55s ease,
+                  color .55s ease, box-shadow .55s ease;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
@@ -48,7 +95,7 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(1100px 600px at 50% 0%, rgba(200,170,110,0.10), transparent 65%),
+        radial-gradient(1100px 600px at 50% 0%, rgba(var(--accent-rgb), 0.10), transparent 65%),
         radial-gradient(700px 500px at 10% 40%, rgba(196,70,47,0.05), transparent 70%);
       pointer-events: none;
       z-index: 0;
@@ -87,8 +134,8 @@
     .hero-veil {
       position: absolute; inset: 0;
       background:
-        radial-gradient(85% 55% at 50% 22%, rgba(10,7,5,0) 0%, rgba(10,7,5,0.45) 72%, var(--bg) 100%),
-        linear-gradient(to bottom, rgba(10,7,5,0.30) 0%, rgba(10,7,5,0.10) 24%, rgba(10,7,5,0.62) 58%, var(--bg) 92%);
+        radial-gradient(85% 55% at 50% 22%, rgba(var(--bg-rgb), 0) 0%, rgba(var(--bg-rgb), 0.45) 72%, var(--bg) 100%),
+        linear-gradient(to bottom, rgba(var(--bg-rgb), 0.30) 0%, rgba(var(--bg-rgb), 0.10) 24%, rgba(var(--bg-rgb), 0.62) 58%, var(--bg) 92%);
     }
 
     .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 18px; }
@@ -98,22 +145,22 @@
     .eyebrow {
       font-family: var(--serif);
       font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase;
-      color: var(--gold); font-weight: 600; margin-bottom: 18px;
-      text-shadow: 0 0 18px rgba(200,170,110,0.4);
+      color: var(--accent); font-weight: 600; margin-bottom: 18px;
+      text-shadow: 0 0 18px rgba(var(--accent-rgb), 0.4);
     }
     h1 {
       font-family: var(--serif);
       font-size: clamp(38px, 6vw, 72px); font-weight: 700;
       letter-spacing: 0.02em; line-height: 1.05;
-      background: linear-gradient(180deg, var(--gold-hi) 0%, var(--gold) 48%, #8A6E3C 100%);
+      background: linear-gradient(180deg, var(--accent-hi) 0%, var(--accent) 48%, #8A6E3C 100%);
       -webkit-background-clip: text; background-clip: text;
       color: transparent;
-      filter: drop-shadow(0 2px 18px rgba(200,170,110,0.35));
+      filter: drop-shadow(0 2px 18px rgba(var(--accent-rgb), 0.35));
     }
     /* Filet doré sous le titre, comme un sceau. */
     h1::after {
       content: ""; display: block; width: 220px; max-width: 60%; height: 1px; margin: 20px auto 0;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
     }
     .subtitle {
       color: var(--text2); font-size: 14px; margin: 16px auto 0; max-width: 620px; line-height: 1.7;
@@ -121,7 +168,7 @@
 
     /* ---------- Tabs ---------- */
     nav.tabs {
-      display: flex; gap: 4px; background: rgba(21,16,11,0.75);
+      display: flex; gap: 4px; background: rgba(var(--surface-rgb), 0.75);
       border: 1px solid var(--border2); border-radius: 6px;
       padding: 5px; margin: 0 0 22px; overflow-x: auto;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
@@ -133,49 +180,49 @@
       text-transform: uppercase;
       cursor: pointer; white-space: nowrap; transition: all .18s;
     }
-    nav.tabs button:hover { color: var(--gold-hi); }
+    nav.tabs button:hover { color: var(--accent-hi); }
     nav.tabs button.active {
       background: linear-gradient(180deg, var(--card3), var(--card2));
-      color: var(--gold-hi);
-      box-shadow: inset 0 0 0 1px var(--border), 0 0 22px rgba(200,170,110,0.10);
+      color: var(--accent-hi);
+      box-shadow: inset 0 0 0 1px var(--border), 0 0 22px rgba(var(--accent-rgb), 0.10);
     }
 
     /* ---------- Player switch ---------- */
     .player-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
     .player-switch button {
       padding: 9px 18px; border-radius: 4px; border: 1px solid var(--border2);
-      background: rgba(21,16,11,0.7); color: var(--text2);
+      background: rgba(var(--surface-rgb), 0.7); color: var(--text2);
       font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
       cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 8px;
       transition: all .18s;
     }
     .player-switch button:hover { border-color: var(--border); color: var(--text); }
     .player-switch button.active {
-      background: var(--gold-soft); border-color: var(--gold); color: var(--gold-hi);
-      box-shadow: 0 0 22px rgba(200,170,110,0.16);
+      background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hi);
+      box-shadow: 0 0 22px rgba(var(--accent-rgb), 0.16);
     }
     .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
     /* ---------- Cards ---------- */
     .card {
       position: relative;
-      background: linear-gradient(180deg, rgba(30,23,16,0.92), rgba(16,12,8,0.92));
+      background: linear-gradient(180deg, rgba(var(--surface-hi-rgb), 0.92), rgba(var(--surface-lo-rgb), 0.92));
       border: 1px solid var(--border2);
       border-radius: 6px; padding: 24px;
-      box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(200,170,110,0.08);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.45), inset 0 1px 0 rgba(var(--accent-rgb), 0.08);
     }
     /* Titre de carte encadré de losanges, comme les intertitres de la référence. */
     .card-title {
       font-family: var(--serif);
       font-size: 12.5px; letter-spacing: 0.24em; text-transform: uppercase;
-      color: var(--gold); font-weight: 600; margin-bottom: 20px;
+      color: var(--accent); font-weight: 600; margin-bottom: 20px;
       display: flex; align-items: center; gap: 12px; white-space: nowrap;
     }
     .card-title::before, .card-title::after {
       content: ""; height: 1px; flex: 1;
-      background: linear-gradient(90deg, transparent, rgba(200,170,110,0.34));
+      background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.34));
     }
-    .card-title::after { background: linear-gradient(90deg, rgba(200,170,110,0.34), transparent); }
+    .card-title::after { background: linear-gradient(90deg, rgba(var(--accent-rgb), 0.34), transparent); }
     .grid { display: grid; gap: 16px; }
     .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
     .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -188,12 +235,12 @@
       position: absolute; inset: 0; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
     }
-    .ring-pct { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--gold-hi); }
+    .ring-pct { font-family: var(--serif); font-size: 22px; font-weight: 700; color: var(--accent-hi); }
     .ring-sub { font-size: 9px; color: var(--text3); font-weight: 600; letter-spacing: 0.18em; }
     .prog-info { min-width: 0; }
     .prog-name {
       font-family: var(--serif); font-size: 22px; font-weight: 700;
-      letter-spacing: 0.04em; color: var(--gold-hi); margin-bottom: 4px;
+      letter-spacing: 0.04em; color: var(--accent-hi); margin-bottom: 4px;
     }
     .prog-riotid {
       font-size: 12px; color: var(--text3); margin-bottom: 12px;
@@ -222,16 +269,16 @@
     /* Halo : l'emblème doit rayonner, c'est le trophée de la page. */
     .rank-emblem-box::before {
       content: ""; position: absolute; inset: 12%;
-      background: radial-gradient(circle, rgba(200,170,110,0.20) 0%, transparent 62%);
+      background: radial-gradient(circle, rgba(var(--accent-rgb), 0.20) 0%, transparent 62%);
       pointer-events: none;
     }
     .rank-emblem { width: 380%; max-width: none; transform: translateY(3%); }
     .rank-tier {
       font-family: var(--serif); font-size: 34px; font-weight: 700; letter-spacing: 0.06em;
-      background: linear-gradient(180deg, var(--gold-hi), var(--gold) 55%, #8A6E3C);
+      background: linear-gradient(180deg, var(--accent-hi), var(--accent) 55%, #8A6E3C);
       -webkit-background-clip: text; background-clip: text; color: transparent;
     }
-    .rank-lp { font-size: 18px; color: var(--gold); font-weight: 700; margin-top: 2px; }
+    .rank-lp { font-size: 18px; color: var(--accent); font-weight: 700; margin-top: 2px; }
     .rank-record { font-size: 12.5px; color: var(--text2); margin-top: 8px; }
     .lp-chart { border-top: 1px solid var(--border2); padding-top: 14px; }
     .lp-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
@@ -245,11 +292,11 @@
 
     /* ---------- Stat tiles ---------- */
     .tile {
-      background: linear-gradient(180deg, rgba(30,23,16,0.9), rgba(16,12,8,0.9));
+      background: linear-gradient(180deg, rgba(var(--surface-hi-rgb), 0.9), rgba(var(--surface-lo-rgb), 0.9));
       border: 1px solid var(--border2); border-radius: 6px; padding: 20px;
-      box-shadow: inset 0 1px 0 rgba(200,170,110,0.07);
+      box-shadow: inset 0 1px 0 rgba(var(--accent-rgb), 0.07);
     }
-    .tile-v { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--gold-hi); }
+    .tile-v { font-family: var(--serif); font-size: 28px; font-weight: 700; color: var(--accent-hi); }
     .tile-l {
       font-size: 10px; color: var(--text3); margin-top: 6px;
       font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
@@ -270,10 +317,10 @@
     .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
     .search {
       flex: 1; min-width: 190px; padding: 11px 16px; border-radius: 5px;
-      border: 1px solid var(--border2); background: rgba(21,16,11,0.7); color: var(--text);
+      border: 1px solid var(--border2); background: rgba(var(--surface-rgb), 0.7); color: var(--text);
       font-size: 14px; font-family: inherit;
     }
-    .search:focus { outline: none; border-color: var(--gold); }
+    .search:focus { outline: none; border-color: var(--accent); }
     .search::placeholder { color: var(--text3); }
     /* Les libellés longs (« Validés par les deux ») dépassaient la largeur d'un mobile :
        le groupe défile sur lui-même plutôt que de pousser la page. */
@@ -287,14 +334,14 @@
       white-space: nowrap;
     }
     .seg button.active {
-      background: var(--card3); color: var(--gold-hi);
+      background: var(--card3); color: var(--accent-hi);
       box-shadow: inset 0 0 0 1px var(--border2);
     }
 
     .lane-bar { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
     .lane {
       display: flex; align-items: center; gap: 7px; padding: 9px 16px;
-      border-radius: 4px; border: 1px solid var(--border2); background: rgba(21,16,11,0.7);
+      border-radius: 4px; border: 1px solid var(--border2); background: rgba(var(--surface-rgb), 0.7);
       color: var(--text2); font-size: 12px; font-weight: 600; letter-spacing: 0.07em;
       text-transform: uppercase; cursor: pointer;
       font-family: inherit; transition: all .18s;
@@ -302,8 +349,8 @@
     .lane img { width: 18px; height: 18px; filter: brightness(2.1); opacity: .75; }
     .lane:hover { color: var(--text); border-color: var(--border); }
     .lane.active {
-      background: var(--gold-soft); border-color: var(--gold); color: var(--gold-hi);
-      box-shadow: 0 0 20px rgba(200,170,110,0.14);
+      background: var(--accent-soft); border-color: var(--accent); color: var(--accent-hi);
+      box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.14);
     }
     .lane.active img { filter: brightness(2.6); opacity: 1; }
 
@@ -316,7 +363,7 @@
     }
     .champ-img {
       width: 100%; aspect-ratio: 1; border-radius: 4px; display: block;
-      border: 1px solid rgba(200,170,110,0.14); background: var(--card2); transition: all .18s;
+      border: 1px solid rgba(var(--accent-rgb), 0.14); background: var(--card2); transition: all .18s;
     }
     /* Ce qui reste à jouer est mis en avant ; ce qui est fait s'efface. */
     .champ.todo .champ-img { border-color: var(--border2); }
@@ -324,8 +371,8 @@
     /* Joué par l'un mais pas par l'autre : à moitié éteint. */
     .champ.partial .champ-img { filter: grayscale(.6) brightness(.72); }
     .champ:hover .champ-img {
-      transform: translateY(-3px); filter: none; border-color: var(--gold);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.55), 0 0 16px rgba(200,170,110,0.22);
+      transform: translateY(-3px); filter: none; border-color: var(--accent);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.55), 0 0 16px rgba(var(--accent-rgb), 0.22);
     }
     .champ-name {
       font-size: 10.5px; margin-top: 5px; color: var(--text2); font-weight: 600;
@@ -358,13 +405,13 @@
       background: var(--loss-bg); margin-bottom: 8px;
     }
     .match.win { border-left-color: var(--win); background: var(--win-bg); }
-    .match.split { border-left-color: var(--gold); background: var(--gold-soft); }
+    .match.split { border-left-color: var(--accent); background: var(--accent-soft); }
     .match-lines { flex: 1; min-width: 0; }
     .match-line { display: flex; align-items: center; gap: 14px; }
     .match-line + .match-line { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border2); }
     .match-together {
       font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--gold); font-weight: 700; margin-bottom: 8px;
+      color: var(--accent); font-weight: 700; margin-bottom: 8px;
     }
     .match-right { flex-shrink: 0; text-align: right; }
     .match img { width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0; background: var(--card2); }
@@ -383,7 +430,7 @@
       font-size: 12.5px; font-weight: 700; letter-spacing: 0.1em; color: var(--loss);
     }
     .match.win .match-res { color: var(--win); }
-    .match.split .match-res { color: var(--gold); }
+    .match.split .match-res { color: var(--accent); }
     .match-date { min-width: 78px; text-align: right; font-size: 11.5px; color: var(--text3); margin-top: 3px; }
 
     /* ---------- Modal ---------- */
@@ -399,7 +446,7 @@
     .modal-head img { width: 62px; height: 62px; border-radius: 12px; }
     .modal-head h3 {
       font-family: var(--serif); font-size: 24px; font-weight: 700; letter-spacing: 0.04em;
-      color: var(--gold-hi);
+      color: var(--accent-hi);
     }
     .modal-tags { font-size: 12px; color: var(--text3); margin-top: 3px; }
     .modal-close {
@@ -412,14 +459,14 @@
     .modal-player-name { font-size: 13px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
 
     /* ---------- Setup / states ---------- */
-    .notice { border: 1px solid var(--border); background: var(--gold-soft); border-radius: var(--radius); padding: 20px; }
+    .notice { border: 1px solid var(--border); background: var(--accent-soft); border-radius: var(--radius); padding: 20px; }
     .notice h2 { font-size: 16px; margin-bottom: 12px; }
     .notice ol { margin: 0 0 0 18px; font-size: 14px; line-height: 1.85; color: var(--text2); }
     .notice code {
       background: rgba(0,0,0,0.35); padding: 2px 6px; border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--gold);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--accent);
     }
-    .notice a { color: var(--gold); }
+    .notice a { color: var(--accent); }
     footer {
       margin-top: 48px; padding-top: 26px; text-align: center;
       font-size: 11px; color: var(--text3); line-height: 1.9; letter-spacing: 0.04em;
@@ -434,21 +481,56 @@
     }
     .header-actions button, .header-actions a {
       padding: 9px 16px; border-radius: 4px; border: 1px solid var(--border2);
-      background: rgba(21,16,11,0.72); backdrop-filter: blur(6px);
+      background: rgba(var(--surface-rgb), 0.72); backdrop-filter: blur(6px);
       color: var(--text2); font-size: 12px; font-weight: 600; letter-spacing: 0.06em;
       cursor: pointer; font-family: inherit; text-decoration: none; white-space: nowrap;
       transition: all .18s;
     }
     .header-actions button:hover, .header-actions a:hover {
-      border-color: var(--gold); color: var(--gold-hi);
-      box-shadow: 0 0 18px rgba(200,170,110,0.18);
+      border-color: var(--accent); color: var(--accent-hi);
+      box-shadow: 0 0 18px rgba(var(--accent-rgb), 0.18);
     }
     .header-actions button[disabled] { opacity: .5; cursor: default; border-color: var(--border2); }
     .header-actions a { color: var(--text3); }
 
+    /* ---------- Bascule de thème ---------- */
+    /*
+      Onde qui traverse l'écran au changement de joueur, dans la couleur du thème visé.
+      Purement décoratif : jamais cliquable, et invisible tant qu'il n'est pas déclenché.
+    */
+    .theme-flash {
+      position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0;
+    }
+    .theme-flash.on { animation: flash-sweep .85s cubic-bezier(.16,.8,.3,1); }
+    .theme-flash::before {
+      content: ""; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 45%,
+        rgba(var(--accent-rgb), 0.55) 0%, rgba(var(--accent-rgb), 0.14) 38%, transparent 68%);
+    }
+    .theme-flash::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(105deg,
+        transparent 38%, rgba(var(--accent-rgb), 0.5) 50%, transparent 62%);
+      transform: translateX(-60%);
+      animation: flash-band .85s cubic-bezier(.16,.8,.3,1);
+    }
+    @keyframes flash-sweep {
+      0%   { opacity: 0; }
+      18%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes flash-band {
+      0%   { transform: translateX(-70%) skewX(-12deg); }
+      100% { transform: translateX(70%)  skewX(-12deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .theme-flash.on { animation: none; }
+      .theme-flash::after { animation: none; }
+    }
+
     .toast {
       position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
-      background: var(--card3); border: 1px solid var(--gold); color: var(--text);
+      background: var(--card3); border: 1px solid var(--accent); color: var(--text);
       padding: 11px 20px; border-radius: 999px; font-size: 13px; font-weight: 600;
       z-index: 200; box-shadow: 0 8px 26px rgba(0,0,0,0.45);
       animation: toast-in .25s ease-out;
@@ -489,6 +571,7 @@
     <div class="hero-img"></div>
     <div class="hero-veil"></div>
   </div>
+  <div class="theme-flash" id="theme-flash" aria-hidden="true"></div>
   <div class="wrap">
     <header>
       <div class="header-row">
@@ -1196,11 +1279,15 @@
 
     // Sélecteur de joueur
     const sw = el('<div class="player-switch"></div>');
-    const options = [{ id: 'all', name: 'Les deux', color: 'var(--gold)' }, ...players()];
+    const options = [{ id: 'all', name: 'Les deux', color: 'var(--accent)' }, ...players()];
     for (const o of options) {
       const b = el(`<button class="${state.player === o.id ? 'active' : ''}">
         <span class="dot" style="background:${o.color}"></span>${esc(o.name)}</button>`);
-      b.addEventListener('click', () => { state.player = o.id; render(); });
+      b.addEventListener('click', () => {
+        if (state.player !== o.id) appliquerTheme(o.id, { effet: true });
+        state.player = o.id;
+        render();
+      });
       sw.appendChild(b);
     }
     app.appendChild(sw);
@@ -1253,6 +1340,23 @@
     document.getElementById('footer').innerHTML =
       `${esc(synced)}${backlog ? ` · ${backlog} matchs encore à rapatrier` : ''}<br>` +
       `Données Riot Games API · Icônes Data Dragon ${esc(state.version)} · Les remakes ne comptent pas.`;
+  }
+
+  /* ================= Thème ================= */
+
+  /**
+   * Bascule l'habillage sur le joueur sélectionné. Purement visuel : la couleur est
+   * portée par un attribut sur la racine, tout le reste découle des variables CSS.
+   * L'onde n'est jouée qu'au clic, pas au rendu initial ni aux redessins automatiques.
+   */
+  function appliquerTheme(joueurId, { effet = false } = {}) {
+    document.documentElement.dataset.theme = joueurId;
+    if (!effet) return;
+    const onde = document.getElementById('theme-flash');
+    if (!onde) return;
+    onde.classList.remove('on');
+    void onde.offsetWidth; // force le navigateur à rejouer l'animation depuis le début
+    onde.classList.add('on');
   }
 
   /* ================= Rafraîchissement automatique ================= */
@@ -1321,6 +1425,7 @@
       state.stats.players = stats.players || {};
       state.lanes = lanes.lanes || {};
       await loadChampions();
+      appliquerTheme(state.player);
       renderChrome();
       render();
 

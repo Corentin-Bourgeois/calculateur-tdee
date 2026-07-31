@@ -56,7 +56,7 @@
 
     /* ---------- Hero ---------- */
     .hero {
-      position: absolute; top: 0; left: 0; right: 0; height: 720px;
+      position: absolute; top: 0; left: 0; right: 0; height: 1000px;
       overflow: hidden; z-index: 0; pointer-events: none;
       /* Repli si l'illustration est absente : le hero reste une scène crédible. */
       background:
@@ -70,15 +70,15 @@
       */
       background-image: url('assets/hero.jpg'), url('assets/hero.jpeg'),
                         url('assets/hero.png'), url('assets/hero.webp');
-      background-size: cover; background-position: center 32%;
+      background-size: cover; background-position: center 22%;
       background-repeat: no-repeat;
       /* Fondu vers le fond sur les quatre bords : l'image ne doit avoir aucune arête. */
       -webkit-mask-image:
-        linear-gradient(to bottom, transparent 0%, #000 18%, #000 52%, transparent 92%),
+        linear-gradient(to bottom, #000 0%, #000 46%, transparent 96%),
         linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
       -webkit-mask-composite: source-in;
       mask-image:
-        linear-gradient(to bottom, transparent 0%, #000 18%, #000 52%, transparent 92%),
+        linear-gradient(to bottom, #000 0%, #000 46%, transparent 96%),
         linear-gradient(to right, transparent 0%, #000 14%, #000 86%, transparent 100%);
       mask-composite: intersect;
       opacity: .72; filter: saturate(.85) contrast(1.08);
@@ -87,14 +87,14 @@
     .hero-veil {
       position: absolute; inset: 0;
       background:
-        radial-gradient(80% 60% at 50% 30%, rgba(10,7,5,0) 0%, rgba(10,7,5,0.55) 70%, var(--bg) 100%),
-        linear-gradient(to bottom, rgba(10,7,5,0.55) 0%, rgba(10,7,5,0.25) 35%, var(--bg) 88%);
+        radial-gradient(85% 55% at 50% 22%, rgba(10,7,5,0) 0%, rgba(10,7,5,0.45) 72%, var(--bg) 100%),
+        linear-gradient(to bottom, rgba(10,7,5,0.30) 0%, rgba(10,7,5,0.10) 24%, rgba(10,7,5,0.62) 58%, var(--bg) 92%);
     }
 
     .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 18px; }
 
     /* ---------- Header ---------- */
-    header { padding: 120px 0 60px; text-align: center; }
+    header { padding: 430px 0 60px; text-align: center; }
     .eyebrow {
       font-family: var(--serif);
       font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase;
@@ -456,8 +456,14 @@
     @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 10px); } }
 
     @media (max-width: 640px) {
-      .hero { height: 520px; }
-      header { padding: 46px 0 40px; }
+      .hero { height: 560px; }
+      /*
+        En cadrage large, les deux personnages deviennent minuscules sur un écran étroit.
+        On agrandit l'image au-delà du cadre pour se rapprocher d'eux, et on remonte le
+        point de calage pour qu'ils passent au-dessus du titre.
+      */
+      .hero-img { background-size: auto 150%; background-position: 50% 35%; }
+      header { padding: 200px 0 36px; }
       .eyebrow { letter-spacing: 0.26em; font-size: 10px; }
       h1::after { margin-top: 16px; }
       /* Les boutons rejoignent le flux : plus de bandeau flottant sur l'illustration. */

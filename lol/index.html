@@ -758,8 +758,12 @@
     const synced = state.stats.generatedAt
       ? `Dernière synchronisation ${timeAgo(new Date(state.stats.generatedAt).getTime())}`
       : 'Aucune synchronisation effectuée';
+    const start = state.stats.challengeStart || state.config.challengeStart;
+    const periode = start
+      ? ` Parties comptées depuis le ${new Date(start).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}.`
+      : '';
     document.getElementById('subtitle').textContent =
-      `Jouer les ${state.champions.length} champions du jeu, une fois chacun, en ranked Solo/Duo.`;
+      `Jouer les ${state.champions.length} champions du jeu, une fois chacun, en ranked Solo/Duo.${periode}`;
     document.getElementById('footer').innerHTML =
       `${esc(synced)}${backlog ? ` · ${backlog} matchs encore à rapatrier` : ''}<br>` +
       `Données Riot Games API · Icônes Data Dragon ${esc(state.version)} · Les remakes ne comptent pas.`;

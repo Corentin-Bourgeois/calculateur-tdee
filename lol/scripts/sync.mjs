@@ -196,7 +196,18 @@ async function main() {
     }
 
     const entry = stats.players[player.id] || {};
-    const existing = entry.matches || [];
+    let existing = entry.matches || [];
+
+    // challengeStart borne aussi les matchs déjà en base : sans ça, restreindre la période
+    // dans config.json ne ferait qu'arrêter d'en ajouter, sans retirer les anciens.
+    if (startTime) {
+      const before = existing.length;
+      existing = existing.filter((m) => m.ts >= startTime * 1000);
+      if (before !== existing.length) {
+        console.log(`  ${before - existing.length} match(s) hors période retiré(s)`);
+      }
+    }
+
     const known = new Set(existing.map((m) => m.id));
 
     entry.riotId = player.riotId;
@@ -239,6 +250,7 @@ async function main() {
   stats.generatedAt = new Date().toISOString();
   stats.queue = queue;
   stats.region = config.region;
+  stats.challengeStart = config.challengeStart || null;
 
   await writeFile(STATS_PATH, JSON.stringify(stats, null, 2) + '\n');
   console.log(`\n✓ ${added} nouveau(x) match(s) écrit(s) dans ${STATS_PATH}`);

@@ -455,30 +455,44 @@
   }
 
   /**
-   * Lanes d'un champion. La table de référence est complétée par les lanes où vous l'avez
-   * réellement joué : le filtre se corrige donc tout seul au fil des parties.
-   * Renvoie null pour un champion inconnu de la table, qui reste alors visible partout
-   * plutôt que de disparaître de tous les filtres.
+   * Lanes d'un champion, du point de vue des joueurs affichés.
+   *
+   * Le fait prime sur la théorie : dès qu'un joueur a joué un champion, ce sont ses lanes
+   * réelles qui comptent pour lui, pas celles de la table. Fiddlesticks joué en jungle ne
+   * doit pas ressortir dans le filtre Support sous prétexte qu'il pourrait s'y jouer.
+   * La table ne sert que pour les champions que le joueur n'a pas encore faits, où tout
+   * reste possible.
+   *
+   * Renvoie null pour un champion dont on ne sait rien : il reste visible partout plutôt
+   * que de disparaître de tous les filtres.
    */
-  function lanesOf(champ) {
-    const set = new Set(state.lanes[champ.key] || []);
-    for (const obs of observedLanes().get(champ.numId) || []) set.add(obs);
+  function lanesFor(champ, list) {
+    const set = new Set();
+    for (const p of list) {
+      const jouees = observedLanes(p.id).get(champ.numId);
+      if (jouees && jouees.length) jouees.forEach((r) => set.add(r));
+      else (state.lanes[champ.key] || []).forEach((r) => set.add(r));
+    }
     return set.size ? set : null;
   }
 
   let _observed = null;
-  function observedLanes() {
-    if (_observed) return _observed;
-    _observed = new Map();
-    for (const p of players()) {
-      for (const m of matchesOf(p.id)) {
-        if (!m.role || m.role === 'UNKNOWN') continue;
-        const arr = _observed.get(m.champId) || [];
-        if (!arr.includes(m.role)) arr.push(m.role);
-        _observed.set(m.champId, arr);
+  /** Lanes réellement jouées par un joueur, champion par champion. */
+  function observedLanes(playerId) {
+    if (!_observed) {
+      _observed = new Map();
+      for (const p of players()) {
+        const parChamp = new Map();
+        for (const m of matchesOf(p.id)) {
+          if (!m.role || m.role === 'UNKNOWN') continue;
+          const arr = parChamp.get(m.champId) || [];
+          if (!arr.includes(m.role)) arr.push(m.role);
+          parChamp.set(m.champId, arr);
+        }
+        _observed.set(p.id, parChamp);
       }
     }
-    return _observed;
+    return _observed.get(playerId) || new Map();
   }
 
   const players = () => (state.config.players || []).filter((p) => state.stats.players[p.id]);
@@ -749,7 +763,7 @@
     const isPartial = (numId) => !isDone(numId) && list.some((p) => statsByPlayer.get(p.id).played.has(numId));
 
     // Les compteurs d'état portent sur la lane sélectionnée, pas sur le roster entier.
-    const duLane = state.champions.filter(matchesLane);
+    const duLane = state.champions.filter((c) => matchesLane(c, list));
     const doneCount = duLane.filter((c) => isDone(c.numId)).length;
     const duo = list.length > 1;
 
@@ -795,9 +809,9 @@
   }
 
   /** Un champion dont la lane est inconnue reste visible dans tous les filtres. */
-  function matchesLane(c) {
+  function matchesLane(c, list) {
     if (state.laneFilter === 'ALL') return true;
-    const lanes = lanesOf(c);
+    const lanes = lanesFor(c, list);
     return !lanes || lanes.has(state.laneFilter);
   }
 
@@ -807,7 +821,7 @@
 
     const visible = state.champions.filter((c) => {
       if (q && !c.name.toLowerCase().includes(q) && !c.key.toLowerCase().includes(q)) return false;
-      if (!matchesLane(c)) return false;
+      if (!matchesLane(c, list)) return false;
       if (state.champFilter === 'done') return isDone(c.numId);
       if (state.champFilter === 'todo') return !isDone(c.numId);
       return true;

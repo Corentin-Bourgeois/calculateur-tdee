@@ -1,0 +1,23 @@
+{
+  "challengeName": "Champion Ocean Challenge",
+  "region": {
+    "platform": "euw1",
+    "routing": "europe"
+  },
+  "queue": 420,
+  "challengeStart": null,
+  "players": [
+    {
+      "id": "corentin",
+      "name": "Corentin",
+      "riotId": "No Trick Poney#LFT",
+      "color": "#C8AA6E"
+    },
+    {
+      "id": "mehdi",
+      "name": "Mehdi",
+      "riotId": "KYLΙAN MBAPPÉ#EUW",
+      "color": "#0AC8B9"
+    }
+  ]
+}

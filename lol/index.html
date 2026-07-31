@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Champion Ocean Challenge</title>
+  <style>
+    :root {
+      --bg:        #070E1B;
+      --card:      #0E1B2E;
+      --card2:     #142339;
+      --card3:     #1B2E48;
+      --border:    rgba(200,170,110,0.16);
+      --border2:   rgba(255,255,255,0.07);
+      --text:      #F0E6D2;
+      --text2:     #9AA4B2;
+      --text3:     #6B7688;
+      --gold:      #C8AA6E;
+      --gold-soft: rgba(200,170,110,0.12);
+      --teal:      #0AC8B9;
+      --win:       #3DCF8E;
+      --win-bg:    rgba(61,207,142,0.12);
+      --loss:      #E5545B;
+      --loss-bg:   rgba(229,84,91,0.12);
+      --radius:    14px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(10,200,185,0.10), transparent 60%),
+        radial-gradient(900px 500px at 85% -10%, rgba(200,170,110,0.10), transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 0 18px; }
+
+    /* ---------- Header ---------- */
+    header { padding: 34px 0 22px; }
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); font-weight: 700; margin-bottom: 8px;
+    }
+    h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; }
+    .subtitle { color: var(--text2); font-size: 14px; margin-top: 6px; }
+
+    /* ---------- Tabs ---------- */
+    nav.tabs {
+      display: flex; gap: 4px; background: var(--card);
+      border: 1px solid var(--border2); border-radius: 12px;
+      padding: 4px; margin: 22px 0 20px; overflow-x: auto;
+    }
+    nav.tabs button {
+      flex: 1; min-width: 110px; padding: 10px 14px; border: 0; border-radius: 9px;
+      background: transparent; color: var(--text2); font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit; white-space: nowrap; transition: all .15s;
+    }
+    nav.tabs button:hover { color: var(--text); }
+    nav.tabs button.active { background: var(--card3); color: var(--text); }
+
+    /* ---------- Player switch ---------- */
+    .player-switch { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .player-switch button {
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border2);
+      background: var(--card); color: var(--text2); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 7px;
+      transition: all .15s;
+    }
+    .player-switch button:hover { border-color: var(--border); color: var(--text); }
+    .player-switch button.active { background: var(--gold-soft); border-color: var(--gold); color: var(--text); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ---------- Cards ---------- */
+    .card {
+      background: var(--card); border: 1px solid var(--border2);
+      border-radius: var(--radius); padding: 20px;
+    }
+    .card-title {
+      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text3); font-weight: 700; margin-bottom: 16px;
+    }
+    .grid { display: grid; gap: 16px; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+
+    /* ---------- Progress card ---------- */
+    .prog { display: flex; align-items: center; gap: 20px; }
+    .ring { position: relative; width: 104px; height: 104px; flex-shrink: 0; }
+    .ring svg { transform: rotate(-90deg); }
+    .ring-label {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .ring-pct { font-size: 21px; font-weight: 800; letter-spacing: -0.5px; }
+    .ring-sub { font-size: 10px; color: var(--text3); font-weight: 600; }
+    .prog-info { min-width: 0; }
+    .prog-name { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+    .prog-riotid {
+      font-size: 12px; color: var(--text3); margin-bottom: 12px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .prog-stats { display: flex; gap: 18px; flex-wrap: wrap; }
+    .prog-stat-v { font-size: 17px; font-weight: 700; }
+    .prog-stat-l { font-size: 11px; color: var(--text3); margin-top: 1px; }
+    .rank-chip {
+      display: inline-block; padding: 3px 9px; border-radius: 6px;
+      background: var(--gold-soft); color: var(--gold);
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 10px;
+    }
+
+    /* ---------- Stat tiles ---------- */
+    .tile { background: var(--card); border: 1px solid var(--border2); border-radius: var(--radius); padding: 16px 18px; }
+    .tile-v { font-size: 24px; font-weight: 800; letter-spacing: -0.6px; }
+    .tile-l { font-size: 11px; color: var(--text3); margin-top: 3px; font-weight: 600; }
+
+    /* ---------- Bars ---------- */
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 13px; }
+    .bar-row:last-child { margin-bottom: 0; }
+    .bar-label { width: 68px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 22px; background: var(--card2); border-radius: 6px; overflow: hidden; display: flex; }
+    .bar-win { background: var(--win); height: 100%; }
+    .bar-loss { background: var(--loss); opacity: .55; height: 100%; }
+    .bar-meta { width: 116px; text-align: right; font-size: 12px; color: var(--text2); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+    .bar-meta b { color: var(--text); font-weight: 700; }
+    .empty { color: var(--text3); font-size: 13px; padding: 6px 0; }
+
+    /* ---------- Champion grid ---------- */
+    .filters { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 18px; }
+    .search {
+      flex: 1; min-width: 190px; padding: 10px 14px; border-radius: 10px;
+      border: 1px solid var(--border2); background: var(--card); color: var(--text);
+      font-size: 14px; font-family: inherit;
+    }
+    .search:focus { outline: none; border-color: var(--gold); }
+    .search::placeholder { color: var(--text3); }
+    .seg { display: flex; background: var(--card); border: 1px solid var(--border2); border-radius: 10px; padding: 3px; }
+    .seg button {
+      padding: 7px 13px; border: 0; border-radius: 7px; background: transparent;
+      color: var(--text2); font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit;
+      white-space: nowrap;
+    }
+    .seg button.active { background: var(--card3); color: var(--text); }
+
+    .champ-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 10px;
+    }
+    .champ {
+      position: relative; border: 0; padding: 0; background: transparent;
+      cursor: pointer; font-family: inherit; text-align: center;
+    }
+    .champ-img {
+      width: 100%; aspect-ratio: 1; border-radius: 10px; display: block;
+      border: 2px solid transparent; background: var(--card2); transition: all .15s;
+    }
+    .champ.todo .champ-img { filter: grayscale(1) brightness(.42); }
+    .champ.done .champ-img { border-color: var(--gold); }
+    .champ:hover .champ-img { transform: translateY(-2px); filter: none; }
+    .champ-name {
+      font-size: 10.5px; margin-top: 5px; color: var(--text2); font-weight: 600;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .champ.done .champ-name { color: var(--text); }
+    .champ-wr {
+      position: absolute; top: -4px; right: -4px; font-size: 9.5px; font-weight: 800;
+      padding: 2px 5px; border-radius: 5px; color: #06111F; line-height: 1.3;
+    }
+    .champ-owners {
+      position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 3px; background: rgba(7,14,27,0.85);
+      padding: 3px 5px; border-radius: 999px;
+    }
+    .champ-owners .dot { width: 6px; height: 6px; }
+
+    /* ---------- Match history ---------- */
+    .match {
+      display: flex; align-items: center; gap: 14px; padding: 12px 14px;
+      border-radius: 10px; border-left: 3px solid var(--loss);
+      background: var(--loss-bg); margin-bottom: 8px;
+    }
+    .match.win { border-left-color: var(--win); background: var(--win-bg); }
+    .match img { width: 42px; height: 42px; border-radius: 8px; flex-shrink: 0; background: var(--card2); }
+    .match-champ { flex: 1; min-width: 120px; }
+    .match-champ b { font-size: 14px; font-weight: 700; display: block; }
+    .match-sub { font-size: 11.5px; color: var(--text3); margin-top: 2px; }
+    .match-kda { text-align: center; min-width: 96px; font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .match-kda span { display: block; font-size: 11px; color: var(--text3); font-weight: 500; margin-top: 2px; }
+    .match-vs { min-width: 118px; font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+    .match-vs img { width: 22px; height: 22px; border-radius: 5px; }
+    .match-res { min-width: 62px; text-align: right; font-size: 12.5px; font-weight: 800; color: var(--loss); }
+    .match.win .match-res { color: var(--win); }
+    .match-date { min-width: 78px; text-align: right; font-size: 11.5px; color: var(--text3); }
+
+    /* ---------- Modal ---------- */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(3,7,15,0.78); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center; padding: 18px; z-index: 100;
+    }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px; max-width: 460px; width: 100%; max-height: 84vh; overflow-y: auto;
+    }
+    .modal-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .modal-head img { width: 62px; height: 62px; border-radius: 12px; }
+    .modal-head h3 { font-size: 20px; font-weight: 800; }
+    .modal-tags { font-size: 12px; color: var(--text3); margin-top: 3px; }
+    .modal-close {
+      margin-top: 20px; width: 100%; padding: 11px; border-radius: 10px; border: 1px solid var(--border2);
+      background: var(--card2); color: var(--text); font-size: 14px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .modal-player { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border2); }
+    .modal-player:last-of-type { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+    .modal-player-name { font-size: 13px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+
+    /* ---------- Setup / states ---------- */
+    .notice { border: 1px solid var(--border); background: var(--gold-soft); border-radius: var(--radius); padding: 20px; }
+    .notice h2 { font-size: 16px; margin-bottom: 12px; }
+    .notice ol { margin: 0 0 0 18px; font-size: 14px; line-height: 1.85; color: var(--text2); }
+    .notice code {
+      background: rgba(0,0,0,0.35); padding: 2px 6px; border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; color: var(--gold);
+    }
+    .notice a { color: var(--gold); }
+    footer { margin-top: 32px; text-align: center; font-size: 11.5px; color: var(--text3); line-height: 1.7; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 24px; }
+      .match-vs, .match-date { display: none; }
+      .bar-meta { width: 92px; font-size: 11px; }
+      .prog { flex-direction: column; align-items: flex-start; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">League of Legends · Ranked Solo/Duo</div>
+      <h1 id="title">Champion Ocean Challenge</h1>
+      <div class="subtitle" id="subtitle">Chargement…</div>
+    </header>
+    <main id="app"></main>
+    <footer id="footer"></footer>
+  </div>
+
+  <script>
+  'use strict';
+
+  const DDRAGON = 'https://ddragon.leagueoflegends.com';
+  const ROLES = [
+    ['TOP', 'Top'], ['JUNGLE', 'Jungle'], ['MIDDLE', 'Mid'],
+    ['BOTTOM', 'ADC'], ['UTILITY', 'Support'], ['UNKNOWN', 'Autre'],
+  ];
+  const ROLE_LABEL = Object.fromEntries(ROLES);
+
+  const state = {
+    config: null,
+    stats: null,
+    version: null,
+    champions: [],          // [{numId, key, name, tags}]
+    champById: new Map(),   // numId -> champion
+    tab: 'overview',
+    player: 'all',
+    champFilter: 'all',     // all | done | todo
+    search: '',
+    modal: null,
+  };
+
+  /* ================= Chargement ================= */
+
+  async function getJson(url) {
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) throw new Error(`${res.status} sur ${url}`);
+    return res.json();
+  }
+
+  async function loadChampions() {
+    const versions = await getJson(`${DDRAGON}/api/versions.json`);
+    state.version = versions[0];
+    const data = await getJson(`${DDRAGON}/cdn/${state.version}/data/fr_FR/champion.json`);
+    state.champions = Object.values(data.data)
+      // Data Dragon liste aussi des variantes hors Faille (préfixées, ex. "Jade_Ahri",
+      // avec un identifiant numérique très élevé). Elles ne comptent pas pour le challenge.
+      .filter((c) => !c.id.includes('_') && Number(c.key) < 10000)
+      .map((c) => ({ numId: Number(c.key), key: c.id, name: c.name, tags: c.tags || [] }))
+      .sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+    state.champById = new Map(state.champions.map((c) => [c.numId, c]));
+  }
+
+  const champIcon = (champ) =>
+    champ ? `${DDRAGON}/cdn/${state.version}/img/champion/${champ.key}.png` : '';
+
+  /* ================= Dérivation des stats ================= */
+
+  /** Matchs retenus pour le challenge : hors remakes. */
+  function matchesOf(playerId) {
+    const p = state.stats.players[playerId];
+    if (!p || !p.matches) return [];
+    return p.matches.filter((m) => !m.remake);
+  }
+
+  function computeStats(playerId) {
+    const matches = matchesOf(playerId);
+    const byRole = {};
+    const byChamp = new Map();
+    let wins = 0;
+
+    for (const m of matches) {
+      if (m.win) wins++;
+
+      const role = ROLE_LABEL[m.role] ? m.role : 'UNKNOWN';
+      byRole[role] = byRole[role] || { games: 0, wins: 0 };
+      byRole[role].games++;
+      if (m.win) byRole[role].wins++;
+
+      const c = byChamp.get(m.champId) || { games: 0, wins: 0, k: 0, d: 0, a: 0, cs: 0 };
+      c.games++;
+      if (m.win) c.wins++;
+      c.k += m.k; c.d += m.d; c.a += m.a; c.cs += m.cs;
+      byChamp.set(m.champId, c);
+    }
+
+    // Un champion ne compte pour le challenge que s'il existe encore dans le jeu.
+    const played = new Set([...byChamp.keys()].filter((id) => state.champById.has(id)));
+
+    return {
+      matches,
+      games: matches.length,
+      wins,
+      losses: matches.length - wins,
+      wr: matches.length ? (wins / matches.length) * 100 : 0,
+      byRole,
+      byChamp,
+      played,
+      total: state.champions.length,
+    };
+  }
+
+  const players = () => (state.config.players || []).filter((p) => state.stats.players[p.id]);
+  const activePlayers = () =>
+    state.player === 'all' ? players() : players().filter((p) => p.id === state.player);
+
+  /* ================= Helpers de rendu ================= */
+
+  const el = (html) => {
+    const t = document.createElement('template');
+    t.innerHTML = html.trim();
+    return t.content.firstElementChild;
+  };
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const pct = (n) => `${n.toFixed(1)}%`;
+  const wrColor = (wr) => (wr >= 50 ? 'var(--win)' : 'var(--loss)');
+
+  function timeAgo(ts) {
+    const days = Math.floor((Date.now() - ts) / 86400000);
+    if (days === 0) return "aujourd'hui";
+    if (days === 1) return 'hier';
+    if (days < 30) return `il y a ${days} j`;
+    if (days < 365) return `il y a ${Math.floor(days / 30)} mois`;
+    return `il y a ${Math.floor(days / 365)} an${days >= 730 ? 's' : ''}`;
+  }
+
+  function ring(percent, color) {
+    const r = 44, c = 2 * Math.PI * r;
+    const dash = (Math.min(100, percent) / 100) * c;
+    return `
+      <div class="ring">
+        <svg width="104" height="104" viewBox="0 0 104 104">
+          <circle cx="52" cy="52" r="${r}" fill="none" stroke="var(--card3)" stroke-width="8"/>
+          <circle cx="52" cy="52" r="${r}" fill="none" stroke="${color}" stroke-width="8"
+                  stroke-linecap="round" stroke-dasharray="${dash} ${c - dash}"/>
+        </svg>
+        <div class="ring-label">
+          <div class="ring-pct">${percent.toFixed(0)}%</div>
+          <div class="ring-sub">CHALLENGE</div>
+        </div>
+      </div>`;
+  }
+
+  /* ================= Onglet : vue d'ensemble ================= */
+
+  function renderOverview() {
+    const list = activePlayers();
+    const frag = document.createDocumentFragment();
+
+    // Cartes de progression
+    const progGrid = el('<div class="grid grid-2" style="margin-bottom:16px"></div>');
+    for (const p of list) {
+      const s = computeStats(p.id);
+      const entry = state.stats.players[p.id];
+      const done = s.played.size;
+      const progress = s.total ? (done / s.total) * 100 : 0;
+      const rank = entry.rank
+        ? `<div class="rank-chip">${esc(entry.rank.tier)} ${esc(entry.rank.division)} · ${entry.rank.lp} LP</div>`
+        : '';
+
+      progGrid.appendChild(el(`
+        <div class="card">
+          <div class="prog">
+            ${ring(progress, p.color)}
+            <div class="prog-info">
+              <div class="prog-name">${esc(p.name)}</div>
+              <div class="prog-riotid">${esc(entry.riotId || '')}</div>
+              ${rank}
+              <div class="prog-stats">
+                <div>
+                  <div class="prog-stat-v">${done}<span style="color:var(--text3);font-size:13px">/${s.total}</span></div>
+                  <div class="prog-stat-l">Champions joués</div>
+                </div>
+                <div>
+                  <div class="prog-stat-v">${s.total - done}</div>
+                  <div class="prog-stat-l">Restants</div>
+                </div>
+                <div>
+                  <div class="prog-stat-v" style="color:${wrColor(s.wr)}">${pct(s.wr)}</div>
+                  <div class="prog-stat-l">${s.wins}V / ${s.losses}D</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`));
+    }
+    frag.appendChild(progGrid);
+
+    // Tuiles globales
+    const all = list.flatMap((p) => matchesOf(p.id));
+    const allWins = all.filter((m) => m.win).length;
+    const unionPlayed = new Set();
+    for (const p of list) for (const id of computeStats(p.id).played) unionPlayed.add(id);
+    const hours = Math.round(all.reduce((sum, m) => sum + m.dur, 0) / 3600);
+
+    const tiles = el('<div class="grid grid-4" style="margin-bottom:16px"></div>');
+    const tileData = [
+      [String(all.length), 'Parties ranked'],
+      [all.length ? pct((allWins / all.length) * 100) : '—', 'Winrate cumulé'],
+      [`${unionPlayed.size}/${state.champions.length}`, 'Champions couverts (à deux)'],
+      [`${hours} h`, 'Temps de jeu'],
+    ];
+    for (const [v, l] of tileData) {
+      tiles.appendChild(el(`<div class="tile"><div class="tile-v">${esc(v)}</div><div class="tile-l">${esc(l)}</div></div>`));
+    }
+    frag.appendChild(tiles);
+
+    // Winrate par rôle
+    const roleGrid = el('<div class="grid grid-2" style="margin-bottom:16px"></div>');
+    for (const p of list) {
+      const s = computeStats(p.id);
+      const card = el(`<div class="card"><div class="card-title">Winrate par rôle — ${esc(p.name)}</div></div>`);
+      const rows = ROLES.filter(([key]) => s.byRole[key]);
+      if (!rows.length) {
+        card.appendChild(el('<div class="empty">Aucune partie enregistrée.</div>'));
+      } else {
+        for (const [key, label] of rows) {
+          const r = s.byRole[key];
+          const wr = (r.wins / r.games) * 100;
+          card.appendChild(el(`
+            <div class="bar-row">
+              <div class="bar-label">${label}</div>
+              <div class="bar-track">
+                <div class="bar-win" style="width:${wr}%"></div>
+                <div class="bar-loss" style="width:${100 - wr}%"></div>
+              </div>
+              <div class="bar-meta"><b style="color:${wrColor(wr)}">${pct(wr)}</b> · ${r.games} g</div>
+            </div>`));
+        }
+      }
+      roleGrid.appendChild(card);
+    }
+    frag.appendChild(roleGrid);
+
+    // Champions les plus joués
+    const topGrid = el('<div class="grid grid-2"></div>');
+    for (const p of list) {
+      const s = computeStats(p.id);
+      const card = el(`<div class="card"><div class="card-title">Les plus joués — ${esc(p.name)}</div></div>`);
+      const top = [...s.byChamp.entries()]
+        .sort((a, b) => b[1].games - a[1].games || b[1].wins - a[1].wins)
+        .slice(0, 6);
+      if (!top.length) {
+        card.appendChild(el('<div class="empty">Aucune partie enregistrée.</div>'));
+      } else {
+        for (const [champId, c] of top) {
+          const champ = state.champById.get(champId);
+          const wr = (c.wins / c.games) * 100;
+          card.appendChild(el(`
+            <div class="bar-row">
+              <img src="${champIcon(champ)}" alt="" width="26" height="26" style="border-radius:6px" loading="lazy">
+              <div class="bar-label" style="width:auto;flex:1">${esc(champ ? champ.name : 'Champion ' + champId)}</div>
+              <div class="bar-meta"><b style="color:${wrColor(wr)}">${pct(wr)}</b> · ${c.games} g</div>
+            </div>`));
+        }
+      }
+      topGrid.appendChild(card);
+    }
+    frag.appendChild(topGrid);
+
+    return frag;
+  }
+
+  /* ================= Onglet : champions ================= */
+
+  function renderChampions() {
+    const list = activePlayers();
+    const statsByPlayer = new Map(list.map((p) => [p.id, computeStats(p.id)]));
+    const frag = document.createDocumentFragment();
+
+    // Un champion est "fait" s'il est joué par TOUS les joueurs affichés en mode comparaison ?
+    // Non : en mode comparaison on affiche l'état de chacun, et "fait" = joué par au moins un.
+    const isDone = (numId) => list.some((p) => statsByPlayer.get(p.id).played.has(numId));
+
+    const doneCount = state.champions.filter((c) => isDone(c.numId)).length;
+
+    const filters = el(`
+      <div class="filters">
+        <input class="search" type="search" placeholder="Rechercher un champion…" value="${esc(state.search)}">
+        <div class="seg">
+          <button data-f="all">Tous (${state.champions.length})</button>
+          <button data-f="done">Joués (${doneCount})</button>
+          <button data-f="todo">Restants (${state.champions.length - doneCount})</button>
+        </div>
+      </div>`);
+    filters.querySelector('.search').addEventListener('input', (e) => {
+      state.search = e.target.value;
+      renderChampGrid(grid, list, statsByPlayer, isDone);
+    });
+    filters.querySelectorAll('.seg button').forEach((b) => {
+      b.classList.toggle('active', b.dataset.f === state.champFilter);
+      b.addEventListener('click', () => {
+        state.champFilter = b.dataset.f;
+        render();
+      });
+    });
+    frag.appendChild(filters);
+
+    const grid = el('<div class="champ-grid"></div>');
+    renderChampGrid(grid, list, statsByPlayer, isDone);
+    frag.appendChild(grid);
+
+    return frag;
+  }
+
+  function renderChampGrid(grid, list, statsByPlayer, isDone) {
+    grid.innerHTML = '';
+    const q = state.search.trim().toLowerCase();
+
+    const visible = state.champions.filter((c) => {
+      if (q && !c.name.toLowerCase().includes(q) && !c.key.toLowerCase().includes(q)) return false;
+      if (state.champFilter === 'done') return isDone(c.numId);
+      if (state.champFilter === 'todo') return !isDone(c.numId);
+      return true;
+    });
+
+    if (!visible.length) {
+      grid.appendChild(el('<div class="empty">Aucun champion ne correspond.</div>'));
+      return;
+    }
+
+    for (const c of visible) {
+      const done = isDone(c.numId);
+
+      // Badge de winrate : uniquement quand un seul joueur est sélectionné.
+      let badge = '';
+      if (list.length === 1 && done) {
+        const stat = statsByPlayer.get(list[0].id).byChamp.get(c.numId);
+        const wr = (stat.wins / stat.games) * 100;
+        badge = `<div class="champ-wr" style="background:${wrColor(wr)}">${wr.toFixed(0)}</div>`;
+      }
+
+      // Pastilles : qui a déjà joué ce champion, en mode comparaison.
+      let owners = '';
+      if (list.length > 1 && done) {
+        const dots = list
+          .map((p) => statsByPlayer.get(p.id).played.has(c.numId)
+            ? `<div class="dot" style="background:${p.color}"></div>` : '')
+          .join('');
+        owners = `<div class="champ-owners">${dots}</div>`;
+      }
+
+      const tile = el(`
+        <button class="champ ${done ? 'done' : 'todo'}" title="${esc(c.name)}">
+          <img class="champ-img" src="${champIcon(c)}" alt="${esc(c.name)}" loading="lazy">
+          ${badge}${owners}
+          <div class="champ-name">${esc(c.name)}</div>
+        </button>`);
+      tile.addEventListener('click', () => { state.modal = c.numId; render(); });
+      grid.appendChild(tile);
+    }
+  }
+
+  /* ================= Onglet : historique ================= */
+
+  function renderHistory() {
+    const list = activePlayers();
+    const rows = list
+      .flatMap((p) => matchesOf(p.id).map((m) => ({ m, p })))
+      .sort((a, b) => b.m.ts - a.m.ts)
+      .slice(0, 120);
+
+    const frag = document.createDocumentFragment();
+    if (!rows.length) {
+      frag.appendChild(el('<div class="card"><div class="empty">Aucune partie enregistrée pour le moment.</div></div>'));
+      return frag;
+    }
+
+    for (const { m, p } of rows) {
+      const champ = state.champById.get(m.champId);
+      const opp = m.oppChampId ? state.champById.get(m.oppChampId) : null;
+      const kda = m.d === 0 ? 'Perfect' : ((m.k + m.a) / m.d).toFixed(2);
+      const mins = Math.round(m.dur / 60);
+      const csm = mins ? (m.cs / mins).toFixed(1) : '0.0';
+
+      frag.appendChild(el(`
+        <div class="match ${m.win ? 'win' : ''}">
+          <img src="${champIcon(champ)}" alt="" loading="lazy">
+          <div class="match-champ">
+            <b>${esc(champ ? champ.name : m.champ)}</b>
+            <div class="match-sub">
+              <span style="color:${p.color}">●</span> ${esc(p.name)} · ${ROLE_LABEL[m.role] || 'Autre'} · ${mins} min
+            </div>
+          </div>
+          <div class="match-kda">
+            ${m.k} / <span style="color:var(--loss);display:inline">${m.d}</span> / ${m.a}
+            <span>${kda} KDA · ${csm} CS/min</span>
+          </div>
+          <div class="match-vs">
+            ${opp ? `<img src="${champIcon(opp)}" alt="" loading="lazy"> vs ${esc(opp.name)}` : ''}
+          </div>
+          <div class="match-res">${m.win ? 'VICTOIRE' : 'DÉFAITE'}</div>
+          <div class="match-date">${timeAgo(m.ts)}</div>
+        </div>`));
+    }
+    return frag;
+  }
+
+  /* ================= Modal champion ================= */
+
+  function renderModal() {
+    const champ = state.champById.get(state.modal);
+    if (!champ) return null;
+
+    const body = players().map((p) => {
+      const s = computeStats(p.id);
+      const c = s.byChamp.get(champ.numId);
+      if (!c) {
+        return `<div class="modal-player">
+          <div class="modal-player-name"><span class="dot" style="background:${p.color}"></span>${esc(p.name)}</div>
+          <div class="empty">Jamais joué — reste à faire.</div>
+        </div>`;
+      }
+      const wr = (c.wins / c.games) * 100;
+      const kda = c.d === 0 ? 'Perfect' : ((c.k + c.a) / c.d).toFixed(2);
+      return `<div class="modal-player">
+        <div class="modal-player-name"><span class="dot" style="background:${p.color}"></span>${esc(p.name)}</div>
+        <div class="prog-stats">
+          <div><div class="prog-stat-v">${c.games}</div><div class="prog-stat-l">Parties</div></div>
+          <div><div class="prog-stat-v" style="color:${wrColor(wr)}">${pct(wr)}</div><div class="prog-stat-l">${c.wins}V / ${c.games - c.wins}D</div></div>
+          <div><div class="prog-stat-v">${kda}</div><div class="prog-stat-l">${(c.k / c.games).toFixed(1)} / ${(c.d / c.games).toFixed(1)} / ${(c.a / c.games).toFixed(1)}</div></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const bg = el(`
+      <div class="modal-bg">
+        <div class="modal">
+          <div class="modal-head">
+            <img src="${champIcon(champ)}" alt="">
+            <div>
+              <h3>${esc(champ.name)}</h3>
+              <div class="modal-tags">${esc(champ.tags.join(' · '))}</div>
+            </div>
+          </div>
+          ${body}
+          <button class="modal-close">Fermer</button>
+        </div>
+      </div>`);
+
+    const close = () => { state.modal = null; render(); };
+    bg.addEventListener('click', (e) => { if (e.target === bg) close(); });
+    bg.querySelector('.modal-close').addEventListener('click', close);
+    return bg;
+  }
+
+  /* ================= Rendu principal ================= */
+
+  function render() {
+    const app = document.getElementById('app');
+    app.innerHTML = '';
+    document.querySelectorAll('.modal-bg').forEach((m) => m.remove());
+
+    if (!players().length) {
+      app.appendChild(el(`
+        <div class="notice">
+          <h2>Le suivi n'est pas encore actif</h2>
+          <ol>
+            <li>Demander une <b>Personal API Key</b> sur <a href="https://developer.riotgames.com" target="_blank" rel="noopener">developer.riotgames.com</a> (la clé de développement expire au bout de 24 h, elle ne suffit pas).</li>
+            <li>Ajouter cette clé dans <code>Settings → Secrets and variables → Actions</code> du dépôt, sous le nom <code>RIOT_API_KEY</code>.</li>
+            <li>Renseigner vos deux Riot ID (format <code>Pseudo#TAG</code>) et votre région dans <code>lol/config.json</code>.</li>
+            <li>Lancer le workflow <code>Sync LoL challenge</code> depuis l'onglet Actions.</li>
+          </ol>
+        </div>`));
+      return;
+    }
+
+    // Sélecteur de joueur
+    const sw = el('<div class="player-switch"></div>');
+    const options = [{ id: 'all', name: 'Les deux', color: 'var(--gold)' }, ...players()];
+    for (const o of options) {
+      const b = el(`<button class="${state.player === o.id ? 'active' : ''}">
+        <span class="dot" style="background:${o.color}"></span>${esc(o.name)}</button>`);
+      b.addEventListener('click', () => { state.player = o.id; render(); });
+      sw.appendChild(b);
+    }
+    app.appendChild(sw);
+
+    if (state.tab === 'overview') app.appendChild(renderOverview());
+    else if (state.tab === 'champions') app.appendChild(renderChampions());
+    else app.appendChild(renderHistory());
+
+    if (state.modal !== null) {
+      const modal = renderModal();
+      if (modal) document.body.appendChild(modal);
+    }
+
+    document.querySelectorAll('nav.tabs button').forEach((b) => {
+      b.classList.toggle('active', b.dataset.tab === state.tab);
+    });
+  }
+
+  function renderChrome() {
+    document.getElementById('title').textContent = state.config.challengeName || 'Champion Ocean Challenge';
+
+    const tabs = el(`
+      <nav class="tabs">
+        <button data-tab="overview">Vue d'ensemble</button>
+        <button data-tab="champions">Champions</button>
+        <button data-tab="history">Historique</button>
+      </nav>`);
+    tabs.querySelectorAll('button').forEach((b) => {
+      b.addEventListener('click', () => { state.tab = b.dataset.tab; render(); });
+    });
+    document.getElementById('app').before(tabs);
+
+    const backlog = Object.values(state.stats.players).reduce((n, p) => n + (p.backlog || 0), 0);
+    const synced = state.stats.generatedAt
+      ? `Dernière synchronisation ${timeAgo(new Date(state.stats.generatedAt).getTime())}`
+      : 'Aucune synchronisation effectuée';
+    document.getElementById('subtitle').textContent =
+      `Jouer les ${state.champions.length} champions du jeu, une fois chacun, en ranked Solo/Duo.`;
+    document.getElementById('footer').innerHTML =
+      `${esc(synced)}${backlog ? ` · ${backlog} matchs encore à rapatrier` : ''}<br>` +
+      `Données Riot Games API · Icônes Data Dragon ${esc(state.version)} · Les remakes ne comptent pas.`;
+  }
+
+  async function init() {
+    try {
+      const [config, stats] = await Promise.all([
+        getJson('config.json'),
+        getJson('data/stats.json').catch(() => ({ players: {} })),
+      ]);
+      state.config = config;
+      state.stats = stats;
+      state.stats.players = stats.players || {};
+      await loadChampions();
+      renderChrome();
+      render();
+    } catch (err) {
+      document.getElementById('subtitle').textContent = 'Erreur de chargement';
+      document.getElementById('app').appendChild(
+        el(`<div class="notice"><h2>Impossible de charger les données</h2><div class="empty">${esc(err.message)}</div></div>`));
+    }
+  }
+
+  init();
+  </script>
+</body>
+</html>

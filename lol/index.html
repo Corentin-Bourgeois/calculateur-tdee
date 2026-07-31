@@ -167,6 +167,8 @@
       border: 2px solid transparent; background: var(--card2); transition: all .15s;
     }
     .champ.todo .champ-img { filter: grayscale(1) brightness(.42); }
+    /* Joué par l'un mais pas par l'autre : ni éteint, ni validé. */
+    .champ.partial .champ-img { filter: grayscale(.6) brightness(.72); border-color: rgba(200,170,110,0.4); }
     .champ.done .champ-img { border-color: var(--gold); }
     .champ:hover .champ-img { transform: translateY(-2px); filter: none; }
     .champ-name {
@@ -472,15 +474,19 @@
     // Tuiles globales
     const all = list.flatMap((p) => matchesOf(p.id));
     const allWins = all.filter((m) => m.win).length;
-    const unionPlayed = new Set();
-    for (const p of list) for (const id of computeStats(p.id).played) unionPlayed.add(id);
     const hours = Math.round(all.reduce((sum, m) => sum + m.dur, 0) / 3600);
+
+    // Le challenge est individuel : chacun doit jouer les 173 champions de son côté.
+    // Cumuler les deux pools n'aurait donc aucun sens ; ce qui compte à deux, c'est le
+    // nombre de champions que TOUT LE MONDE a validé.
+    const playedSets = list.map((p) => computeStats(p.id).played);
+    const parTous = state.champions.filter((c) => playedSets.every((s) => s.has(c.numId))).length;
 
     const tiles = el('<div class="grid grid-4" style="margin-bottom:16px"></div>');
     const tileData = [
       [String(all.length), 'Parties ranked'],
       [all.length ? pct((allWins / all.length) * 100) : '—', 'Winrate cumulé'],
-      [`${unionPlayed.size}/${state.champions.length}`, 'Champions couverts (à deux)'],
+      [`${parTous}/${state.champions.length}`, list.length > 1 ? 'Validés par les deux' : 'Champions joués'],
       [`${hours} h`, 'Temps de jeu'],
     ];
     for (const [v, l] of tileData) {
@@ -551,24 +557,26 @@
     const statsByPlayer = new Map(list.map((p) => [p.id, computeStats(p.id)]));
     const frag = document.createDocumentFragment();
 
-    // Un champion est "fait" s'il est joué par TOUS les joueurs affichés en mode comparaison ?
-    // Non : en mode comparaison on affiche l'état de chacun, et "fait" = joué par au moins un.
-    const isDone = (numId) => list.some((p) => statsByPlayer.get(p.id).played.has(numId));
+    // Le challenge est individuel : un champion n'est réglé que lorsque CHAQUE joueur
+    // affiché l'a joué. Un champion que seul l'un des deux a fait reste à faire pour l'autre.
+    const isDone = (numId) => list.every((p) => statsByPlayer.get(p.id).played.has(numId));
+    const isPartial = (numId) => !isDone(numId) && list.some((p) => statsByPlayer.get(p.id).played.has(numId));
 
     const doneCount = state.champions.filter((c) => isDone(c.numId)).length;
+    const duo = list.length > 1;
 
     const filters = el(`
       <div class="filters">
         <input class="search" type="search" placeholder="Rechercher un champion…" value="${esc(state.search)}">
         <div class="seg">
           <button data-f="all">Tous (${state.champions.length})</button>
-          <button data-f="done">Joués (${doneCount})</button>
+          <button data-f="done">${duo ? 'Validés par les deux' : 'Joués'} (${doneCount})</button>
           <button data-f="todo">Restants (${state.champions.length - doneCount})</button>
         </div>
       </div>`);
     filters.querySelector('.search').addEventListener('input', (e) => {
       state.search = e.target.value;
-      renderChampGrid(grid, list, statsByPlayer, isDone);
+      renderChampGrid(grid, list, statsByPlayer, isDone, isPartial);
     });
     filters.querySelectorAll('.seg button').forEach((b) => {
       b.classList.toggle('active', b.dataset.f === state.champFilter);
@@ -580,13 +588,13 @@
     frag.appendChild(filters);
 
     const grid = el('<div class="champ-grid"></div>');
-    renderChampGrid(grid, list, statsByPlayer, isDone);
+    renderChampGrid(grid, list, statsByPlayer, isDone, isPartial);
     frag.appendChild(grid);
 
     return frag;
   }
 
-  function renderChampGrid(grid, list, statsByPlayer, isDone) {
+  function renderChampGrid(grid, list, statsByPlayer, isDone, isPartial) {
     grid.innerHTML = '';
     const q = state.search.trim().toLowerCase();
 
@@ -604,6 +612,7 @@
 
     for (const c of visible) {
       const done = isDone(c.numId);
+      const partial = isPartial(c.numId);
 
       // Badge de winrate : uniquement quand un seul joueur est sélectionné.
       let badge = '';
@@ -613,18 +622,21 @@
         badge = `<div class="champ-wr" style="background:${wrColor(wr)}">${wr.toFixed(0)}</div>`;
       }
 
-      // Pastilles : qui a déjà joué ce champion, en mode comparaison.
+      // Pastilles : l'état de chacun, toujours affiché en mode comparaison. Une pastille
+      // éteinte signale un joueur qui doit encore jouer ce champion.
       let owners = '';
-      if (list.length > 1 && done) {
-        const dots = list
-          .map((p) => statsByPlayer.get(p.id).played.has(c.numId)
-            ? `<div class="dot" style="background:${p.color}"></div>` : '')
-          .join('');
+      if (list.length > 1) {
+        const dots = list.map((p) => {
+          const ok = statsByPlayer.get(p.id).played.has(c.numId);
+          return `<div class="dot" style="background:${ok ? p.color : 'transparent'};box-shadow:inset 0 0 0 1.5px ${ok ? p.color : 'var(--text3)'}"
+                       title="${esc(p.name)} : ${ok ? 'joué' : 'à faire'}"></div>`;
+        }).join('');
         owners = `<div class="champ-owners">${dots}</div>`;
       }
 
       const tile = el(`
-        <button class="champ ${done ? 'done' : 'todo'}" title="${esc(c.name)}">
+        <button class="champ ${done ? 'done' : partial ? 'partial' : 'todo'}"
+                title="${esc(c.name)}">
           <img class="champ-img" src="${champIcon(c)}" alt="${esc(c.name)}" loading="lazy">
           ${badge}${owners}
           <div class="champ-name">${esc(c.name)}</div>

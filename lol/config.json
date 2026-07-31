@@ -5,7 +5,7 @@
     "routing": "europe"
   },
   "queue": 420,
-  "challengeStart": null,
+  "challengeStart": "2026-04-29",
   "players": [
     {
       "id": "corentin",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T18:12:04.520Z",
+  "generatedAt": "2026-08-07T19:17:53.697Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 51,
+        "lp": 41,
         "wins": 11,
-        "losses": 6
+        "losses": 7
       },
       "matches": [
+        {
+          "id": "EUW1_7943368336",
+          "ts": 1786130107834,
+          "dur": 1945,
+          "remake": false,
+          "champId": 27,
+          "champ": "Singed",
+          "role": "TOP",
+          "win": false,
+          "k": 5,
+          "d": 6,
+          "a": 12,
+          "cs": 283,
+          "gold": 14049,
+          "oppChampId": 98,
+          "oppChamp": "Shen"
+        },
         {
           "id": "EUW1_7939743134",
           "ts": 1785832852549,
@@ -327,6 +344,14 @@
           "lp": 51,
           "wins": 11,
           "losses": 6
+        },
+        {
+          "ts": 1786130267545,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 41,
+          "wins": 11,
+          "losses": 7
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-07T19:17:53.697Z",
+  "generatedAt": "2026-08-07T20:03:02.077Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 41,
+        "lp": 31,
         "wins": 11,
-        "losses": 7
+        "losses": 8
       },
       "matches": [
+        {
+          "id": "EUW1_7943426006",
+          "ts": 1786132841347,
+          "dur": 2278,
+          "remake": false,
+          "champId": 2,
+          "champ": "Olaf",
+          "role": "TOP",
+          "win": false,
+          "k": 9,
+          "d": 9,
+          "a": 4,
+          "cs": 288,
+          "gold": 16965,
+          "oppChampId": 50,
+          "oppChamp": "Swain"
+        },
         {
           "id": "EUW1_7943368336",
           "ts": 1786130107834,
@@ -352,6 +369,14 @@
           "lp": 41,
           "wins": 11,
           "losses": 7
+        },
+        {
+          "ts": 1786132975935,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 31,
+          "wins": 11,
+          "losses": 8
         }
       ]
     },

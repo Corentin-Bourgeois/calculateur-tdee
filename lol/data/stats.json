@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09T10:19:38.840Z",
+  "generatedAt": "2026-08-09T10:58:16.868Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,45 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 31,
+        "lp": 21,
         "wins": 11,
-        "losses": 8
+        "losses": 9
       },
       "matches": [
+        {
+          "id": "EUW1_7945007053",
+          "ts": 1786271439119,
+          "dur": 73,
+          "remake": true,
+          "champId": 8,
+          "champ": "Vladimir",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 0,
+          "d": 0,
+          "a": 0,
+          "cs": 3,
+          "gold": 577,
+          "oppChampId": 103,
+          "oppChamp": "Ahri"
+        },
+        {
+          "id": "EUW1_7944982053",
+          "ts": 1786270804883,
+          "dur": 1756,
+          "remake": false,
+          "champId": 50,
+          "champ": "Swain",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 2,
+          "d": 7,
+          "a": 7,
+          "cs": 226,
+          "gold": 12011,
+          "oppChampId": 804,
+          "oppChamp": "Yunara"
+        },
         {
           "id": "EUW1_7943426006",
           "ts": 1786132841347,
@@ -377,6 +411,14 @@
           "lp": 31,
           "wins": 11,
           "losses": 8
+        },
+        {
+          "ts": 1786273089446,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 21,
+          "wins": 11,
+          "losses": 9
         }
       ]
     },

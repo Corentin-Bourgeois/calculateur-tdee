@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T18:03:18.527Z",
+  "generatedAt": "2026-08-10T19:11:23.795Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "I",
-        "lp": 61,
-        "wins": 16,
+        "lp": 91,
+        "wins": 17,
         "losses": 11
       },
       "matches": [
+        {
+          "id": "EUW1_7946515835",
+          "ts": 1786386065270,
+          "dur": 2174,
+          "remake": false,
+          "champId": 136,
+          "champ": "AurelionSol",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 5,
+          "d": 5,
+          "a": 14,
+          "cs": 257,
+          "gold": 17095,
+          "oppChampId": 81,
+          "oppChamp": "Ezreal"
+        },
         {
           "id": "EUW1_7946495936",
           "ts": 1786383389734,
@@ -569,6 +586,14 @@
           "division": "I",
           "lp": 61,
           "wins": 16,
+          "losses": 11
+        },
+        {
+          "ts": 1786389077659,
+          "tier": "GOLD",
+          "division": "I",
+          "lp": 91,
+          "wins": 17,
           "losses": 11
         }
       ]

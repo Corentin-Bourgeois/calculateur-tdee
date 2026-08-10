@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T11:38:26.658Z",
+  "generatedAt": "2026-08-10T12:31:37.738Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 21,
-        "wins": 11,
+        "lp": 51,
+        "wins": 12,
         "losses": 9
       },
       "matches": [
+        {
+          "id": "EUW1_7946143799",
+          "ts": 1786362379988,
+          "dur": 1996,
+          "remake": false,
+          "champId": 83,
+          "champ": "Yorick",
+          "role": "TOP",
+          "win": true,
+          "k": 5,
+          "d": 4,
+          "a": 4,
+          "cs": 262,
+          "gold": 14388,
+          "oppChampId": 420,
+          "oppChamp": "Illaoi"
+        },
         {
           "id": "EUW1_7945007053",
           "ts": 1786271439119,
@@ -418,6 +435,14 @@
           "division": "II",
           "lp": 21,
           "wins": 11,
+          "losses": 9
+        },
+        {
+          "ts": 1786365091629,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 51,
+          "wins": 12,
           "losses": 9
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T23:06:31.471Z",
+  "generatedAt": "2026-08-10T23:49:20.896Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "IV",
-        "lp": 51,
+        "lp": 41,
         "wins": 19,
-        "losses": 12
+        "losses": 13
       },
       "matches": [
+        {
+          "id": "EUW1_7946905420",
+          "ts": 1786403865089,
+          "dur": 1619,
+          "remake": false,
+          "champId": 15,
+          "champ": "Sivir",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 1,
+          "d": 5,
+          "a": 6,
+          "cs": 234,
+          "gold": 9801,
+          "oppChampId": 893,
+          "oppChamp": "Aurora"
+        },
         {
           "id": "EUW1_7946873561",
           "ts": 1786401225462,
@@ -662,6 +679,14 @@
           "lp": 51,
           "wins": 19,
           "losses": 12
+        },
+        {
+          "ts": 1786405754690,
+          "tier": "PLATINUM",
+          "division": "IV",
+          "lp": 41,
+          "wins": 19,
+          "losses": 13
         }
       ]
     },

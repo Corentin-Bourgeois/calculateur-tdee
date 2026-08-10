@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T12:31:37.738Z",
+  "generatedAt": "2026-08-10T14:01:31.722Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,46 @@
       "name": "Corentin",
       "rank": {
         "tier": "GOLD",
-        "division": "II",
-        "lp": 51,
-        "wins": 12,
+        "division": "I",
+        "lp": 11,
+        "wins": 14,
         "losses": 9
       },
       "matches": [
+        {
+          "id": "EUW1_7946198209",
+          "ts": 1786367759651,
+          "dur": 2125,
+          "remake": false,
+          "champId": 54,
+          "champ": "Malphite",
+          "role": "TOP",
+          "win": true,
+          "k": 5,
+          "d": 6,
+          "a": 19,
+          "cs": 253,
+          "gold": 15482,
+          "oppChampId": 904,
+          "oppChamp": "Zaahen"
+        },
+        {
+          "id": "EUW1_7946158328",
+          "ts": 1786365254090,
+          "dur": 2590,
+          "remake": false,
+          "champId": 887,
+          "champ": "Gwen",
+          "role": "TOP",
+          "win": true,
+          "k": 10,
+          "d": 4,
+          "a": 9,
+          "cs": 341,
+          "gold": 21511,
+          "oppChampId": 516,
+          "oppChamp": "Ornn"
+        },
         {
           "id": "EUW1_7946143799",
           "ts": 1786362379988,
@@ -443,6 +477,14 @@
           "division": "II",
           "lp": 51,
           "wins": 12,
+          "losses": 9
+        },
+        {
+          "ts": 1786370484374,
+          "tier": "GOLD",
+          "division": "I",
+          "lp": 11,
+          "wins": 14,
           "losses": 9
         }
       ]

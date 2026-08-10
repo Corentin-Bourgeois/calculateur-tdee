@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T20:57:17.643Z",
+  "generatedAt": "2026-08-10T21:50:24.892Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -10,9 +10,26 @@
         "division": "I",
         "lp": 91,
         "wins": 17,
-        "losses": 11
+        "losses": 12
       },
       "matches": [
+        {
+          "id": "EUW1_7946804177",
+          "ts": 1786397149367,
+          "dur": 558,
+          "remake": false,
+          "champId": 122,
+          "champ": "Darius",
+          "role": "TOP",
+          "win": false,
+          "k": 0,
+          "d": 0,
+          "a": 0,
+          "cs": 67,
+          "gold": 2775,
+          "oppChampId": 54,
+          "oppChamp": "Malphite"
+        },
         {
           "id": "EUW1_7946515835",
           "ts": 1786386065270,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T16:10:05.603Z",
+  "generatedAt": "2026-08-10T17:09:00.747Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,45 @@
       "rank": {
         "tier": "GOLD",
         "division": "I",
-        "lp": 11,
-        "wins": 14,
-        "losses": 9
+        "lp": 31,
+        "wins": 15,
+        "losses": 10
       },
       "matches": [
+        {
+          "id": "EUW1_7946437988",
+          "ts": 1786381270737,
+          "dur": 1094,
+          "remake": false,
+          "champId": 112,
+          "champ": "Viktor",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 0,
+          "d": 5,
+          "a": 1,
+          "cs": 149,
+          "gold": 5735,
+          "oppChampId": 96,
+          "oppChamp": "KogMaw"
+        },
+        {
+          "id": "EUW1_7946417606",
+          "ts": 1786379775023,
+          "dur": 1075,
+          "remake": false,
+          "champId": 103,
+          "champ": "Ahri",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 3,
+          "d": 1,
+          "a": 4,
+          "cs": 151,
+          "gold": 7425,
+          "oppChampId": 777,
+          "oppChamp": "Yone"
+        },
         {
           "id": "EUW1_7946198209",
           "ts": 1786367759651,
@@ -486,6 +520,14 @@
           "lp": 11,
           "wins": 14,
           "losses": 9
+        },
+        {
+          "ts": 1786381733605,
+          "tier": "GOLD",
+          "division": "I",
+          "lp": 31,
+          "wins": 15,
+          "losses": 10
         }
       ]
     },

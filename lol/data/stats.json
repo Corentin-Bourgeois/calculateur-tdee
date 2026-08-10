@@ -1,18 +1,35 @@
 {
-  "generatedAt": "2026-08-10T21:50:24.892Z",
+  "generatedAt": "2026-08-10T22:24:34.508Z",
   "queue": 420,
   "players": {
     "corentin": {
       "riotId": "No Trick Poney#LFT",
       "name": "Corentin",
       "rank": {
-        "tier": "GOLD",
-        "division": "I",
-        "lp": 91,
-        "wins": 17,
+        "tier": "PLATINUM",
+        "division": "IV",
+        "lp": 21,
+        "wins": 18,
         "losses": 12
       },
       "matches": [
+        {
+          "id": "EUW1_7946821418",
+          "ts": 1786398935361,
+          "dur": 1470,
+          "remake": false,
+          "champId": 34,
+          "champ": "Anivia",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 6,
+          "d": 3,
+          "a": 10,
+          "cs": 183,
+          "gold": 12242,
+          "oppChampId": 134,
+          "oppChamp": "Syndra"
+        },
         {
           "id": "EUW1_7946804177",
           "ts": 1786397149367,
@@ -612,6 +629,14 @@
           "lp": 91,
           "wins": 17,
           "losses": 11
+        },
+        {
+          "ts": 1786400668350,
+          "tier": "PLATINUM",
+          "division": "IV",
+          "lp": 21,
+          "wins": 18,
+          "losses": 12
         }
       ]
     },

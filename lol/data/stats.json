@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T22:24:34.508Z",
+  "generatedAt": "2026-08-10T23:06:31.471Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "IV",
-        "lp": 21,
-        "wins": 18,
+        "lp": 51,
+        "wins": 19,
         "losses": 12
       },
       "matches": [
+        {
+          "id": "EUW1_7946873561",
+          "ts": 1786401225462,
+          "dur": 1730,
+          "remake": false,
+          "champId": 134,
+          "champ": "Syndra",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 7,
+          "d": 6,
+          "a": 7,
+          "cs": 240,
+          "gold": 14256,
+          "oppChampId": 804,
+          "oppChamp": "Yunara"
+        },
         {
           "id": "EUW1_7946821418",
           "ts": 1786398935361,
@@ -636,6 +653,14 @@
           "division": "IV",
           "lp": 21,
           "wins": 18,
+          "losses": 12
+        },
+        {
+          "ts": 1786403185302,
+          "tier": "PLATINUM",
+          "division": "IV",
+          "lp": 51,
+          "wins": 19,
           "losses": 12
         }
       ]

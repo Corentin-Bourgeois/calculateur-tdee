@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T15:24:16.400Z",
+  "generatedAt": "2026-08-11T16:13:37.259Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 21,
-        "wins": 22,
+        "lp": 51,
+        "wins": 23,
         "losses": 14
       },
       "matches": [
+        {
+          "id": "EUW1_7947374295",
+          "ts": 1786464593990,
+          "dur": 1801,
+          "remake": false,
+          "champId": 8,
+          "champ": "Vladimir",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 6,
+          "d": 4,
+          "a": 10,
+          "cs": 230,
+          "gold": 13324,
+          "oppChampId": 711,
+          "oppChamp": "Vex"
+        },
         {
           "id": "EUW1_7947333745",
           "ts": 1786461508390,
@@ -795,6 +812,14 @@
           "division": "III",
           "lp": 21,
           "wins": 22,
+          "losses": 14
+        },
+        {
+          "ts": 1786464811155,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 51,
+          "wins": 23,
           "losses": 14
         }
       ]

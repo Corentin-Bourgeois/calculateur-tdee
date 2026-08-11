@@ -891,6 +891,22 @@
   const pct = (n) => `${n.toFixed(1)}%`;
   const wrColor = (wr) => (wr >= 50 ? 'var(--win)' : 'var(--loss)');
 
+  /**
+   * Ancienneté à la minute près. timeAgo() raisonne au jour, ce qui convient aux parties
+   * mais masquait l'âge réel de la synchronisation : « aujourd'hui » pouvait vouloir dire
+   * il y a trois heures.
+   */
+  function ilYA(ts) {
+    const s = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+    if (s < 60) return "à l'instant";
+    const min = Math.floor(s / 60);
+    if (min < 60) return `il y a ${min} min`;
+    const h = Math.floor(min / 60);
+    if (h < 24) return `il y a ${h} h${min % 60 ? ' ' + (min % 60) : ''}`;
+    const j = Math.floor(h / 24);
+    return `il y a ${j} jour${j > 1 ? 's' : ''}`;
+  }
+
   function timeAgo(ts) {
     const days = Math.floor((Date.now() - ts) / 86400000);
     if (days === 0) return "aujourd'hui";
@@ -1450,7 +1466,7 @@
   function updateMeta() {
     const backlog = Object.values(state.stats.players).reduce((n, p) => n + (p.backlog || 0), 0);
     const synced = state.stats.generatedAt
-      ? `Dernière synchronisation ${timeAgo(new Date(state.stats.generatedAt).getTime())}`
+      ? `Dernière synchronisation ${ilYA(new Date(state.stats.generatedAt).getTime())}`
       : 'Aucune synchronisation effectuée';
     const start = state.stats.challengeStart || state.config.challengeStart;
     const periode = start
@@ -1617,7 +1633,13 @@
 
     if (fresh.generatedAt === state.stats.generatedAt) {
       updateMeta(); // rien de neuf, mais « il y a X minutes » doit avancer
-      if (manual) toast('Aucune nouvelle partie');
+      if (manual) {
+        // Sans l'âge de la synchro, le bouton a l'air cassé : il relit un fichier qui,
+        // lui, n'est réécrit que lorsque la récupération auprès de Riot a tourné.
+        const t = state.stats.generatedAt;
+        toast(t ? `Aucune nouvelle partie · synchro ${ilYA(new Date(t).getTime())}`
+                : 'Aucune nouvelle partie');
+      }
       return;
     }
 

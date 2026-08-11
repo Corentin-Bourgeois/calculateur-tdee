@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T23:49:20.896Z",
+  "generatedAt": "2026-08-11T00:40:01.560Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "IV",
-        "lp": 41,
-        "wins": 19,
+        "lp": 71,
+        "wins": 20,
         "losses": 13
       },
       "matches": [
+        {
+          "id": "EUW1_7946938945",
+          "ts": 1786406027921,
+          "dur": 1823,
+          "remake": false,
+          "champId": 63,
+          "champ": "Brand",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 7,
+          "d": 4,
+          "a": 16,
+          "cs": 225,
+          "gold": 14633,
+          "oppChampId": 895,
+          "oppChamp": "Nilah"
+        },
         {
           "id": "EUW1_7946905420",
           "ts": 1786403865089,
@@ -686,6 +703,14 @@
           "division": "IV",
           "lp": 41,
           "wins": 19,
+          "losses": 13
+        },
+        {
+          "ts": 1786408795678,
+          "tier": "PLATINUM",
+          "division": "IV",
+          "lp": 71,
+          "wins": 20,
           "losses": 13
         }
       ]

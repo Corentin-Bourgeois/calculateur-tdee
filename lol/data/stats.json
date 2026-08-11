@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T16:13:37.259Z",
+  "generatedAt": "2026-08-11T16:48:37.475Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 51,
+        "lp": 41,
         "wins": 23,
-        "losses": 14
+        "losses": 15
       },
       "matches": [
+        {
+          "id": "EUW1_7947417210",
+          "ts": 1786466669443,
+          "dur": 1567,
+          "remake": false,
+          "champId": 61,
+          "champ": "Orianna",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 4,
+          "d": 6,
+          "a": 2,
+          "cs": 203,
+          "gold": 9699,
+          "oppChampId": 8,
+          "oppChamp": "Vladimir"
+        },
         {
           "id": "EUW1_7947374295",
           "ts": 1786464593990,
@@ -821,6 +838,14 @@
           "lp": 51,
           "wins": 23,
           "losses": 14
+        },
+        {
+          "ts": 1786466911304,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 41,
+          "wins": 23,
+          "losses": 15
         }
       ]
     },

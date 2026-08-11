@@ -1584,6 +1584,61 @@
     if (lecture) lecture.catch(sortir);
   }
 
+  /**
+   * Actualisation à la demande.
+   *
+   * Sans point de déclenchement configuré, on se contente de relire les données publiées.
+   * Avec, on demande d'abord une récupération auprès de Riot, puis on attend que le
+   * fichier change — la synchronisation prend une trentaine de secondes.
+   */
+  async function actualiser(btn) {
+    const libelle = btn.textContent;
+    btn.disabled = true;
+    try {
+      const endpoint = (state.config.syncEndpoint || '').trim();
+      if (!endpoint) {
+        btn.textContent = 'Lecture…';
+        await refreshStats({ manual: true });
+        return;
+      }
+
+      btn.textContent = 'Synchronisation…';
+      const avant = state.stats.generatedAt;
+
+      try {
+        const r = await fetch(endpoint, { method: 'POST' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      } catch (err) {
+        // Point de déclenchement injoignable : on relit quand même ce qui est publié,
+        // plutôt que de laisser le bouton sans effet. La relecture est silencieuse, sinon
+        // son propre message masquerait l'échec du déclenchement.
+        await refreshStats({ manual: false });
+        toast('Synchronisation injoignable · données publiées relues');
+        return;
+      }
+
+      // La récupération tourne côté GitHub : on guette le changement du fichier.
+      const limite = Date.now() + 150000;
+      while (Date.now() < limite) {
+        await new Promise((r) => setTimeout(r, 5000));
+        let frais;
+        try {
+          frais = await getJson(`data/stats.json?t=${Date.now()}`);
+        } catch { continue; }
+        if (frais.generatedAt !== avant) {
+          await refreshStats({ manual: true });
+          return;
+        }
+        const reste = Math.ceil((limite - Date.now()) / 1000);
+        btn.textContent = `Synchronisation… ${reste}s`;
+      }
+      toast('Synchronisation lancée, données pas encore publiées');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = libelle;
+    }
+  }
+
   /* ================= Thème ================= */
 
   /**
@@ -1602,8 +1657,6 @@
   }
 
   /* ================= Rafraîchissement automatique ================= */
-
-  const REFRESH_MS = 5 * 60 * 1000;
 
   function toast(message) {
     document.querySelectorAll('.toast').forEach((t) => t.remove());
@@ -1678,23 +1731,8 @@
       render();
       ouvrirAccueil();
 
-      setInterval(refreshStats, REFRESH_MS);
-      // Revenir sur l'onglet est le moment où l'on veut des données fraîches.
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') refreshStats();
-      });
-
       const btn = document.getElementById('refresh');
-      btn.addEventListener('click', async () => {
-        btn.disabled = true;
-        btn.textContent = 'Actualisation…';
-        try {
-          await refreshStats({ manual: true });
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Actualiser';
-        }
-      });
+      btn.addEventListener('click', () => actualiser(btn));
 
       // Le site est statique : il ne peut pas déclencher lui-même la récupération auprès
       // de Riot, cela demanderait un jeton GitHub, qui serait public dans la page. Le lien

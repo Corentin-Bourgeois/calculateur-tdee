@@ -20,5 +20,6 @@
       "color": "#3B7BD8"
     }
   ],
-  "repoUrl": "https://github.com/Corentin-Bourgeois/calculateur-tdee"
+  "repoUrl": "https://github.com/Corentin-Bourgeois/calculateur-tdee",
+  "syncEndpoint": ""
 }

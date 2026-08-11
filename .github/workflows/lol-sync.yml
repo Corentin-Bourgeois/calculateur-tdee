@@ -2,27 +2,34 @@ name: Sync LoL challenge
 
 on:
   schedule:
-    # Toutes les 5 minutes : c'est l'intervalle le plus court accepté par GitHub Actions.
-    # Les exécutions planifiées sont souvent décalées de plusieurs minutes en période de
-    # charge, la latence réelle est donc plutôt de 5 à 15 minutes.
-    - cron: '*/5 * * * *'
+    # GitHub n'honore pas les intervalles courts : mesuré sur ce dépôt, un cron réglé sur
+    # 5 minutes ne se déclenchait en réalité que toutes les 90 minutes environ, avec des
+    # écarts allant jusqu'à 3 h 30. On ne compte donc plus sur la fréquence des
+    # déclenchements : chaque exécution boucle sur elle-même pendant près d'une heure.
+    - cron: '*/30 * * * *'
   workflow_dispatch:
     inputs:
       max_new_matches:
-        description: 'Nombre max de nouveaux matchs à récupérer sur cette exécution'
+        description: 'Nombre max de nouveaux matchs à récupérer par passage'
         required: false
         default: '80'
+      duree_minutes:
+        description: "Durée de la boucle, en minutes (0 = un seul passage)"
+        required: false
+        default: '50'
 
 permissions:
   contents: write
 
 concurrency:
   group: lol-sync
-  cancel-in-progress: false
+  # Une nouvelle exécution remplace la boucle en cours plutôt que d'attendre sa fin.
+  cancel-in-progress: true
 
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 70
     steps:
       - uses: actions/checkout@v4
 
@@ -30,25 +37,48 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Récupération des matchs
+      - name: Synchronisation en boucle
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
           MAX_NEW_MATCHES: ${{ github.event.inputs.max_new_matches || '80' }}
-        run: node lol/scripts/sync.mjs
-
-      - name: Commit des données
+          DUREE_MINUTES: ${{ github.event.inputs.duree_minutes || '50' }}
+          INTERVALLE_SECONDES: '240'
         run: |
+          set -u
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- lol/data/stats.json; then
-            echo "Aucun nouveau match, rien à commiter."
-            exit 0
-          fi
-          git add lol/data/stats.json
-          git commit -m "chore(lol): synchronisation des matchs ranked"
-          for delay in 0 2 4 8 16; do
-            if [ "$delay" != "0" ]; then sleep "$delay"; fi
-            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+
+          fin=$(( $(date +%s) + DUREE_MINUTES * 60 ))
+          passage=0
+
+          while : ; do
+            passage=$(( passage + 1 ))
+            echo "::group::Passage $passage"
+            # Un échec ponctuel de l'API ne doit pas interrompre la boucle.
+            node lol/scripts/sync.mjs || echo "passage en échec, on réessaiera"
+
+            # Le script ne réécrit le fichier que si les données ont bougé : pas de
+            # commit ni de reconstruction du site pour une exécution à vide.
+            if git diff --quiet -- lol/data/stats.json; then
+              echo "rien de neuf"
+            else
+              git add lol/data/stats.json
+              git commit -m "chore(lol): synchronisation des matchs ranked"
+              pousse=0
+              for delai in 0 2 4 8 16; do
+                [ "$delai" != "0" ] && sleep "$delai"
+                if git pull --rebase origin "${GITHUB_REF_NAME}" \
+                   && git push origin "HEAD:${GITHUB_REF_NAME}"; then
+                  pousse=1; break
+                fi
+              done
+              [ "$pousse" = "1" ] || echo "::warning::push impossible à ce passage"
+            fi
+            echo "::endgroup::"
+
+            reste=$(( fin - $(date +%s) ))
+            [ "$reste" -le "$INTERVALLE_SECONDES" ] && break
+            sleep "$INTERVALLE_SECONDES"
           done
-          echo "Push impossible après plusieurs tentatives." >&2
-          exit 1
+
+          echo "Boucle terminée après $passage passage(s)."

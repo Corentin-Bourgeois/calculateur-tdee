@@ -167,6 +167,9 @@ async function main() {
   const stats = await loadJson(STATS_PATH, { players: {} });
   stats.players = stats.players || {};
 
+  // Empreinte de l'état de départ, hors date, pour détecter une exécution sans changement.
+  const avant = JSON.stringify({ ...stats, generatedAt: undefined });
+
   let budget = MAX_NEW_MATCHES;
   let added = 0;
 
@@ -263,13 +266,22 @@ async function main() {
     stats.players[player.id] = entry;
   }
 
-  stats.generatedAt = new Date().toISOString();
   stats.queue = queue;
   stats.region = config.region;
   stats.challengeStart = config.challengeStart || null;
 
+  // La date de génération changeant à chaque passage, écrire systématiquement produirait
+  // un commit à chaque exécution — et donc une reconstruction du site pour rien. On ne
+  // réécrit que si les données elles-mêmes ont bougé.
+  const sansDate = (o) => JSON.stringify({ ...o, generatedAt: undefined });
+  if (avant !== null && sansDate(stats) === avant) {
+    console.log('\n= Rien de neuf, fichier inchangé.');
+    return;
+  }
+
+  stats.generatedAt = new Date().toISOString();
   await writeFile(STATS_PATH, JSON.stringify(stats, null, 2) + '\n');
-  console.log(`\n✓ ${added} nouveau(x) match(s) écrit(s) dans ${STATS_PATH}`);
+  console.log(`\n✓ ${added} nouveau(x) match(s) · fichier mis à jour`);
 }
 
 main().catch((err) => {

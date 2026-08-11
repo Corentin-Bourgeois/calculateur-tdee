@@ -20,5 +20,9 @@
       "color": "#3B7BD8"
     }
   ],
-  "repoUrl": "https://github.com/Corentin-Bourgeois/calculateur-tdee"
+  "repoUrl": "https://github.com/Corentin-Bourgeois/calculateur-tdee",
+  "cancelledMatches": [
+    "EUW1_7946495936",
+    "EUW1_7946804177"
+  ]
 }

@@ -406,6 +406,17 @@
     }
     .match.win { border-left-color: var(--win); background: var(--win-bg); }
     .match.split { border-left-color: var(--accent); background: var(--accent-soft); }
+    /* Annulée : ni victoire ni défaite, la ligne s'efface pour ne pas peser dans la lecture. */
+    .match.annulee {
+      border-left-color: var(--text3);
+      background: rgba(var(--surface-rgb), 0.55);
+      opacity: .72;
+    }
+    .match.annulee .match-res { color: var(--text3); }
+    .match-annulee {
+      font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--text3); font-weight: 700; margin-bottom: 8px;
+    }
     .match-lines { flex: 1; min-width: 0; }
     .match-line { display: flex; align-items: center; gap: 14px; }
     .match-line + .match-line { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border2); }
@@ -771,10 +782,20 @@
   /* ================= Dérivation des stats ================= */
 
   /** Matchs retenus pour le challenge : hors remakes. */
-  function matchesOf(playerId) {
+  /** Parties annulées : défaites effacées par Riot, listées à la main dans config.json. */
+  const estAnnulee = (m) => (state.config.cancelledMatches || []).includes(m.id);
+
+  /**
+   * Parties d'un joueur, remakes toujours exclus.
+   *
+   * Les parties annulées sont écartées des statistiques par défaut : elles fausseraient le
+   * winrate alors que Riot les a effacées. Elles restent néanmoins de vraies parties, donc
+   * l'historique et les lanes réellement jouées les demandent explicitement.
+   */
+  function matchesOf(playerId, { avecAnnulees = false } = {}) {
     const p = state.stats.players[playerId];
     if (!p || !p.matches) return [];
-    return p.matches.filter((m) => !m.remake);
+    return p.matches.filter((m) => !m.remake && (avecAnnulees || !estAnnulee(m)));
   }
 
   function computeStats(playerId) {
@@ -798,8 +819,13 @@
       byChamp.set(m.champId, c);
     }
 
+    // Le champion reste validé même quand la partie a été annulée : elle a bien été jouée,
+    // c'est seulement son résultat qui ne compte pas.
+    const joues = new Set([...byChamp.keys()]);
+    for (const m of matchesOf(playerId, { avecAnnulees: true })) joues.add(m.champId);
+
     // Un champion ne compte pour le challenge que s'il existe encore dans le jeu.
-    const played = new Set([...byChamp.keys()].filter((id) => state.champById.has(id)));
+    const played = new Set([...joues].filter((id) => state.champById.has(id)));
 
     return {
       matches,
@@ -863,7 +889,7 @@
       _observed = new Map();
       for (const p of players()) {
         const parChamp = new Map();
-        for (const m of matchesOf(p.id)) {
+        for (const m of matchesOf(p.id, { avecAnnulees: true })) {
           if (!m.role || m.role === 'UNKNOWN') continue;
           const arr = parChamp.get(m.champId) || [];
           if (!arr.includes(m.role)) arr.push(m.role);
@@ -1282,7 +1308,7 @@
     // on la regroupe pour l'afficher sur une seule ligne au lieu de la compter deux fois.
     const parMatch = new Map();
     for (const p of list) {
-      for (const m of matchesOf(p.id)) {
+      for (const m of matchesOf(p.id, { avecAnnulees: true })) {
         const entree = parMatch.get(m.id) || { ts: m.ts, dur: m.dur, joueurs: [] };
         entree.joueurs.push({ m, p });
         parMatch.set(m.id, entree);
@@ -1302,6 +1328,7 @@
       // s'ils se sont retrouvés face à face, on n'affiche pas de résultat commun.
       const memeCamp = partie.joueurs.every((j) => j.m.win === partie.joueurs[0].m.win);
       const gagne = partie.joueurs[0].m.win;
+      const annulee = partie.joueurs.every((j) => estAnnulee(j.m));
       const duo = partie.joueurs.length > 1;
       const mins = Math.round(partie.dur / 60);
 
@@ -1331,13 +1358,14 @@
       }).join('');
 
       frag.appendChild(el(`
-        <div class="match ${memeCamp && gagne ? 'win' : ''} ${memeCamp ? '' : 'split'}">
+        <div class="match ${memeCamp && gagne && !annulee ? 'win' : ''} ${memeCamp ? '' : 'split'} ${annulee ? 'annulee' : ''}">
           <div class="match-lines">
             ${duo ? '<div class="match-together">ensemble</div>' : ''}
+            ${annulee ? '<div class="match-annulee">partie annulée · hors statistiques</div>' : ''}
             ${lignes}
           </div>
           <div class="match-right">
-            <div class="match-res">${memeCamp ? (gagne ? 'VICTOIRE' : 'DÉFAITE') : 'FACE À FACE'}</div>
+            <div class="match-res">${annulee ? 'ANNULÉE' : memeCamp ? (gagne ? 'VICTOIRE' : 'DÉFAITE') : 'FACE À FACE'}</div>
             <div class="match-date">${mins} min · ${timeAgo(partie.ts)}</div>
           </div>
         </div>`));

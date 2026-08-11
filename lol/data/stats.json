@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T13:53:59.566Z",
+  "generatedAt": "2026-08-11T14:55:09.287Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,62 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "IV",
-        "lp": 71,
-        "wins": 20,
-        "losses": 13
+        "lp": 91,
+        "wins": 21,
+        "losses": 14
       },
       "matches": [
+        {
+          "id": "EUW1_7947288175",
+          "ts": 1786459395425,
+          "dur": 1956,
+          "remake": false,
+          "champId": 711,
+          "champ": "Vex",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 10,
+          "d": 9,
+          "a": 10,
+          "cs": 208,
+          "gold": 14494,
+          "oppChampId": 55,
+          "oppChamp": "Katarina"
+        },
+        {
+          "id": "EUW1_7947285186",
+          "ts": 1786457066910,
+          "dur": 83,
+          "remake": true,
+          "champId": 84,
+          "champ": "Akali",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 0,
+          "d": 0,
+          "a": 0,
+          "cs": 4,
+          "gold": 615,
+          "oppChampId": 805,
+          "oppChamp": "Locke"
+        },
+        {
+          "id": "EUW1_7947248243",
+          "ts": 1786456539461,
+          "dur": 1720,
+          "remake": false,
+          "champId": 38,
+          "champ": "Kassadin",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 11,
+          "d": 6,
+          "a": 7,
+          "cs": 184,
+          "gold": 13102,
+          "oppChampId": 805,
+          "oppChamp": "Locke"
+        },
         {
           "id": "EUW1_7946938945",
           "ts": 1786406027921,
@@ -712,6 +763,14 @@
           "lp": 71,
           "wins": 20,
           "losses": 13
+        },
+        {
+          "ts": 1786460100703,
+          "tier": "PLATINUM",
+          "division": "IV",
+          "lp": 91,
+          "wins": 21,
+          "losses": 14
         }
       ]
     },

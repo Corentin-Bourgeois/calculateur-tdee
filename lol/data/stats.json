@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-11T16:48:37.475Z",
+  "generatedAt": "2026-08-12T09:37:14.259Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 41,
-        "wins": 23,
+        "lp": 71,
+        "wins": 24,
         "losses": 15
       },
       "matches": [
+        {
+          "id": "EUW1_7948081911",
+          "ts": 1786526830995,
+          "dur": 1935,
+          "remake": false,
+          "champId": 90,
+          "champ": "Malzahar",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 3,
+          "d": 6,
+          "a": 16,
+          "cs": 238,
+          "gold": 11966,
+          "oppChampId": 245,
+          "oppChamp": "Ekko"
+        },
         {
           "id": "EUW1_7947417210",
           "ts": 1786466669443,
@@ -845,6 +862,14 @@
           "division": "III",
           "lp": 41,
           "wins": 23,
+          "losses": 15
+        },
+        {
+          "ts": 1786527428131,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 71,
+          "wins": 24,
           "losses": 15
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T19:59:03.405Z",
+  "generatedAt": "2026-08-12T20:37:54.097Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 1,
+        "division": "III",
+        "lp": 91,
         "wins": 26,
-        "losses": 18
+        "losses": 19
       },
       "matches": [
+        {
+          "id": "EUW1_7948667617",
+          "ts": 1786566982797,
+          "dur": 2145,
+          "remake": false,
+          "champId": 96,
+          "champ": "KogMaw",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 13,
+          "d": 14,
+          "a": 15,
+          "cs": 190,
+          "gold": 16439,
+          "oppChampId": 119,
+          "oppChamp": "Draven"
+        },
         {
           "id": "EUW1_7948599092",
           "ts": 1786564498054,
@@ -996,6 +1013,14 @@
           "lp": 1,
           "wins": 26,
           "losses": 18
+        },
+        {
+          "ts": 1786567067946,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 91,
+          "wins": 26,
+          "losses": 19
         }
       ]
     },

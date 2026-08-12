@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T09:37:14.259Z",
+  "generatedAt": "2026-08-12T10:01:56.364Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "III",
-        "lp": 71,
-        "wins": 24,
+        "division": "II",
+        "lp": 1,
+        "wins": 25,
         "losses": 15
       },
       "matches": [
+        {
+          "id": "EUW1_7948099846",
+          "ts": 1786528736375,
+          "dur": 1561,
+          "remake": false,
+          "champId": 142,
+          "champ": "Zoe",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 8,
+          "d": 3,
+          "a": 11,
+          "cs": 192,
+          "gold": 11816,
+          "oppChampId": 161,
+          "oppChamp": "Velkoz"
+        },
         {
           "id": "EUW1_7948081911",
           "ts": 1786526830995,
@@ -870,6 +887,14 @@
           "division": "III",
           "lp": 71,
           "wins": 24,
+          "losses": 15
+        },
+        {
+          "ts": 1786528910195,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 1,
+          "wins": 25,
           "losses": 15
         }
       ]

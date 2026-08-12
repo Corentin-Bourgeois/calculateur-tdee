@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T10:01:56.364Z",
+  "generatedAt": "2026-08-12T10:52:43.497Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 1,
+        "division": "III",
+        "lp": 91,
         "wins": 25,
-        "losses": 15
+        "losses": 16
       },
       "matches": [
+        {
+          "id": "EUW1_7948133582",
+          "ts": 1786531011682,
+          "dur": 1842,
+          "remake": false,
+          "champId": 98,
+          "champ": "Shen",
+          "role": "TOP",
+          "win": false,
+          "k": 11,
+          "d": 11,
+          "a": 7,
+          "cs": 146,
+          "gold": 11771,
+          "oppChampId": 14,
+          "oppChamp": "Sion"
+        },
         {
           "id": "EUW1_7948099846",
           "ts": 1786528736375,
@@ -896,6 +913,14 @@
           "lp": 1,
           "wins": 25,
           "losses": 15
+        },
+        {
+          "ts": 1786531957370,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 91,
+          "wins": 25,
+          "losses": 16
         }
       ]
     },

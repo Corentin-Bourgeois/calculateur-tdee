@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T10:52:43.497Z",
+  "generatedAt": "2026-08-12T12:08:50.404Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 91,
+        "lp": 81,
         "wins": 25,
-        "losses": 16
+        "losses": 17
       },
       "matches": [
+        {
+          "id": "EUW1_7948159088",
+          "ts": 1786536291465,
+          "dur": 2243,
+          "remake": false,
+          "champId": 14,
+          "champ": "Sion",
+          "role": "TOP",
+          "win": false,
+          "k": 5,
+          "d": 5,
+          "a": 7,
+          "cs": 220,
+          "gold": 12486,
+          "oppChampId": 6,
+          "oppChamp": "Urgot"
+        },
         {
           "id": "EUW1_7948133582",
           "ts": 1786531011682,
@@ -921,6 +938,14 @@
           "lp": 91,
           "wins": 25,
           "losses": 16
+        },
+        {
+          "ts": 1786536524207,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 81,
+          "wins": 25,
+          "losses": 17
         }
       ]
     },

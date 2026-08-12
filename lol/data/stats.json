@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T12:08:50.404Z",
+  "generatedAt": "2026-08-12T14:43:50.020Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 81,
+        "lp": 71,
         "wins": 25,
-        "losses": 17
+        "losses": 18
       },
       "matches": [
+        {
+          "id": "EUW1_7948286293",
+          "ts": 1786545638399,
+          "dur": 1780,
+          "remake": false,
+          "champId": 412,
+          "champ": "Thresh",
+          "role": "UTILITY",
+          "win": false,
+          "k": 2,
+          "d": 10,
+          "a": 6,
+          "cs": 32,
+          "gold": 8923,
+          "oppChampId": 16,
+          "oppChamp": "Soraka"
+        },
         {
           "id": "EUW1_7948159088",
           "ts": 1786536291465,
@@ -946,6 +963,14 @@
           "lp": 81,
           "wins": 25,
           "losses": 17
+        },
+        {
+          "ts": 1786545823976,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 71,
+          "wins": 25,
+          "losses": 18
         }
       ]
     },

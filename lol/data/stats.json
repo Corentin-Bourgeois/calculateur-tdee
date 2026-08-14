@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T16:02:26.581Z",
+  "generatedAt": "2026-08-14T16:32:57.893Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 11,
+        "lp": 1,
         "wins": 28,
-        "losses": 23
+        "losses": 24
       },
       "matches": [
+        {
+          "id": "EUW1_7950300654",
+          "ts": 1786725033784,
+          "dur": 1400,
+          "remake": false,
+          "champId": 901,
+          "champ": "Smolder",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 3,
+          "d": 5,
+          "a": 4,
+          "cs": 194,
+          "gold": 10323,
+          "oppChampId": 429,
+          "oppChamp": "Kalista"
+        },
         {
           "id": "EUW1_7950265475",
           "ts": 1786723239568,
@@ -1171,6 +1188,14 @@
           "lp": 11,
           "wins": 28,
           "losses": 23
+        },
+        {
+          "ts": 1786725171732,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 1,
+          "wins": 28,
+          "losses": 24
         }
       ]
     },

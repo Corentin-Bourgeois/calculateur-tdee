@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T11:06:47.864Z",
+  "generatedAt": "2026-08-14T13:32:05.115Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 81,
+        "lp": 71,
         "wins": 26,
-        "losses": 20
+        "losses": 21
       },
       "matches": [
+        {
+          "id": "EUW1_7950117774",
+          "ts": 1786714135975,
+          "dur": 1566,
+          "remake": false,
+          "champId": 910,
+          "champ": "Hwei",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 9,
+          "d": 7,
+          "a": 4,
+          "cs": 204,
+          "gold": 11256,
+          "oppChampId": 34,
+          "oppChamp": "Anivia"
+        },
         {
           "id": "EUW1_7950003269",
           "ts": 1786705400693,
@@ -1046,6 +1063,14 @@
           "lp": 81,
           "wins": 26,
           "losses": 20
+        },
+        {
+          "ts": 1786714318938,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 71,
+          "wins": 26,
+          "losses": 21
         }
       ]
     },

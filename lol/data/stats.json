@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T14:30:03.499Z",
+  "generatedAt": "2026-08-14T15:21:19.189Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 91,
+        "lp": 81,
         "wins": 27,
-        "losses": 22
+        "losses": 23
       },
       "matches": [
+        {
+          "id": "EUW1_7950212640",
+          "ts": 1786720754480,
+          "dur": 2499,
+          "remake": false,
+          "champId": 245,
+          "champ": "Ekko",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 15,
+          "d": 10,
+          "a": 17,
+          "cs": 259,
+          "gold": 18617,
+          "oppChampId": 55,
+          "oppChamp": "Katarina"
+        },
         {
           "id": "EUW1_7950172048",
           "ts": 1786717742589,
@@ -1121,6 +1138,14 @@
           "lp": 91,
           "wins": 27,
           "losses": 22
+        },
+        {
+          "ts": 1786720873067,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 81,
+          "wins": 27,
+          "losses": 23
         }
       ]
     },

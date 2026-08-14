@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T14:09:28.871Z",
+  "generatedAt": "2026-08-14T14:30:03.499Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 61,
-        "wins": 26,
+        "lp": 91,
+        "wins": 27,
         "losses": 22
       },
       "matches": [
+        {
+          "id": "EUW1_7950172048",
+          "ts": 1786717742589,
+          "dur": 1532,
+          "remake": false,
+          "champId": 80,
+          "champ": "Pantheon",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 24,
+          "d": 2,
+          "a": 4,
+          "cs": 169,
+          "gold": 15468,
+          "oppChampId": 105,
+          "oppChamp": "Fizz"
+        },
         {
           "id": "EUW1_7950155521",
           "ts": 1786715705947,
@@ -1095,6 +1112,14 @@
           "division": "III",
           "lp": 61,
           "wins": 26,
+          "losses": 22
+        },
+        {
+          "ts": 1786717797428,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 91,
+          "wins": 27,
           "losses": 22
         }
       ]

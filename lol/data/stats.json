@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T15:21:19.189Z",
+  "generatedAt": "2026-08-14T16:02:26.581Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "III",
-        "lp": 81,
-        "wins": 27,
+        "division": "II",
+        "lp": 11,
+        "wins": 28,
         "losses": 23
       },
       "matches": [
+        {
+          "id": "EUW1_7950265475",
+          "ts": 1786723239568,
+          "dur": 2034,
+          "remake": false,
+          "champId": 119,
+          "champ": "Draven",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 9,
+          "d": 11,
+          "a": 8,
+          "cs": 230,
+          "gold": 16102,
+          "oppChampId": 29,
+          "oppChamp": "Twitch"
+        },
         {
           "id": "EUW1_7950212640",
           "ts": 1786720754480,
@@ -1145,6 +1162,14 @@
           "division": "III",
           "lp": 81,
           "wins": 27,
+          "losses": 23
+        },
+        {
+          "ts": 1786723340413,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 11,
+          "wins": 28,
           "losses": 23
         }
       ]

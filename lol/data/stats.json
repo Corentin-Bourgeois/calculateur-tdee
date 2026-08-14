@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T20:02:33.029Z",
+  "generatedAt": "2026-08-14T20:23:09.807Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 81,
+        "lp": 71,
         "wins": 28,
-        "losses": 26
+        "losses": 27
       },
       "matches": [
+        {
+          "id": "EUW1_7950571897",
+          "ts": 1786738942156,
+          "dur": 934,
+          "remake": false,
+          "champId": 30,
+          "champ": "Karthus",
+          "role": "JUNGLE",
+          "win": false,
+          "k": 1,
+          "d": 4,
+          "a": 1,
+          "cs": 97,
+          "gold": 4968,
+          "oppChampId": 131,
+          "oppChamp": "Diana"
+        },
         {
           "id": "EUW1_7950516028",
           "ts": 1786737548879,
@@ -1246,6 +1263,14 @@
           "lp": 81,
           "wins": 28,
           "losses": 26
+        },
+        {
+          "ts": 1786738982273,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 71,
+          "wins": 28,
+          "losses": 27
         }
       ]
     },
@@ -1255,11 +1280,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 71,
+        "lp": 61,
         "wins": 8,
-        "losses": 5
+        "losses": 6
       },
       "matches": [
+        {
+          "id": "EUW1_7950571897",
+          "ts": 1786738942156,
+          "dur": 934,
+          "remake": false,
+          "champId": 27,
+          "champ": "Singed",
+          "role": "TOP",
+          "win": false,
+          "k": 1,
+          "d": 4,
+          "a": 2,
+          "cs": 90,
+          "gold": 4711,
+          "oppChampId": 150,
+          "oppChamp": "Gnar"
+        },
         {
           "id": "EUW1_7950439079",
           "ts": 1786734351879,
@@ -1498,6 +1540,14 @@
           "lp": 71,
           "wins": 8,
           "losses": 5
+        },
+        {
+          "ts": 1786738987149,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 61,
+          "wins": 8,
+          "losses": 6
         }
       ]
     }

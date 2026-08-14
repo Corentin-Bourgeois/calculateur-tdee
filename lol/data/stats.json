@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T13:32:05.115Z",
+  "generatedAt": "2026-08-14T14:09:28.871Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 71,
+        "lp": 61,
         "wins": 26,
-        "losses": 21
+        "losses": 22
       },
       "matches": [
+        {
+          "id": "EUW1_7950155521",
+          "ts": 1786715705947,
+          "dur": 1254,
+          "remake": false,
+          "champId": 91,
+          "champ": "Talon",
+          "role": "JUNGLE",
+          "win": false,
+          "k": 2,
+          "d": 8,
+          "a": 3,
+          "cs": 143,
+          "gold": 8225,
+          "oppChampId": 60,
+          "oppChamp": "Elise"
+        },
         {
           "id": "EUW1_7950117774",
           "ts": 1786714135975,
@@ -1071,6 +1088,14 @@
           "lp": 71,
           "wins": 26,
           "losses": 21
+        },
+        {
+          "ts": 1786716562693,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 61,
+          "wins": 26,
+          "losses": 22
         }
       ]
     },

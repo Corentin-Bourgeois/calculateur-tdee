@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T16:32:57.893Z",
+  "generatedAt": "2026-08-14T19:26:18.886Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 1,
+        "division": "III",
+        "lp": 91,
         "wins": 28,
-        "losses": 24
+        "losses": 25
       },
       "matches": [
+        {
+          "id": "EUW1_7950439079",
+          "ts": 1786734351879,
+          "dur": 2374,
+          "remake": false,
+          "champId": 85,
+          "champ": "Kennen",
+          "role": "TOP",
+          "win": false,
+          "k": 6,
+          "d": 9,
+          "a": 9,
+          "cs": 224,
+          "gold": 14193,
+          "oppChampId": 223,
+          "oppChamp": "TahmKench"
+        },
         {
           "id": "EUW1_7950300654",
           "ts": 1786725033784,
@@ -1196,6 +1213,14 @@
           "lp": 1,
           "wins": 28,
           "losses": 24
+        },
+        {
+          "ts": 1786735571362,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 91,
+          "wins": 28,
+          "losses": 25
         }
       ]
     },
@@ -1205,11 +1230,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 81,
+        "lp": 71,
         "wins": 8,
-        "losses": 4
+        "losses": 5
       },
       "matches": [
+        {
+          "id": "EUW1_7950439079",
+          "ts": 1786734351879,
+          "dur": 2374,
+          "remake": false,
+          "champId": 412,
+          "champ": "Thresh",
+          "role": "UTILITY",
+          "win": false,
+          "k": 3,
+          "d": 9,
+          "a": 32,
+          "cs": 18,
+          "gold": 12189,
+          "oppChampId": 350,
+          "oppChamp": "Yuumi"
+        },
         {
           "id": "EUW1_7934929192",
           "ts": 1785441449780,
@@ -1423,6 +1465,14 @@
           "lp": 81,
           "wins": 8,
           "losses": 4
+        },
+        {
+          "ts": 1786735576332,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 71,
+          "wins": 8,
+          "losses": 5
         }
       ]
     }

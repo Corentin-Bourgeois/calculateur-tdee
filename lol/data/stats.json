@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-14T19:26:18.886Z",
+  "generatedAt": "2026-08-14T20:02:33.029Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 91,
+        "lp": 81,
         "wins": 28,
-        "losses": 25
+        "losses": 26
       },
       "matches": [
+        {
+          "id": "EUW1_7950516028",
+          "ts": 1786737548879,
+          "dur": 1996,
+          "remake": false,
+          "champId": 200,
+          "champ": "Belveth",
+          "role": "JUNGLE",
+          "win": false,
+          "k": 5,
+          "d": 13,
+          "a": 13,
+          "cs": 182,
+          "gold": 12550,
+          "oppChampId": 30,
+          "oppChamp": "Karthus"
+        },
         {
           "id": "EUW1_7950439079",
           "ts": 1786734351879,
@@ -1221,6 +1238,14 @@
           "lp": 91,
           "wins": 28,
           "losses": 25
+        },
+        {
+          "ts": 1786737746921,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 81,
+          "wins": 28,
+          "losses": 26
         }
       ]
     },

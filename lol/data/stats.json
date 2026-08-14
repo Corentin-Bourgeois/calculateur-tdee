@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-12T20:37:54.097Z",
+  "generatedAt": "2026-08-14T11:06:47.864Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 91,
+        "lp": 81,
         "wins": 26,
-        "losses": 19
+        "losses": 20
       },
       "matches": [
+        {
+          "id": "EUW1_7950003269",
+          "ts": 1786705400693,
+          "dur": 1533,
+          "remake": false,
+          "champId": 897,
+          "champ": "KSante",
+          "role": "TOP",
+          "win": false,
+          "k": 3,
+          "d": 6,
+          "a": 1,
+          "cs": 180,
+          "gold": 9038,
+          "oppChampId": 69,
+          "oppChamp": "Cassiopeia"
+        },
         {
           "id": "EUW1_7948667617",
           "ts": 1786566982797,
@@ -1021,6 +1038,14 @@
           "lp": 91,
           "wins": 26,
           "losses": 19
+        },
+        {
+          "ts": 1786705601664,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 81,
+          "wins": 26,
+          "losses": 20
         }
       ]
     },

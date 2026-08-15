@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T15:47:05.351Z",
+  "generatedAt": "2026-08-15T16:25:53.448Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 81,
+        "lp": 71,
         "wins": 29,
-        "losses": 29
+        "losses": 30
       },
       "matches": [
+        {
+          "id": "EUW1_7951316950",
+          "ts": 1786811058176,
+          "dur": 1899,
+          "remake": false,
+          "champId": 39,
+          "champ": "Irelia",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 8,
+          "d": 9,
+          "a": 7,
+          "cs": 303,
+          "gold": 15618,
+          "oppChampId": 245,
+          "oppChamp": "Ekko"
+        },
         {
           "id": "EUW1_7951280999",
           "ts": 1786808781705,
@@ -1346,6 +1363,14 @@
           "lp": 81,
           "wins": 29,
           "losses": 29
+        },
+        {
+          "ts": 1786811147326,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 71,
+          "wins": 29,
+          "losses": 30
         }
       ]
     },

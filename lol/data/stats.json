@@ -1,17 +1,11 @@
 {
-  "generatedAt": "2026-08-14T20:23:09.807Z",
+  "generatedAt": "2026-08-15T02:34:23.827Z",
   "queue": 420,
   "players": {
     "corentin": {
       "riotId": "No Trick Poney#LFT",
       "name": "Corentin",
-      "rank": {
-        "tier": "PLATINUM",
-        "division": "III",
-        "lp": 71,
-        "wins": 28,
-        "losses": 27
-      },
+      "rank": null,
       "matches": [
         {
           "id": "EUW1_7950571897",

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T23:16:10.579Z",
+  "generatedAt": "2026-08-15T23:46:07.773Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 81,
+        "lp": 71,
         "wins": 33,
-        "losses": 31
+        "losses": 32
       },
       "matches": [
+        {
+          "id": "EUW1_7951849458",
+          "ts": 1786837510925,
+          "dur": 1641,
+          "remake": false,
+          "champId": 523,
+          "champ": "Aphelios",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 2,
+          "d": 9,
+          "a": 4,
+          "cs": 214,
+          "gold": 9958,
+          "oppChampId": 81,
+          "oppChamp": "Ezreal"
+        },
         {
           "id": "EUW1_7951791263",
           "ts": 1786835568537,
@@ -1496,6 +1513,14 @@
           "lp": 81,
           "wins": 33,
           "losses": 31
+        },
+        {
+          "ts": 1786837561568,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 71,
+          "wins": 33,
+          "losses": 32
         }
       ]
     },

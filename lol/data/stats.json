@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T02:38:31.523Z",
+  "generatedAt": "2026-08-15T14:34:28.060Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 71,
+        "lp": 61,
         "wins": 28,
-        "losses": 27
+        "losses": 28
       },
       "matches": [
+        {
+          "id": "EUW1_7951204872",
+          "ts": 1786804357170,
+          "dur": 1658,
+          "remake": false,
+          "champId": 805,
+          "champ": "Locke",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 7,
+          "d": 10,
+          "a": 3,
+          "cs": 188,
+          "gold": 11189,
+          "oppChampId": 101,
+          "oppChamp": "Xerath"
+        },
         {
           "id": "EUW1_7950571897",
           "ts": 1786738942156,
@@ -1271,6 +1288,14 @@
           "lp": 71,
           "wins": 28,
           "losses": 27
+        },
+        {
+          "ts": 1786804460462,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 61,
+          "wins": 28,
+          "losses": 28
         }
       ]
     },
@@ -1280,11 +1305,28 @@
       "rank": {
         "tier": "GOLD",
         "division": "II",
-        "lp": 61,
+        "lp": 51,
         "wins": 8,
-        "losses": 6
+        "losses": 7
       },
       "matches": [
+        {
+          "id": "EUW1_7951204872",
+          "ts": 1786804357170,
+          "dur": 1658,
+          "remake": false,
+          "champId": 266,
+          "champ": "Aatrox",
+          "role": "TOP",
+          "win": false,
+          "k": 2,
+          "d": 12,
+          "a": 6,
+          "cs": 113,
+          "gold": 8150,
+          "oppChampId": 240,
+          "oppChamp": "Kled"
+        },
         {
           "id": "EUW1_7950571897",
           "ts": 1786738942156,
@@ -1548,6 +1590,14 @@
           "lp": 61,
           "wins": 8,
           "losses": 6
+        },
+        {
+          "ts": 1786804465376,
+          "tier": "GOLD",
+          "division": "II",
+          "lp": 51,
+          "wins": 8,
+          "losses": 7
         }
       ]
     }

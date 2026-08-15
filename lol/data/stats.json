@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T17:37:35.142Z",
+  "generatedAt": "2026-08-15T21:50:54.961Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 31,
+        "lp": 21,
         "wins": 31,
-        "losses": 30
+        "losses": 31
       },
       "matches": [
+        {
+          "id": "EUW1_7951699799",
+          "ts": 1786830491782,
+          "dur": 2023,
+          "remake": false,
+          "champId": 150,
+          "champ": "Gnar",
+          "role": "TOP",
+          "win": false,
+          "k": 2,
+          "d": 10,
+          "a": 8,
+          "cs": 224,
+          "gold": 11252,
+          "oppChampId": 79,
+          "oppChamp": "Gragas"
+        },
         {
           "id": "EUW1_7951411691",
           "ts": 1786815425197,
@@ -1421,6 +1438,14 @@
           "lp": 31,
           "wins": 31,
           "losses": 30
+        },
+        {
+          "ts": 1786830648835,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 21,
+          "wins": 31,
+          "losses": 31
         }
       ]
     },

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T15:15:50.432Z",
+  "generatedAt": "2026-08-15T15:47:05.351Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 51,
-        "wins": 28,
+        "lp": 81,
+        "wins": 29,
         "losses": 29
       },
       "matches": [
+        {
+          "id": "EUW1_7951280999",
+          "ts": 1786808781705,
+          "dur": 1689,
+          "remake": false,
+          "champId": 202,
+          "champ": "Jhin",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 6,
+          "d": 3,
+          "a": 16,
+          "cs": 213,
+          "gold": 13678,
+          "oppChampId": 51,
+          "oppChamp": "Caitlyn"
+        },
         {
           "id": "EUW1_7951244161",
           "ts": 1786806707218,
@@ -1320,6 +1337,14 @@
           "division": "III",
           "lp": 51,
           "wins": 28,
+          "losses": 29
+        },
+        {
+          "ts": 1786808819201,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 81,
+          "wins": 29,
           "losses": 29
         }
       ]

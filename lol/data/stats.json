@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T17:08:20.793Z",
+  "generatedAt": "2026-08-15T17:37:35.142Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 1,
-        "wins": 30,
+        "lp": 31,
+        "wins": 31,
         "losses": 30
       },
       "matches": [
+        {
+          "id": "EUW1_7951411691",
+          "ts": 1786815425197,
+          "dur": 1430,
+          "remake": false,
+          "champId": 800,
+          "champ": "Mel",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 15,
+          "d": 3,
+          "a": 4,
+          "cs": 225,
+          "gold": 14382,
+          "oppChampId": 91,
+          "oppChamp": "Talon"
+        },
         {
           "id": "EUW1_7951353338",
           "ts": 1786813645831,
@@ -1395,6 +1412,14 @@
           "division": "II",
           "lp": 1,
           "wins": 30,
+          "losses": 30
+        },
+        {
+          "ts": 1786815449056,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 31,
+          "wins": 31,
           "losses": 30
         }
       ]

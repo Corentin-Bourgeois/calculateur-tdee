@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T22:28:22.835Z",
+  "generatedAt": "2026-08-15T23:16:10.579Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 51,
-        "wins": 32,
+        "lp": 81,
+        "wins": 33,
         "losses": 31
       },
       "matches": [
+        {
+          "id": "EUW1_7951791263",
+          "ts": 1786835568537,
+          "dur": 2258,
+          "remake": false,
+          "champId": 238,
+          "champ": "Zed",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 9,
+          "d": 8,
+          "a": 7,
+          "cs": 226,
+          "gold": 18864,
+          "oppChampId": 103,
+          "oppChamp": "Ahri"
+        },
         {
           "id": "EUW1_7951739354",
           "ts": 1786832682982,
@@ -1470,6 +1487,14 @@
           "division": "II",
           "lp": 51,
           "wins": 32,
+          "losses": 31
+        },
+        {
+          "ts": 1786835764378,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 81,
+          "wins": 33,
           "losses": 31
         }
       ]

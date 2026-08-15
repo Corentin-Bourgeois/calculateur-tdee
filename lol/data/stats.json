@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T14:34:28.060Z",
+  "generatedAt": "2026-08-15T15:15:50.432Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "III",
-        "lp": 61,
+        "lp": 51,
         "wins": 28,
-        "losses": 28
+        "losses": 29
       },
       "matches": [
+        {
+          "id": "EUW1_7951244161",
+          "ts": 1786806707218,
+          "dur": 1505,
+          "remake": false,
+          "champId": 163,
+          "champ": "Taliyah",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 1,
+          "d": 10,
+          "a": 3,
+          "cs": 177,
+          "gold": 7913,
+          "oppChampId": 777,
+          "oppChamp": "Yone"
+        },
         {
           "id": "EUW1_7951204872",
           "ts": 1786804357170,
@@ -1296,6 +1313,14 @@
           "lp": 61,
           "wins": 28,
           "losses": 28
+        },
+        {
+          "ts": 1786806944312,
+          "tier": "PLATINUM",
+          "division": "III",
+          "lp": 51,
+          "wins": 28,
+          "losses": 29
         }
       ]
     },

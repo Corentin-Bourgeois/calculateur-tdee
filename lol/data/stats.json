@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-15T23:46:07.773Z",
+  "generatedAt": "2026-08-16T14:18:29.165Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 71,
-        "wins": 33,
+        "division": "I",
+        "lp": 1,
+        "wins": 34,
         "losses": 32
       },
       "matches": [
+        {
+          "id": "EUW1_7952279807",
+          "ts": 1786889875905,
+          "dur": 1607,
+          "remake": false,
+          "champId": 6,
+          "champ": "Urgot",
+          "role": "TOP",
+          "win": true,
+          "k": 8,
+          "d": 9,
+          "a": 13,
+          "cs": 159,
+          "gold": 12805,
+          "oppChampId": 75,
+          "oppChamp": "Nasus"
+        },
         {
           "id": "EUW1_7951849458",
           "ts": 1786837510925,
@@ -1520,6 +1537,14 @@
           "division": "II",
           "lp": 71,
           "wins": 33,
+          "losses": 32
+        },
+        {
+          "ts": 1786889903007,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 1,
+          "wins": 34,
           "losses": 32
         }
       ]

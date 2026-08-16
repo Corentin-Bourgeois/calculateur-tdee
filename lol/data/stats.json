@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T14:18:29.165Z",
+  "generatedAt": "2026-08-16T15:02:21.061Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "I",
-        "lp": 1,
+        "division": "II",
+        "lp": 91,
         "wins": 34,
-        "losses": 32
+        "losses": 33
       },
       "matches": [
+        {
+          "id": "EUW1_7952308372",
+          "ts": 1786892436075,
+          "dur": 2190,
+          "remake": false,
+          "champId": 106,
+          "champ": "Volibear",
+          "role": "TOP",
+          "win": false,
+          "k": 8,
+          "d": 11,
+          "a": 11,
+          "cs": 255,
+          "gold": 15834,
+          "oppChampId": 75,
+          "oppChamp": "Nasus"
+        },
         {
           "id": "EUW1_7952279807",
           "ts": 1786889875905,
@@ -1546,6 +1563,14 @@
           "lp": 1,
           "wins": 34,
           "losses": 32
+        },
+        {
+          "ts": 1786892534962,
+          "tier": "PLATINUM",
+          "division": "II",
+          "lp": 91,
+          "wins": 34,
+          "losses": 33
         }
       ]
     },

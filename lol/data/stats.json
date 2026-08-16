@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-16T15:02:21.061Z",
+  "generatedAt": "2026-08-16T15:41:32.852Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -7,12 +7,29 @@
       "name": "Corentin",
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 91,
-        "wins": 34,
+        "division": "I",
+        "lp": 21,
+        "wins": 35,
         "losses": 33
       },
       "matches": [
+        {
+          "id": "EUW1_7952368977",
+          "ts": 1786894686898,
+          "dur": 1947,
+          "remake": false,
+          "champId": 7,
+          "champ": "Leblanc",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 6,
+          "d": 5,
+          "a": 15,
+          "cs": 208,
+          "gold": 12801,
+          "oppChampId": 34,
+          "oppChamp": "Anivia"
+        },
         {
           "id": "EUW1_7952308372",
           "ts": 1786892436075,
@@ -1570,6 +1587,14 @@
           "division": "II",
           "lp": 91,
           "wins": 34,
+          "losses": 33
+        },
+        {
+          "ts": 1786894886674,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 21,
+          "wins": 35,
           "losses": 33
         }
       ]

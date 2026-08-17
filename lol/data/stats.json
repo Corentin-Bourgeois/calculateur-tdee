@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T15:07:23.445Z",
+  "generatedAt": "2026-08-17T16:28:51.853Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 51,
-        "wins": 36,
+        "lp": 81,
+        "wins": 37,
         "losses": 34
       },
       "matches": [
+        {
+          "id": "EUW1_7953436338",
+          "ts": 1786983931068,
+          "dur": 2097,
+          "remake": false,
+          "champId": 127,
+          "champ": "Lissandra",
+          "role": "MIDDLE",
+          "win": true,
+          "k": 9,
+          "d": 4,
+          "a": 12,
+          "cs": 273,
+          "gold": 16374,
+          "oppChampId": 238,
+          "oppChamp": "Zed"
+        },
         {
           "id": "EUW1_7953361302",
           "ts": 1786979216100,
@@ -1637,6 +1654,14 @@
           "division": "I",
           "lp": 51,
           "wins": 36,
+          "losses": 34
+        },
+        {
+          "ts": 1786984125700,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 81,
+          "wins": 37,
           "losses": 34
         }
       ]

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T09:09:52.831Z",
+  "generatedAt": "2026-08-17T15:07:23.445Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 21,
-        "wins": 35,
+        "lp": 51,
+        "wins": 36,
         "losses": 34
       },
       "matches": [
+        {
+          "id": "EUW1_7953361302",
+          "ts": 1786979216100,
+          "dur": 1783,
+          "remake": false,
+          "champId": 115,
+          "champ": "Ziggs",
+          "role": "BOTTOM",
+          "win": true,
+          "k": 2,
+          "d": 5,
+          "a": 13,
+          "cs": 212,
+          "gold": 12707,
+          "oppChampId": 50,
+          "oppChamp": "Swain"
+        },
         {
           "id": "EUW1_7953129014",
           "ts": 1786957648580,
@@ -1613,6 +1630,14 @@
           "lp": 21,
           "wins": 35,
           "losses": 33
+        },
+        {
+          "ts": 1786979237286,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 51,
+          "wins": 36,
+          "losses": 34
         }
       ]
     },

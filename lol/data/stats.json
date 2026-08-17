@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-17T16:28:51.853Z",
+  "generatedAt": "2026-08-17T23:22:29.152Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 81,
+        "lp": 71,
         "wins": 37,
-        "losses": 34
+        "losses": 35
       },
       "matches": [
+        {
+          "id": "EUW1_7953969418",
+          "ts": 1787008842388,
+          "dur": 1815,
+          "remake": false,
+          "champId": 4,
+          "champ": "TwistedFate",
+          "role": "MIDDLE",
+          "win": false,
+          "k": 4,
+          "d": 7,
+          "a": 15,
+          "cs": 204,
+          "gold": 12419,
+          "oppChampId": 134,
+          "oppChamp": "Syndra"
+        },
         {
           "id": "EUW1_7953436338",
           "ts": 1786983931068,
@@ -1663,6 +1680,14 @@
           "lp": 81,
           "wins": 37,
           "losses": 34
+        },
+        {
+          "ts": 1787008942995,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 71,
+          "wins": 37,
+          "losses": 35
         }
       ]
     },

@@ -1,17 +1,11 @@
 {
-  "generatedAt": "2026-08-17T23:22:29.152Z",
+  "generatedAt": "2026-08-18T18:02:47.195Z",
   "queue": 420,
   "players": {
     "corentin": {
       "riotId": "No Trick Poney#LFT",
       "name": "Corentin",
-      "rank": {
-        "tier": "PLATINUM",
-        "division": "I",
-        "lp": 71,
-        "wins": 37,
-        "losses": 35
-      },
+      "rank": null,
       "matches": [
         {
           "id": "EUW1_7953969418",
@@ -1694,13 +1688,7 @@
     "mehdi": {
       "riotId": "KYLΙAN MBAPPÉ#EUW",
       "name": "Mehdi",
-      "rank": {
-        "tier": "GOLD",
-        "division": "II",
-        "lp": 51,
-        "wins": 8,
-        "losses": 7
-      },
+      "rank": null,
       "matches": [
         {
           "id": "EUW1_7951204872",

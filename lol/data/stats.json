@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T09:15:49.448Z",
+  "generatedAt": "2026-08-19T09:56:57.606Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 61,
+        "lp": 51,
         "wins": 37,
-        "losses": 36
+        "losses": 37
       },
       "matches": [
+        {
+          "id": "EUW1_7955191689",
+          "ts": 1787133281012,
+          "dur": 2082,
+          "remake": false,
+          "champId": 29,
+          "champ": "Twitch",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 9,
+          "d": 13,
+          "a": 15,
+          "cs": 198,
+          "gold": 16473,
+          "oppChampId": 50,
+          "oppChamp": "Swain"
+        },
         {
           "id": "EUW1_7955170865",
           "ts": 1787130694590,
@@ -1713,6 +1730,14 @@
           "lp": 61,
           "wins": 37,
           "losses": 36
+        },
+        {
+          "ts": 1787133411473,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 51,
+          "wins": 37,
+          "losses": 37
         }
       ]
     },

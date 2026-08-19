@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-18T18:06:56.120Z",
+  "generatedAt": "2026-08-19T09:11:41.197Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -13,6 +13,23 @@
         "losses": 35
       },
       "matches": [
+        {
+          "id": "EUW1_7955170865",
+          "ts": 1787130694590,
+          "dur": 1832,
+          "remake": false,
+          "champId": 147,
+          "champ": "Seraphine",
+          "role": "BOTTOM",
+          "win": false,
+          "k": 7,
+          "d": 5,
+          "a": 5,
+          "cs": 248,
+          "gold": 14508,
+          "oppChampId": 145,
+          "oppChamp": "Kaisa"
+        },
         {
           "id": "EUW1_7953969418",
           "ts": 1787008842388,

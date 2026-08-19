@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T09:11:41.197Z",
+  "generatedAt": "2026-08-19T09:15:49.448Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,9 +8,9 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 71,
+        "lp": 61,
         "wins": 37,
-        "losses": 35
+        "losses": 36
       },
       "matches": [
         {
@@ -1705,6 +1705,14 @@
           "lp": 71,
           "wins": 37,
           "losses": 35
+        },
+        {
+          "ts": 1787130944593,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 61,
+          "wins": 37,
+          "losses": 36
         }
       ]
     },

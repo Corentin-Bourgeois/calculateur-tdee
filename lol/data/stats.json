@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T09:56:57.606Z",
+  "generatedAt": "2026-08-19T10:30:27.960Z",
   "queue": 420,
   "players": {
     "corentin": {
@@ -8,11 +8,28 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "I",
-        "lp": 51,
+        "lp": 41,
         "wins": 37,
-        "losses": 37
+        "losses": 38
       },
       "matches": [
+        {
+          "id": "EUW1_7955212663",
+          "ts": 1787135402894,
+          "dur": 1655,
+          "remake": false,
+          "champId": 240,
+          "champ": "Kled",
+          "role": "TOP",
+          "win": false,
+          "k": 2,
+          "d": 6,
+          "a": 6,
+          "cs": 224,
+          "gold": 10373,
+          "oppChampId": 904,
+          "oppChamp": "Zaahen"
+        },
         {
           "id": "EUW1_7955191689",
           "ts": 1787133281012,
@@ -1738,6 +1755,14 @@
           "lp": 51,
           "wins": 37,
           "losses": 37
+        },
+        {
+          "ts": 1787135421816,
+          "tier": "PLATINUM",
+          "division": "I",
+          "lp": 41,
+          "wins": 37,
+          "losses": 38
         }
       ]
     },
